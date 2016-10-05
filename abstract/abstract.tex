@@ -1,0 +1,43 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{tabu}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=tb,
+  language=C,
+  columns=flexible,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
+}
+
+\begin{document}
+\begin{titlepage}
+  \title{CS 461 - Fall 2016 - Project Abstract}
+  \author{Matthew Johnson, Garrett Smith, Cody Malick}
+  \date{October 4, 2016}
+  \maketitle
+  \vspace{4cm}
+  \begin{abstract}
+  	\noindent Intel's Cloud Integrated Advanced Orchestrator (ciao) cloud
+	orchestration platform currently uses Linux bridges and Generic Routing
+	Encapsulation (GRE) tunnels to implement a software defined network
+	(SDN). While the current implementation allows for scalability above
+	typical designs, it lacks compatibility with modern tunneling protocols
+	such as VxLAN and nvGRE. The proposed solution is to switch the
+	implementation from Linux GRE tunnels to Open vSwitch (OVS) Tunnels and
+	Linux bridges to Open vSwitch. This will allow Ciao to leverage packet
+	acceleration frameworks such as the Data Plane Development Kit (DPDK)
+	and provide needed compatibility.
+  \end{abstract}
+\end{titlepage}
+\end{document}
