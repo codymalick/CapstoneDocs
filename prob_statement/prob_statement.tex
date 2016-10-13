@@ -23,12 +23,13 @@
 \begin{document}
 \begin{titlepage}
   \title{CS 461 - Fall 2016 - Problem Statement}
-  \author{Matthew Johnson, Garrett Smith, Cody Malick\\Cloud Orchestration Networking}
+  \author{Matthew Johnson, Garrett Smith, Cody Malick\\Cloud Orchestration
+  Networking}
   \date{October 10, 2016}
   \maketitle
   \vspace{4cm}
   \begin{abstract}
-  	\noindent Intel's Cloud Integrated Advanced Orchestrator (ciao) cloud
+  	\noindent Intel's Cloud Integrated Advanced Orchestrator (Ciao) cloud
 	orchestration platform currently uses Linux bridges and Generic Routing
 	Encapsulation (GRE) tunnels to implement a software defined network
 	(SDN). While the current implementation allows for scalability above
@@ -42,31 +43,65 @@
 \end{titlepage}
 
 \section*{Problem Definition}
-Software Defined Network (SDN) implementations in practice today focus exclusively on extremely large scale deployments where there are tens of thousands of datacenter servers. They use a topology that fully connects all servers with all servers, resulting in an extremely large and unwieldy mesh of tunnels. Beyond the mesh complexity itself, Address Resolution Protocol (ARP) table management, endpoint discovery, broadcast loop prevention and broadcast traffic management are also challenging in this complex topology.
+Software Defined Network (SDN) implementations in practice today focus
+exclusively on extremely large scale deployments where there are tens of
+thousands of datacenter servers. They use a topology that fully connects all
+servers with all servers, resulting in an extremely large and unwieldy mesh of
+tunnels. Beyond the mesh complexity itself, Address Resolution Protocol (ARP)
+table management, endpoint discovery, broadcast loop prevention and broadcast
+traffic management are also challenging in this complex topology.
 
-In contrast, Ciao tightly integrates SDN to achieve a simpler overall implementation leveraging a limited local awareness of just enough of the global cloud’s state. Tenant overlay networks are used to overcome the above listed challenges in typical SDNs by using a distributed, stateless, self-configuring network topology running over dedicated network software appliances. This design yields a hierarchical SDN overlay without loops and meshes using Linux bridges interconnected by Linux native GRE tunnels. This has been shown to scale extremely well in an environment which consists of a few hundred nodes across a few server racks, which also happens to be the sweet spot of scale when it comes to most small and medium enterprises running private clouds today.
+In contrast, Ciao tightly integrates SDN to achieve a simpler overall
+implementation leveraging a limited local awareness of just enough of the global
+cloud’s state. Tenant overlay networks are used to overcome the above listed
+challenges in typical SDNs by using a distributed, stateless, self-configuring
+network topology running over dedicated network software appliances. This design
+yields a hierarchical SDN overlay without loops and meshes using Linux bridges
+interconnected by Linux native GRE tunnels. This has been shown to scale
+extremely well in an environment which consists of a few hundred nodes across a
+few server racks, which also happens to be the sweet spot of scale when it comes
+to most small and medium enterprises running private clouds today.
 
-While this initial network implementation in Ciao uses Linux bridges and GRE tunnels, all innovation around SDNs currently has shifted to a framework called Open vSwitch (OVS). Moving from Linux bridges and GRE to OVS-GRE would allow Ciao to leverage packet acceleration frameworks like DPDK as well as support multiple tunneling protocols like VxLAN and nvGRE which are equal cost multipath routing (ECMP) friendly and in some cases are accelerated directly in the hardware network cards found on most servers.
+While this initial network implementation in Ciao uses Linux bridges and GRE
+tunnels, all innovation around SDNs currently has shifted to a framework called
+Open vSwitch (OVS). Moving from Linux bridges and GRE to OVS-GRE would allow
+Ciao to leverage packet acceleration frameworks like DPDK as well as support
+multiple tunneling protocols like VxLAN and nvGRE which are equal cost multipath
+routing (ECMP) friendly and in some cases are accelerated directly in the
+hardware network cards found on most servers.
+
 \section*{Proposed Solution}
-This proposed solution is to add an OVS-GRE mode in Ciao. The project will involve two phases with an optional third phase, each resulting in a fully functional SDN implementation:
+This proposed solution is to add an OVS-GRE mode in Ciao. The project will 
+involve two phases with an optional third phase, each resulting in a fully 
+functional SDN implementation:
 
 \begin{enumerate}
-	\item Switch the GRE tunnel implementation to use OVS created GRE tunnels.
-	\item Switch the tunneling implementation to VxLAN/nvGRE based on performance measurements of VxLAN and nvGRE on data center network cards.
+	\item Switch the GRE tunnel implementation to use OVS created GRE 
+		tunnels.
+	\item Switch the tunneling implementation to VxLAN/nvGRE based on
+		performance measurements of VxLAN and nvGRE on data center
+		network cards.
 	\item Optional: Replace the linux bridges with OVS switch instances.
 \end{enumerate}
-This solution will allow Ciao to leverage DPDK and other SDN technology innovations which are dependent on OVS.
+This solution will allow Ciao to leverage DPDK and other SDN technology
+innovations which are dependent on OVS.
 
-At the engineering expo, we expect to demonstrate our solution running on a minimal cluster of four nodes. We will also show performance metrics from before and after our implementation, illustrating improvements to the network speed and scalability.
+At the engineering expo, we expect to demonstrate our solution running on a
+minimal cluster of four nodes. We will also show performance metrics from before
+and after our implementation, illustrating improvements to the network speed and
+scalability.
 
 \section*{Performance Metrics}
-The main metric is a functional SDN utilizing OVS, as well as a VxLAN/nvGRE tunneling implementation selected based on performance measurements. A marked improvement over current implementation performance is expected. Efficient team communication is also expected to help overcome obstacles.
+The main metric is a functional SDN utilizing OVS, as well as a VxLAN/nvGRE
+tunneling implementation selected based on performance measurements. A marked
+improvement over current implementation performance is expected. Efficient team
+communication is also expected to help overcome obstacles.
 
 \clearpage
 \section*{Approval}
-
-\noindent Kent Helm\hspace{0.7cm} \makebox[1.5in]{\hrulefill}\\\\\\
-Rob Nesius\hspace{0.7cm} \makebox[1.5in]{\hrulefill}\\\\\\
+\vspace{2cm}
+\noindent Kent Helm, Engineering Manager\hspace{0.7cm} \makebox[1.5in]
+{\hrulefill}\\\\\\
 Matthew Johnson\hspace{0.3cm} \makebox[1.5in]{\hrulefill}\\\\\\
 Garrett Smith\hspace{0.7cm} \makebox[1.5in]{\hrulefill}\\\\\\
 Cody Malick\hspace{0.7cm} \makebox[1.5in]{\hrulefill}\\\\\\
