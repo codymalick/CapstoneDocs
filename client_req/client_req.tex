@@ -30,7 +30,11 @@
   \maketitle
   \vspace{4cm}
   \begin{abstract}
-  	\noindent Abstract Goes here
+  	\noindent This document outlines the requirements for the Cloud Orchestration
+  	project sponsored by Intel Corporation. It formally defines the purpose, scope,
+  	description, function, use, constraints, and specific requirements of the project.
+  	Although there are no specific design decisions made, it will be used as a building
+  	block for the rest of the design, implementation, and testing process.
 
   \end{abstract}
 
@@ -39,10 +43,56 @@
 \clearpage
 \section{Introduction}
 \subsection{Purpose}
+Intel, while developing its Software Defined Network implementation into Ciao, has found
+a need for a more advanced form of network bride than the standard Linux bridge. The initial
+implementation of the Linux bridge GRE has worked well, but as further development was done on
+Ciao, the need for modern packet encapsulation and other innovative protocols were found to
+be needed. Implementing an Open vSwitch GRE would allow increased performance, access
+to contemporary Software Defined Network innovations, and modern packet encapsulation methods.
+This addition would be used by those implementing Ciao in their own organizations or businesses
+to further increase speed and availability of features in their cloud. 
 \subsection{Scope}
+The scope of the Cloud Orchestration project encapsulates the following two main goals, followed
+by one additional stretch goal:
+\subsubsection{Open vSwitch GRE Tunnel}
+The first goal of the project is to switch the GRE tunnel implementation with the Open vSwitch
+created GRE tunnel. This will allow for newer packet encapsulation techniques to be used, as
+well as provide the option to test packet acceleration.
+\subsubsection{Test and Implement Best Performing Tunnel Implementation}
+Switch the tunneling implementation to VxLAN/nvGRE based on performance measurements of VxLAN and nvGRE
+on data center network cards.
+\subsubsection{Stretch Goal, Replace Linux Bridge}
+The final objective of the project, and stretch goal, is to replace the Linux bridges with Open
+vSwitch instances
+
 \subsection{Definitions, acronyms, and abbreviations}
+We have a giant list of these
+\begin{description}
+    \item[Cloud] Fluffy and light, usually full of moisture
+    \item[Open vSwitch]
+    \item[Tunnel]
+    \item{GRE} Generic Packet Encapsulation
+    \item{VxLAN}
+    \item{nvGRE}
+    \item{Packet Acceleration}
+    \item{Cloud Orchestration}
+    \item{Bridge}
+    \item{Linux Bridges}
+    \item{Packet Encapsulation}
+    \item{OVS}    
+\end{description}
+
 \subsection{References}
+This subsection should
+a) Provide a complete list of all documents referenced elsewhere in the SRS;
+b) Identify each document by title, report number (if applicable), date, and publishing organization;
+c) Specify the sources from which the references can be obtained.
+This information may be provided by reference to an appendix or to another document.
 \subsection{Overview}
+This subsection should
+a) Describe what the rest of the SRS contains;
+b) Explain how the SRS is organized.
+\clearpage
 \section{Overall Description}
 \subsection{Product perspective}
 \subsection{Product functions}
@@ -50,6 +100,7 @@
 \subsection{Constraints}
 \subsection{Assumptions and dependencies}
 \section{Specific Requirements}
+\clearpage
 \section{Appendixes}
 \section{Index}
 
