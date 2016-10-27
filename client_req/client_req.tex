@@ -5,11 +5,13 @@
 \usepackage{longtable}
 \usepackage{tabu}
 \usepackage{hyperref}
+\usepackage{graphicx}
 %Fixes descritpion label and body font overlap issues
 \usepackage{enumitem}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+\graphicspath{{../images/}}
 
 \lstset{frame=tb,
   language=C,
@@ -135,15 +137,107 @@ b) Explain how the SRS is organized.
 
 \subsection{Product perspective}
 
+The SDN we implement will be utilized by Ciao to transfer packets between
+compute nodes and control nodes on a cloud cluster. For this purpose the mode
+must be fully integrated into the Ciao infrastructure and must behave similarly
+to what is already in place.
+
+Because this software will be a component of a larger system, it must follow the
+design of that larger system and be fully integrated. Because Ciao is
+implemented in the Go programming language, so too must this SDN implementation
+be written in Go. The networking mode must route packets between ports on
+different nodes using networking protocols.
+
+The SDN that is implemented must support the following structure of the cloud in
+Ciao:
+
+\begin{center}
+	\makebox[\textwidth]{\includegraphics[width=\textwidth]{ciao-networking.eps}}
+\end{center}
+
+Ciao has several functional components that must be worked with:
+
+\begin{description}[leftmargin=12em,style=nextline]
+	\item[libsnnet]
+		Provides networking APIs to the ciao-launcher to create tenant
+		specific network interfaces on compute nodes and CNCI specific
+		network interfaces on a network node.
+	\item[ciao-cnci-agent]
+		A SSNTP client which connects to the ciao-scheduler and runs
+		within a CNCI VM and configures tenant network connectivity by
+		interacting with the ciao-controller and ciao-launchers using
+		the ciao-scheduler. The ciao-cnci-agent can also be run on
+		physical nodes if desired.
+	\item[docker-plugin]
+		Provides unified networking between VM and Docker workloads.
+\end{description}
+
 \subsection{Product functions}
+
+Ciao networking must support the following functionality.
+
+\begin{enumerate}
+	\item Secure isolated overlay network - The networking implementation
+		must provide each tenant with a secure isolated overlay network
+		without the need for any configuration by the tenant and minimal
+		configuration by the data center operator.
+	\item Auto discovery of compute/network nodes - Auto discover roles of
+		nodes when they are attached to the network.
+	\item Diverse and scalable - Support large number of tenants with large
+		or small number of workloads.
+	\item Work on different platforms - Operate on any Linux distribution
+		by limiting the number of dependencies on user-space tools and
+		leveraging Linux kernel interfaces whenever possible.
+	\item Migrate workloads - Provide the ability to migrate workloads from
+		a Compute Node on demand or when a CN crashes without tenant
+		intervention. Provide the ability to migrate CNCIs on demand or
+		when a Network Node crashes.
+	\item Encrypt traffic - Provide the ability to transparently encrypt all
+		tenant traffic even within the data center network.
+	\item Create GRE tunnels with Open VSwitch
+	\item Support for tenant and workload level security rules
+	\item Support for tenant and workload level NAT rules (inbound and outbound)
+\end{enumerate}
 
 \subsection{User characteristics}
 
+The users of this mode in Ciao will be educated and technically-minded data
+center administrators. They will be familiar with cloud technologies and
+networks, but software-defined and hardware-defined.
+
+Despite this, however, due to Ciao's goal of minimum configuration the user may
+have a lower knowledge base than, by contrast, the normal network administrator
+for an openstack cluster.
+
 \subsection{Constraints}
 
-\subsection{Assumptions and dependencies}
+\subsubsection{High-order language requirements}
+
+As mentioned above, it is necessary to write this mode in the Go programming
+language in order to integrate with the rest of Ciao.
+
+\subsubsection{Reliability}
+
+The networking mode must be completely reliable and include the ability to
+migrate workloads when a compute or network node crashes with little-to-no
+interruption to the network capabilities for the tenants and must do so without
+tenant intervention.
+
+\subsubsection{Security}
+
+Traffic must be fully and transparently encrypted even within the data center
+network. It must utilize Simple and Secure Node Transfer Protocol (SSNTP) to
+ensure security of the traffic between the nodes.
 
 \section{Specific Requirements}
+
+The main requirement is that Open VSwitch is used to create the GRE tunnels in
+the SDN implementation. A further goal is to switch the tunneling implementation
+to VxLAN or nvGRE based on performance measurements of each. The result of those
+performance metrics will dictate which is used.
+
+A stretch goal is to replace the currently-implemented linux bridges with
+Open VSwitch switch instances.
 
 \clearpage
 \section{Appendixes}
