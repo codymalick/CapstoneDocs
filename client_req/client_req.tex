@@ -4,6 +4,9 @@
 \usepackage{color}
 \usepackage{longtable}
 \usepackage{tabu}
+\usepackage{hyperref}
+%Fixes descritpion label and body font overlap issues
+\usepackage{enumitem}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -66,20 +69,32 @@ The final objective of the project, and stretch goal, is to replace the Linux br
 vSwitch instances
 
 \subsection{Definitions, acronyms, and abbreviations}
-We have a giant list of these
-\begin{description}
-    \item[Cloud] Fluffy and light, usually full of moisture
-    \item[Open vSwitch]
-    \item[Tunnel]
-    \item{GRE} Generic Packet Encapsulation
-    \item{VxLAN}
-    \item{nvGRE}
-    \item{Packet Acceleration}
-    \item{Cloud Orchestration}
-    \item{Bridge}
-    \item{Linux Bridges}
-    \item{Packet Encapsulation}
-    \item{OVS}    
+\begin{description}[leftmargin=12em,style=nextline]
+    \item[Bridge]
+	    Software or hardware that connects two or more network segments
+    \item [Cloud] 
+	    A collection of networked servers
+	\item[Cloud Orchestration]
+		Workload scheduling and deployment in a cloud environment
+	\item[GRE] 
+		Generic Routing Encapsulation
+    \item[Linux Bridge]
+	    The built in Linux software bridge
+    \item[nvGRE] 
+	    Network Virtualization using Generic Routing Encapsulation
+    \item [Open vSwitch] 
+	    An open source multilayer software switch with support for distribution across multiple physical devices. 
+	    The project can be found at \url{https://github.com/openvswitch/ovs}.
+	\item[OVS] 
+		Open vSwitch 
+    \item[Packet Acceleration] 
+	    Increasing the speed of the processing and transfer of network packets
+    \item[Packet Encapsulation]
+	    The wrapping on a network packet in the headers for a protocol
+    \item [Tunnel]
+	    Point to point network connection that encapsulates traffic between the points
+    \item[VxLAN] 
+	    Virtual Extensible Local Area Network
 \end{description}
 
 \subsection{References}
