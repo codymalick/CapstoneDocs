@@ -24,8 +24,9 @@
   breakatwhitespace=true,
   tabsize=4
 }
-
-
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*}{\subsection}{}{}
+\patchcmd{\thebibliography}{\addcontentsline{toc}{section}{\refname}}{}{}{}
 
 \begin{document}
 \begin{titlepage}
@@ -80,7 +81,7 @@ on data center network cards.
 
 \subsubsection{Stretch Goal, Replace Linux Bridge}
 
-The final objective of the project, and stretch goal, is to replace the Linux bridges with Open
+The final objective and stretch goal of the project is to replace the Linux bridges with Open
 vSwitch instances.
 
 \subsection{Definitions, acronyms, and abbreviations}
@@ -92,15 +93,22 @@ vSwitch instances.
 		A collection of networked servers
 	\item[Cloud Orchestration]
 		Workload scheduling and deployment in a cloud environment
-	\item[GRE]
-		Generic Routing Encapsulation
-  \item[Generic Routing Encapsulation]
-    Enter Description Here \cite{rfc1701}
+	\item[CNCI]
+		Virtual Machines automatically configured by the ciao-controller,
+		scheduled by the ciao-scheduler on a need basis, when tenant
+		workloads are created.
+	\item[Generic Routing Encapsulation (GRE)]
+    		Enter Description Here \cite{rfc1701}
 	\item[Linux Bridge]
 		The built in Linux software bridge
+	\item[Network Node (NN)]
+		A Network Node is used to aggregate network traffic for all
+		tenants while still keeping individual tenant traffic isolated
+		from all other the tenants using special virtual machines called
+		Compute Node Concentrators (or CNCIs)
 	\item[nvGRE]
 		Network Virtualization using Generic Routing Encapsulation
-	\item [Open vSwitch]
+	\item[Open vSwitch]
 		An open source multilayer software switch with support for distribution across multiple physical devices.
 		The project can be found at \url{https://github.com/openvswitch/ovs}.
 	\item[OVS]
@@ -109,33 +117,40 @@ vSwitch instances.
 		Increasing the speed of the processing and transfer of network packets
 	\item[Packet Encapsulation]
 		The wrapping on a network packet in the headers for a protocol
-	\item [Tunnel]
-		Point to point network connection that encapsulates traffic between the points
+	\item[SSNTP]
+		The Simple and Secure Node Transfer Protocol (SSNTP) is a
+		custom, fully asynchronous and TLS based application layer
+		protocol. All Cloud Integrated Advanced Orchestrator (CIAO)
+		components communicate with each others over SSNTP.
+	\item[Tunnel]
+		Point to point network connection that encapsulates traffic
+		between the points
 	\item[VxLAN]
 		Virtual Extensible Local Area Network
 \end{description}
 
-\subsection{References}
-
 \bibliographystyle{IEEEtran}
 \bibliography{client_req}
 
-This subsection should
-a) Provide a complete list of all documents referenced elsewhere in the SRS;
-b) Identify each document by title, report number (if applicable), date, and publishing organization;
-c) Specify the sources from which the references can be obtained.
-This information may be provided by reference to an appendix or to another document.
-
 \subsection{Overview}
-
-This subsection should
-a) Describe what the rest of the SRS contains;
-b) Explain how the SRS is organized.
-\clearpage
+The following section describes more details about the product, including 
+product perspective, specific requirements, functionality requirements, and any
+assumptions or dependecies used. The section is organized in the following
+fashion:
+\begin{enumerate}
+	\item Overall Description
+	\item Product Perspective
+	\item Product Functions
+	\item User Characteristics
+	\item Constraints
+	\item Reliability
+	\item Security
+	\item Specific Requirements
+\end{enumerate}
 
 \section{Overall Description}
 
-\subsection{Product perspective}
+\subsection{Product Perspective}
 
 The SDN we implement will be utilized by Ciao to transfer packets between
 compute nodes and control nodes on a cloud cluster. For this purpose the mode
@@ -172,7 +187,7 @@ Ciao has several functional components that must be worked with:
 		Provides unified networking between VM and Docker workloads.
 \end{description}
 
-\subsection{Product functions}
+\subsection{Product Functions}
 
 Ciao networking must support the following functionality.
 
