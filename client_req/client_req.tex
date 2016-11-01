@@ -2,6 +2,7 @@
 \usepackage[margin=0.75in]{geometry}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{float}
 \usepackage{longtable}
 \usepackage{tabu}
 \usepackage{hyperref}
@@ -167,9 +168,13 @@ different nodes using networking protocols.
 The SDN that is implemented must support the following structure of the cloud in
 Ciao:
 
-\begin{center}
-	\makebox[\textwidth]{\includegraphics[width=\textwidth]{ciao-networking.eps}}
-\end{center}
+\begin{figure}[H]
+	\caption{Ciao Network Topology~\cite{ciaoNetTopology}}
+	\begin{center}
+		\makebox[\textwidth]{\includegraphics[width=\textwidth]{ciao-networking.eps}}
+	\end{center}
+\end{figure}
+
 
 Ciao has several functional components that must be worked with:
 
