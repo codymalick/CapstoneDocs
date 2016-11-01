@@ -15,6 +15,15 @@
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 \graphicspath{{../images/}}
 
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+\renewcommand\thesectiondis{\arabic{section}}
+\renewcommand\thesubsectiondis{\thesectiondis.\arabic{subsection}}
+\renewcommand\thesubsubsectiondis{\thesubsectiondis.\arabic{subsubsection}}
+
+
 \lstset{frame=tb,
 	language=C,
 	columns=flexible,
@@ -85,6 +94,31 @@ on data center network cards.
 
 The final objective and stretch goal of the project is to replace the Linux bridges with Open
 vSwitch instances.
+
+
+\subsubsection{Distribution of Work}
+Following is the distribution of work scheduled for the duration of the project:\\
+% Gantt chart location
+\begin{ganttchart}[
+		hgrid=true,
+		vgrid={*{10}{blue, dashed}},
+		y unit chart=0.75cm,
+		x unit=1.0cm
+	]{1}{9}
+\gantttitle{2016-2017}{9} \\
+\gantttitlelist{9,10,11,12,1,2,3,4,5}{1} \\
+\ganttgroup{Project Documentation}{1}{4} \\
+\ganttbar[progress=100]{Problem Statement}{1}{2} \\
+\ganttbar[progress=50]{Requirements Document}{2}{3} \\
+\ganttbar[progress=0]{Design Document}{3}{4}  \ganttnewline
+\ganttgroup{Implementation}{4}{7} \ganttnewline
+\ganttbar[progress=0,progress label text={}]{Open vSwitch GRE Tunnels}{4}{6} \\
+\ganttbar[progress=0,progress label text={}]{VxLan/nvGRE Implementation}{6}{7} \\
+\ganttbar[progress=0,progress label text={}]{Optional: Replace Linux Bridges with OVS Switches}{7}{7} \\
+\ganttgroup{Presentation}{7}{9} \\
+\ganttbar[progress=0,progress label text={}]{Build Presentation Board}{7}{9}\\
+\ganttbar[progress=0,progress label text={}]{Engineering Expo}{9}{9}
+\end{ganttchart}
 
 \subsection{Definitions, acronyms, and abbreviations}
 
@@ -284,32 +318,6 @@ The specific requirements for this project are as follows:
 
 \clearpage
 \section{Appendixes}
-\subsection{Gantt Chart}
-%\noindent\resizebox{\textwidth}{!}{
-%\begin{tikzpicture}[x=1cm, y=.25cm]
-% Gantt chart location
-\begin{ganttchart}[
-		hgrid=true,
-		vgrid={*{10}{blue, dashed}},
-		y unit chart=0.75cm,
-		x unit=1.0cm
-	]{1}{9}
-\gantttitle{2016-2017}{9} \\
-\gantttitlelist{9,10,11,12,1,2,3,4,5}{1} \\
-\ganttgroup{Project Documentation}{1}{4} \\
-\ganttbar[progress=100]{Problem Statement}{1}{2} \\
-\ganttbar[progress=50]{Requirements Document}{2}{3} \\
-\ganttbar[progress=0]{Design Document}{3}{4}  \ganttnewline
-\ganttgroup{Implementation}{4}{7} \ganttnewline
-\ganttbar[progress=0,progress label text={}]{Open vSwitch GRE Tunnels}{4}{6} \\
-\ganttbar[progress=0,progress label text={}]{VxLan/nvGRE Implementation}{6}{7} \\
-\ganttbar[progress=0,progress label text={}]{Optional: Replace Linux Bridges with OVS Switches}{7}{7} \\
-\ganttgroup{Presentation}{7}{9} \\
-\ganttbar[progress=0,progress label text={}]{Build Presentation Board}{7}{9}\\
-\ganttbar[progress=0,progress label text={}]{Engineering Expo}{9}{9}
-\end{ganttchart}
-%\end{tikzpicture}
-%}
 \section{Index}
 
 \end{document}
