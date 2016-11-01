@@ -6,6 +6,7 @@
 \usepackage{tabu}
 \usepackage{hyperref}
 \usepackage{graphicx}
+\usepackage{pgfgantt}
 %Fixes descritpion label and body font overlap issues
 \usepackage{enumitem}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
@@ -14,15 +15,15 @@
 \graphicspath{{../images/}}
 
 \lstset{frame=tb,
-  language=C,
-  columns=flexible,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true,
-  tabsize=4
+	language=C,
+	columns=flexible,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=4
 }
 \usepackage{etoolbox}
 \patchcmd{\thebibliography}{\section*}{\subsection}{}{}
@@ -98,7 +99,7 @@ vSwitch instances.
 		scheduled by the ciao-scheduler on a need basis, when tenant
 		workloads are created.
 	\item[Generic Routing Encapsulation (GRE)]
-    		Enter Description Here \cite{rfc1701}
+		Enter Description Here \cite{rfc1701}
 	\item[Linux Bridge]
 		The built in Linux software bridge
 	\item[Network Node (NN)]
@@ -256,7 +257,32 @@ Open VSwitch switch instances.
 
 \clearpage
 \section{Appendixes}
-
+\subsection{Gantt Chart}
+%\noindent\resizebox{\textwidth}{!}{
+%\begin{tikzpicture}[x=1cm, y=.25cm]
+% Gantt chart location
+\begin{ganttchart}[
+		hgrid=true,
+		vgrid={*{10}{blue, dashed}},
+		y unit chart=0.75cm,
+		x unit=1.0cm
+	]{1}{9}
+\gantttitle{2016-2017}{9} \\
+\gantttitlelist{9,10,11,12,1,2,3,4,5}{1} \\
+\ganttgroup{Project Documentation}{1}{4} \\
+\ganttbar[progress=100]{Problem Statement}{1}{2} \\
+\ganttbar[progress=50]{Requirements Document}{2}{3} \\
+\ganttbar[progress=0]{Design Document}{3}{4}  \ganttnewline
+\ganttgroup{Implementation}{4}{7} \ganttnewline
+\ganttbar[progress=0,progress label text={}]{Open vSwitch GRE Tunnels}{4}{6} \\
+\ganttbar[progress=0,progress label text={}]{VxLan/nvGRE Implementation}{6}{7} \\
+\ganttbar[progress=0,progress label text={}]{Optional: Replace Linux Bridges with OVS Switches}{7}{7} \\
+\ganttgroup{Presentation}{7}{9} \\
+\ganttbar[progress=0,progress label text={}]{Build Presentation Board}{7}{9}\\
+\ganttbar[progress=0,progress label text={}]{Engineering Expo}{9}{9}
+\end{ganttchart}
+%\end{tikzpicture}
+%}
 \section{Index}
 
 \end{document}
