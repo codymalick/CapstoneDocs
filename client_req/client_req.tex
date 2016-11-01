@@ -1,0 +1,337 @@
+\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{float}
+\usepackage{longtable}
+\usepackage{tabu}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{pgfgantt}
+%Fixes descritpion label and body font overlap issues
+\usepackage{enumitem}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+\graphicspath{{../images/}}
+
+\renewcommand\thesection{\arabic{section}}
+\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+\renewcommand\thesectiondis{\arabic{section}}
+\renewcommand\thesubsectiondis{\thesectiondis.\arabic{subsection}}
+\renewcommand\thesubsubsectiondis{\thesubsectiondis.\arabic{subsubsection}}
+
+\setlength{\parindent}{0cm}
+
+\lstset{frame=tb,
+	language=C,
+	columns=flexible,
+	numberstyle=\tiny\color{gray},
+	keywordstyle=\color{blue},
+	commentstyle=\color{dkgreen},
+	stringstyle=\color{mauve},
+	breaklines=true,
+	breakatwhitespace=true,
+	tabsize=4
+}
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*}{\subsection}{}{}
+\patchcmd{\thebibliography}{\addcontentsline{toc}{section}{\refname}}{}{}{}
+
+\begin{document}
+\begin{titlepage}
+	\title{CS 461 - Fall 2016 - Client Requirements Document}
+	\author{Matthew Johnson, Garrett Smith, Cody Malick\\Cloud Orchestra}
+	\date{October 28, 2016}
+	\maketitle
+	\vspace{4cm}
+	\begin{abstract}
+		\noindent This document outlines the requirements for the Cloud Orchestration
+		Networking project sponsored by Intel Corporation. It formally defines the
+		purpose, scope, description, function, use, constraints, and specific
+		requirements of the project. Although there are no specific design decisions
+		made, it will be used as a building block for the rest of the design,
+		implementation, and testing process.
+
+	\end{abstract}
+
+\end{titlepage}
+\tableofcontents
+\clearpage
+
+\section{Introduction}
+
+\subsection{Purpose}
+
+Intel, while developing its Software Defined Network implementation into Ciao, has found
+a need for a more advanced form of network bride than the standard Linux bridge. The initial
+implementation using Linux bridges and GRE tunnels has worked well, but as further development was
+done on Ciao, the need for modern packet encapsulation and other innovative protocols were found to
+be needed. Implementing a network mode in Ciao utilizing Open vSwitch-created GRE tunnels would
+allow the network to utilize advanced networking techniques to increase performance, such as
+modern packet encapsulation methods. This addition would be used by those implementing Ciao in
+their own organizations or businesses to further increase speed and availability of features in
+their cloud.
+
+\subsection{Scope}
+
+The scope of the Cloud Orchestration project encapsulates the following two main goals, followed
+by one additional stretch goal:
+
+\subsubsection{Open vSwitch GRE Tunnel}
+
+The first goal of the project is to switch the GRE tunnel implementation with the Open vSwitch
+created GRE tunnel. This will allow for newer packet encapsulation techniques to be used, as
+well as provide the option to test packet acceleration.
+
+\subsubsection{Test and Implement Best Performing Tunnel Implementation}
+
+Switch the tunneling implementation to VxLAN/nvGRE based on performance measurements of VxLAN and nvGRE
+on data center network cards.
+
+\subsubsection{Stretch Goal, Replace Linux Bridge}
+
+The final objective and stretch goal of the project is to replace the Linux bridges with Open
+vSwitch instances.
+
+
+\subsubsection{Distribution of Work}
+Following is the distribution of work scheduled for the duration of the project:\\\\
+% Gantt chart location
+\begin{ganttchart}[
+		hgrid=true,
+		vgrid={*{10}{blue, dashed}},
+		y unit chart=0.75cm,
+		x unit=1.5cm
+	]{1}{9}
+\gantttitle{2016-2017}{9} \\
+\gantttitlelist{9,10,11,12,1,2,3,4,5}{1} \\
+\ganttgroup{Project Documentation}{1}{4} \\
+\ganttbar[progress=100]{Problem Statement}{1}{2} \\
+\ganttbar[progress=50]{Requirements Document}{2}{3} \\
+\ganttbar[progress=0]{Design Document}{3}{4}  \ganttnewline
+\ganttgroup{Implementation}{4}{7} \ganttnewline
+\ganttbar[progress=0,progress label text={}]{Open vSwitch GRE Tunnels}{4}{6} \\
+\ganttbar[progress=0,progress label text={}]{VxLan/nvGRE Implementation}{6}{7} \\
+\ganttbar[progress=0,progress label text={}]{Linux Bridges to OVS Switches}{7}{7} \\
+\ganttgroup{Presentation}{7}{9} \\
+\ganttbar[progress=0,progress label text={}]{Build Presentation Board}{7}{9}\\
+\ganttbar[progress=0,progress label text={}]{Engineering Expo}{9}{9}
+\end{ganttchart}
+
+\subsection{Definitions, acronyms, and abbreviations}
+
+\begin{description}[leftmargin=12em,style=nextline]
+	\item[Bridge]
+		Software or hardware that connects two or more network segments.
+	\item [Cloud]
+		A huge, amorphus network of servers somewhere~\cite{xkcd908}.
+	\item[Cloud Orchestration]
+		An easy to deploy, secure, scalable cloud orchestration system
+		which handles virtual machines, containers, and bare metal apps
+		agnostically as generic workloads~\cite{ciaoReadme}.
+	\item[CNCI]
+		Virtual Machines automatically configured by the ciao-controller,
+		scheduled by the ciao-scheduler on a need basis, when tenant
+		workloads are created~\cite{ciaoNetworking}.
+	\item[Generic Routing Encapsulation (GRE)]
+		Encapsulation of an arbitrary network layer protocol so it can
+		be sent over another arbitrary network layer protocol~\cite{rfc1701}.
+	\item[Linux Bridge]
+		Configurable software bridge built into the Linux
+		kernel\cite{linuxBridge}. 
+	\item[Network Node (NN)]
+		A Network Node is used to aggregate network traffic for all
+		tenants while still keeping individual tenant traffic isolated
+		from all other the tenants using special virtual machines called
+		Compute Node Concentrators (or CNCIs)~\cite{ciaoNetworking}.
+	\item[nvGRE]
+		Network Virtualization using Generic Routing Encapsulation~\cite{rfc7637}.
+	\item[Open vSwitch]
+		Open source multilayer software switch with support for
+		distribution across multiple physical devices~\cite{ovs}.
+	\item[OVS]
+		Open vSwitch~\cite{ovs}.
+	\item[Packet Acceleration]
+		Increasing the speed of the processing and transfer of network packets.
+	\item[Packet Encapsulation]
+		Attaching the headers for a network protocol to a packet so it 
+		can be transmitted using that protocol~\cite{networkingTextbook}.
+	\item[SSNTP]
+		The Simple and Secure Node Transfer Protocol (SSNTP) is a
+		custom, fully asynchronous and TLS based application layer
+		protocol. All Cloud Integrated Advanced Orchestrator (CIAO)
+		components communicate with each others over SSNTP~\cite{ciaoSSNTP}.
+	\item[Tunnel]
+		Point to point network connection that encapsulates traffic
+		between points~\cite{networkingTextbook}.
+	\item[VxLAN]
+		Virtual Extensible Local Area Network~\cite{rfc7348}.
+\end{description}
+
+\bibliographystyle{IEEEtran}
+\bibliography{client_req}
+
+\subsection{Overview}
+The following section describes more details about the product, including 
+product perspective, specific requirements, functionality requirements, and any
+assumptions or dependecies used. The section is organized in the following
+fashion:
+\begin{enumerate}
+	\item Overall Description
+	\item Product Perspective
+	\item Product Functions
+	\item User Characteristics
+	\item Constraints
+	\item Reliability
+	\item Security
+	\item Specific Requirements
+\end{enumerate}
+
+\section{Overall Description}
+
+\subsection{Product Perspective}
+
+The SDN we implement will be utilized by Ciao to transfer packets between
+compute nodes and control nodes on a cloud cluster. For this purpose the mode
+must be fully integrated into the Ciao infrastructure and must behave similarly
+to what is already in place.
+
+Because this software will be a component of a larger system, it must follow the
+design of that larger system and be fully integrated. Because Ciao is
+implemented in the Go programming language, so too must this SDN implementation
+be written in Go. The networking mode must route packets between ports on
+different nodes using networking protocols.
+
+The SDN that is implemented must support the following structure of the cloud in
+Ciao:
+
+\begin{figure}[H]
+	\caption{Ciao Network Topology~\cite{ciaoNetTopology}}
+	\begin{center}
+		\makebox[\textwidth]{\includegraphics[width=\textwidth]{ciao-networking.eps}}
+	\end{center}
+\end{figure}
+
+
+Ciao has several functional components that must be worked with:
+
+\begin{description}[leftmargin=12em,style=nextline]
+	\item[libsnnet]
+		Provides networking APIs to the ciao-launcher to create tenant
+		specific network interfaces on compute nodes and CNCI specific
+		network interfaces on a network node.
+	\item[ciao-cnci-agent]
+		A SSNTP client which connects to the ciao-scheduler and runs
+		within a CNCI VM and configures tenant network connectivity by
+		interacting with the ciao-controller and ciao-launchers using
+		the ciao-scheduler. The ciao-cnci-agent can also be run on
+		physical nodes if desired.
+	\item[docker-plugin]
+		Provides unified networking between VM and Docker workloads.
+\end{description}
+
+\subsection{Product Functions}
+
+Ciao networking must support the following functionality.
+
+\begin{enumerate}
+	\item Secure isolated overlay network - The networking implementation
+		must provide each tenant with a secure isolated overlay network
+		without the need for any configuration by the tenant and minimal
+		configuration by the data center operator.
+	\item Auto discovery of compute/network nodes - Auto discover roles of
+		nodes when they are attached to the network.
+	\item Diverse and scalable - Support large number of tenants with large
+		or small number of workloads.
+	\item Work on different platforms - Operate on any Linux distribution
+		by limiting the number of dependencies on user-space tools and
+		leveraging Linux kernel interfaces whenever possible.
+	\item Migrate workloads - Provide the ability to migrate workloads from
+		a Compute Node on demand or when a CN crashes without tenant
+		intervention. Provide the ability to migrate CNCIs on demand or
+		when a Network Node crashes.
+	\item Encrypt traffic - Provide the ability to transparently encrypt all
+		tenant traffic even within the data center network.
+	\item Create GRE tunnels with Open VSwitch
+	\item Support for tenant and workload level security rules
+	\item Support for tenant and workload level NAT rules (inbound and outbound)
+\end{enumerate}
+
+\subsection{User characteristics}
+
+The users of this mode in Ciao will be educated and technically-minded data
+center administrators. They will be familiar with cloud technologies and
+networks, but software-defined and hardware-defined.
+
+Despite this, however, due to Ciao's goal of minimum configuration the user may
+have a lower knowledge base than, by contrast, the normal network administrator
+for an openstack cluster.
+
+\subsection{Constraints}
+
+\subsubsection{High-order language requirements}
+
+As mentioned above, it is necessary to write this mode in the Go programming
+language in order to integrate with the rest of Ciao.
+
+\subsubsection{Reliability}
+
+The networking mode must be completely reliable and include the ability to
+migrate workloads when a compute or network node crashes with little-to-no
+interruption to the network capabilities for the tenants and must do so without
+tenant intervention.
+
+\subsubsection{Security}
+
+Traffic must be fully and transparently encrypted even within the data center
+network. It must utilize Simple and Secure Node Transfer Protocol (SSNTP) to
+ensure security of the traffic between the nodes.
+
+\section{Specific Requirements}
+
+The main requirement is that Open VSwitch is used to create the GRE tunnels in
+the SDN implementation. A further goal is to switch the tunneling implementation
+to VxLAN or nvGRE based on performance measurements of each. The result of those
+performance metrics will dictate which is used.
+
+A stretch goal is to replace the currently-implemented linux bridges with
+Open VSwitch switch instances.
+
+The specific requirements for this project are as follows:
+
+\begin{enumerate}
+	\item Documentation
+		\begin{enumerate}
+			\item Problem statement
+			\item Requirements document
+			\item Design document
+		\end{enumerate}
+	\item Implementation
+		\begin{enumerate}
+			\item Open vSwitch GRE tunnels - Open VSwitch must be
+				used to create the GRE tunnels in the SDN
+				implementation. Currently, Ciao uses
+				Linux-created GRE tunnels.
+			\item VxLAN/nvGRE implementation - The second part is
+				to switch the tunneling implementation to a
+				VxLAN or nvGRE implementation based on speed
+				performance. The faster implementation will be
+				kept.
+			\item Optional: replace Linux bridges with OVS
+				switches - if enough time remains, replace the
+				Linux bridges with switches created by Open
+				VSwitch.
+		\end{enumerate}
+	\item Presentation
+		\begin{enumerate}
+			\item Build presentation board
+			\item Present at Engineering Expo
+		\end{enumerate}
+\end{enumerate}
+
+\clearpage
+
+\end{document}
