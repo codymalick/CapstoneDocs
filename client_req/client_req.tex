@@ -23,6 +23,7 @@
 \renewcommand\thesubsectiondis{\thesectiondis.\arabic{subsection}}
 \renewcommand\thesubsubsectiondis{\thesubsectiondis.\arabic{subsubsection}}
 
+\setlength{\parindent}{0cm}
 
 \lstset{frame=tb,
 	language=C,
@@ -97,13 +98,13 @@ vSwitch instances.
 
 
 \subsubsection{Distribution of Work}
-Following is the distribution of work scheduled for the duration of the project:\\
+Following is the distribution of work scheduled for the duration of the project:\\\\
 % Gantt chart location
 \begin{ganttchart}[
 		hgrid=true,
 		vgrid={*{10}{blue, dashed}},
 		y unit chart=0.75cm,
-		x unit=1.0cm
+		x unit=1.5cm
 	]{1}{9}
 \gantttitle{2016-2017}{9} \\
 \gantttitlelist{9,10,11,12,1,2,3,4,5}{1} \\
@@ -114,7 +115,7 @@ Following is the distribution of work scheduled for the duration of the project:
 \ganttgroup{Implementation}{4}{7} \ganttnewline
 \ganttbar[progress=0,progress label text={}]{Open vSwitch GRE Tunnels}{4}{6} \\
 \ganttbar[progress=0,progress label text={}]{VxLan/nvGRE Implementation}{6}{7} \\
-\ganttbar[progress=0,progress label text={}]{Optional: Replace Linux Bridges with OVS Switches}{7}{7} \\
+\ganttbar[progress=0,progress label text={}]{Linux Bridges to OVS Switches}{7}{7} \\
 \ganttgroup{Presentation}{7}{9} \\
 \ganttbar[progress=0,progress label text={}]{Build Presentation Board}{7}{9}\\
 \ganttbar[progress=0,progress label text={}]{Engineering Expo}{9}{9}
@@ -128,16 +129,19 @@ Following is the distribution of work scheduled for the duration of the project:
 	\item [Cloud]
 		A huge, amorphus network of servers somewhere~\cite{xkcd908}.
 	\item[Cloud Orchestration]
-		An easy to deploy, secure, scalable cloud orchestration system which handles 
-		virtual machines, containers, and bare metal apps agnostically as generic workloads~\cite{ciaoReadme}.
+		An easy to deploy, secure, scalable cloud orchestration system
+		which handles virtual machines, containers, and bare metal apps
+		agnostically as generic workloads~\cite{ciaoReadme}.
 	\item[CNCI]
 		Virtual Machines automatically configured by the ciao-controller,
 		scheduled by the ciao-scheduler on a need basis, when tenant
 		workloads are created~\cite{ciaoNetworking}.
 	\item[Generic Routing Encapsulation (GRE)]
-		Encapsulation of an arbitrary network layer protocol so it can be sent over another arbitrary network layer protocol~\cite{rfc1701}.
+		Encapsulation of an arbitrary network layer protocol so it can
+		be sent over another arbitrary network layer protocol~\cite{rfc1701}.
 	\item[Linux Bridge]
-		Configurable software bridge built into the Linux kernel~\cite{linuxBridge}. 
+		Configurable software bridge built into the Linux
+		kernel\cite{linuxBridge}. 
 	\item[Network Node (NN)]
 		A Network Node is used to aggregate network traffic for all
 		tenants while still keeping individual tenant traffic isolated
@@ -146,13 +150,15 @@ Following is the distribution of work scheduled for the duration of the project:
 	\item[nvGRE]
 		Network Virtualization using Generic Routing Encapsulation~\cite{rfc7637}.
 	\item[Open vSwitch]
-		Open source multilayer software switch with support for distribution across multiple physical devices~\cite{ovs}.
+		Open source multilayer software switch with support for
+		distribution across multiple physical devices~\cite{ovs}.
 	\item[OVS]
 		Open vSwitch~\cite{ovs}.
 	\item[Packet Acceleration]
 		Increasing the speed of the processing and transfer of network packets.
 	\item[Packet Encapsulation]
-		Attaching the headers for a network protocol to a packet so it can be transmitted using that protocol~\cite{networkingTextbook}.
+		Attaching the headers for a network protocol to a packet so it 
+		can be transmitted using that protocol~\cite{networkingTextbook}.
 	\item[SSNTP]
 		The Simple and Secure Node Transfer Protocol (SSNTP) is a
 		custom, fully asynchronous and TLS based application layer
@@ -317,7 +323,5 @@ The specific requirements for this project are as follows:
 \end{enumerate}
 
 \clearpage
-\section{Appendixes}
-\section{Index}
 
 \end{document}
