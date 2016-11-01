@@ -311,9 +311,19 @@ The specific requirements for this project are as follows:
 		\end{enumerate}
 	\item Implementation
 		\begin{enumerate}
-			\item Open vSwitch GRE tunnels
-			\item VxLAN/nvGRE implementation
-			\item Optional: replace Linux bridges with OVS switches
+			\item Open vSwitch GRE tunnels - Open VSwitch must be
+				used to create the GRE tunnels in the SDN
+				implementation. Currently, Ciao uses
+				Linux-created GRE tunnels.
+			\item VxLAN/nvGRE implementation - The second part is
+				to switch the tunneling implementation to a
+				VxLAN or nvGRE implementation based on speed
+				performance. The faster implementation will be
+				kept.
+			\item Optional: replace Linux bridges with OVS
+				switches - if enough time remains, replace the
+				Linux bridges with switches created by Open
+				VSwitch.
 		\end{enumerate}
 	\item Presentation
 		\begin{enumerate}
