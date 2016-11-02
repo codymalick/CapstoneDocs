@@ -65,21 +65,22 @@
 
 \subsection{Purpose}
 
-Ciao is Intel's Cloud Integrated Advanced Orchestrator (ciao). Ciao schedules and balances workload
-throughout a large set of servers. Intel, While developing its Software Defined Network implementation
-into Ciao, has found a need for a more advanced form of network bridge than the standard Linux bridge.
+Ciao is Intel's Cloud Integrated Advanced Orchestrator (Ciao). Ciao schedules and balances workload
+throughout a large set of servers. The job of distributing workload over a large number of servers is a difficult
+task. Ciao does this well, but has room for improvement in the area of network security and speed. Our
+project is to add additional functionality to Ciao's network systems, and enable technology that will
+increase the speed that these systems operate at.
+
+
+While developing its Software Defined Network implementation into Ciao, Intel has found a need for a
+more advanced form of network bridge than the standard Linux bridge.
 The initial implementation using Linux bridges and GRE tunnels has worked well, but as further
 development was done on Ciao, the need for modern packet encapsulation and other innovative protocols
-were found to be needed. Implementing a network mode in Ciao utilizing Open vSwitch-created GRE
+was found to be needed. Implementing a network mode in Ciao utilizing Open vSwitch-created GRE
 tunnels would allow the network to utilize advanced networking techniques to increase performance,
 such as modern packet encapsulation methods. This addition would be used by those implementing Ciao in
 their own organizations or businesses to further increase speed and availability of features in
 their cloud.
-
-In less technical terms, the job of distributing workload over a large number of servers is a difficult
-task. Ciao does this well, but has room for improvement in the area of network security and speed. Our
-project is to add additional functionality to Ciao's network systems, and enable technology that will
-increase the speed that these systems operate at.
 
 \subsection{Scope}
 
@@ -88,7 +89,7 @@ by one additional stretch goal:
 
 \subsubsection{Open vSwitch GRE Tunnel}
 
-The first goal of the project is to switch the GRE tunnel implementation with the Open vSwitch
+The first goal of the project is to switch the current GRE tunnel implementation with the Open vSwitch
 created GRE tunnel. This will allow for newer packet encapsulation techniques to be used, as
 well as provide the option to test packet acceleration.
 
@@ -176,7 +177,7 @@ fashion:
 
 \subsection{Product Perspective}
 
-The SDN we implement will be utilized by Ciao to transfer packets between
+The Software Defined Network (SDN) we implement will be utilized by Ciao to transfer packets between
 compute nodes and control nodes on a cloud cluster. For this purpose the mode
 must be fully integrated into the Ciao infrastructure and must behave similarly
 to what is already in place.
@@ -248,9 +249,8 @@ The users of this mode in Ciao will be educated and technically-minded data
 center administrators. They will be familiar with cloud technologies and
 networks, but software-defined and hardware-defined.
 
-Despite this, however, due to Ciao's goal of minimum configuration the user may
-have a lower knowledge base than, by contrast, the normal network administrator
-for an Openstack cluster.
+Due to Ciao's goal of minimum configuration, users are not required to
+have the knowledge base of a normal Openstack network administrator.
 
 \subsection{Constraints}
 
