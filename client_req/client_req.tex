@@ -278,6 +278,32 @@ Traffic must be fully and transparently encrypted even within the data center
 network. It must utilize Simple and Secure Node Transfer Protocol (SSNTP) to
 ensure the security of traffic between the nodes.
 
+\subsubsection{Software Interfaces}
+
+Our networking mode must, as mentioned, be fully integrated with Ciao and able
+to facilitate communication between different compute and network nodes in a
+cloud cluster. Additionally, these connections must be secure and follow the
+SSNTP protocol.
+
+The networking mode must also work in Ciao running on top of Clear Linux.
+
+\subsubsection{Hardware Interfaces}
+
+The network and control nodes will all be Intel NUCs and will be connected by
+ethernet ports and a switch. Other than the basic hardware requirements, there
+will be no other hardware interfaces, as this is a software defined solution.
+
+\subsection{Assumptions and Dependencies}
+
+A main assumption is that the Oregon State University will not interfere with
+our networking implementation. As we had issues with the OSU network in the
+beginning of this project, this is a valid concern.
+
+Dependencies include Ciao and the physical hardware (5 Intel NUCs and a network
+switch) required to run the cluster. Additional dependencies are a Linux
+operating system, the Go programming language, Open VSwitch, and basic
+networking OS libraries.
+
 \section{Specific Requirements}
 
 The main requirement is that Open VSwitch is used to create the GRE tunnels in
