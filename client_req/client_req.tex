@@ -84,8 +84,14 @@ their cloud.
 
 \subsection{Scope}
 
-The scope of the Cloud Orchestration project encapsulates the following two main goals, followed
-by one additional stretch goal:
+Ciao exists as a cloud orchestrator for cloud clusters. It is inherently necessary for the separate
+nodes in the cloud cluster to be able to talk to each other. Without a reliable and secure
+software defined network Ciao would have little purpose. Utilization of Open VSwitch GRE
+tunnels allows Ciao to become more scalable and enables the inclusion of packet-acceleration
+technology.
+
+The software we will be developing will be an Open VSwitch networking mode within Ciao,
+encapsulating the following goals:
 
 \subsubsection{Open vSwitch GRE Tunnel}
 
