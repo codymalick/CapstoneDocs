@@ -65,15 +65,21 @@
 
 \subsection{Purpose}
 
-Intel, while developing its Software Defined Network implementation into Ciao, has found
-a need for a more advanced form of network bride than the standard Linux bridge. The initial
-implementation using Linux bridges and GRE tunnels has worked well, but as further development was
-done on Ciao, the need for modern packet encapsulation and other innovative protocols were found to
-be needed. Implementing a network mode in Ciao utilizing Open vSwitch-created GRE tunnels would
-allow the network to utilize advanced networking techniques to increase performance, such as
-modern packet encapsulation methods. This addition would be used by those implementing Ciao in
+Ciao is Intel's Cloud Integrated Advanced Orchestrator (ciao). Ciao schedules and balances workload
+throughout a large set of servers. Intel, While developing its Software Defined Network implementation
+into Ciao, has found a need for a more advanced form of network bridge than the standard Linux bridge.
+The initial implementation using Linux bridges and GRE tunnels has worked well, but as further
+development was done on Ciao, the need for modern packet encapsulation and other innovative protocols
+were found to be needed. Implementing a network mode in Ciao utilizing Open vSwitch-created GRE
+tunnels would allow the network to utilize advanced networking techniques to increase performance,
+such as modern packet encapsulation methods. This addition would be used by those implementing Ciao in
 their own organizations or businesses to further increase speed and availability of features in
 their cloud.
+
+In less technical terms, the job of distributing workload over a large number of servers is a difficult
+task. Ciao does this well, but has room for improvement in the area of network security and speed. Our
+project is to add additional functionality to Ciao's network systems, and enable technology that will
+increase the speed that these systems operate at.
 
 \subsection{Scope}
 
@@ -97,37 +103,13 @@ The final objective and stretch goal of the project is to replace the Linux brid
 vSwitch instances.
 
 
-\subsubsection{Distribution of Work}
-Following is the distribution of work scheduled for the duration of the project:\\\\
-% Gantt chart location
-\begin{ganttchart}[
-		hgrid=true,
-		vgrid={*{10}{blue, dashed}},
-		y unit chart=0.75cm,
-		x unit=1.5cm
-	]{1}{9}
-\gantttitle{2016-2017}{9} \\
-\gantttitlelist{9,10,11,12,1,2,3,4,5}{1} \\
-\ganttgroup{Project Documentation}{1}{4} \\
-\ganttbar[progress=100]{Problem Statement}{1}{2} \\
-\ganttbar[progress=50]{Requirements Document}{2}{3} \\
-\ganttbar[progress=0]{Design Document}{3}{4}  \ganttnewline
-\ganttgroup{Implementation}{4}{7} \ganttnewline
-\ganttbar[progress=0,progress label text={}]{Open vSwitch GRE Tunnels}{4}{6} \\
-\ganttbar[progress=0,progress label text={}]{VxLan/nvGRE Implementation}{6}{7} \\
-\ganttbar[progress=0,progress label text={}]{Linux Bridges to OVS Switches}{7}{7} \\
-\ganttgroup{Presentation}{7}{9} \\
-\ganttbar[progress=0,progress label text={}]{Build Presentation Board}{7}{9}\\
-\ganttbar[progress=0,progress label text={}]{Engineering Expo}{9}{9}
-\end{ganttchart}
-
 \subsection{Definitions, acronyms, and abbreviations}
 
 \begin{description}[leftmargin=12em,style=nextline]
 	\item[Bridge]
 		Software or hardware that connects two or more network segments.
 	\item [Cloud]
-		A huge, amorphus network of servers somewhere~\cite{xkcd908}.
+		A huge, amorphous network of servers somewhere~\cite{xkcd908}.
 	\item[Cloud Orchestration]
 		An easy to deploy, secure, scalable cloud orchestration system
 		which handles virtual machines, containers, and bare metal apps
@@ -177,7 +159,7 @@ Following is the distribution of work scheduled for the duration of the project:
 \subsection{Overview}
 The following section describes more details about the product, including 
 product perspective, specific requirements, functionality requirements, and any
-assumptions or dependecies used. The section is organized in the following
+assumptions or dependencies used. The section is organized in the following
 fashion:
 \begin{enumerate}
 	\item Overall Description
@@ -268,7 +250,7 @@ networks, but software-defined and hardware-defined.
 
 Despite this, however, due to Ciao's goal of minimum configuration the user may
 have a lower knowledge base than, by contrast, the normal network administrator
-for an openstack cluster.
+for an Openstack cluster.
 
 \subsection{Constraints}
 
@@ -297,7 +279,7 @@ the SDN implementation. A further goal is to switch the tunneling implementation
 to VxLAN or nvGRE based on performance measurements of each. The result of those
 performance metrics will dictate which is used.
 
-A stretch goal is to replace the currently-implemented linux bridges with
+A stretch goal is to replace the currently-implemented Linux bridges with
 Open VSwitch switch instances.
 
 The specific requirements for this project are as follows:
@@ -331,6 +313,31 @@ The specific requirements for this project are as follows:
 			\item Present at Engineering Expo
 		\end{enumerate}
 \end{enumerate}
+
+\section{Gantt Chart}
+Following is the distribution of work scheduled for the duration of the project:\\\\
+% Gantt chart location
+\begin{ganttchart}[
+		hgrid=true,
+		vgrid={*{10}{blue, dashed}},
+		y unit chart=0.75cm,
+		x unit=1.5cm
+	]{1}{9}
+\gantttitle{2016-2017}{9} \\
+\gantttitlelist{9,10,11,12,1,2,3,4,5}{1} \\
+\ganttgroup{Project Documentation}{1}{4} \\
+\ganttbar[progress=100]{Problem Statement}{1}{2} \\
+\ganttbar[progress=50]{Requirements Document}{2}{3} \\
+\ganttbar[progress=0]{Design Document}{3}{4}  \ganttnewline
+\ganttgroup{Implementation}{4}{7} \ganttnewline
+\ganttbar[progress=0,progress label text={}]{Open vSwitch GRE Tunnels}{4}{6} \\
+\ganttbar[progress=0,progress label text={}]{VxLan/nvGRE Implementation}{6}{7} \\
+\ganttbar[progress=0,progress label text={}]{Linux Bridges to OVS Switches}{7}{7} \\
+\ganttgroup{Presentation}{7}{9} \\
+\ganttbar[progress=0,progress label text={}]{Build Presentation Board}{7}{9}\\
+\ganttbar[progress=0,progress label text={}]{Engineering Expo}{9}{9}
+\end{ganttchart}
+
 
 \clearpage
 
