@@ -38,6 +38,8 @@ tabsize=4
 	\end{abstract}
 
 \end{titlepage}
+\tableofcontents
+\clearpage
 
 \section{Programming Languages}
 
@@ -90,7 +92,7 @@ capabilities, and the overall ease of use.
 The most available language in terms of libraries and the language itself
 (regarding its standard libraries) is obviously C because of how ubiquitous it
 is, how universally available it is, and how extensive its standard libraries
-are\cite{SOC}.
+are~\cite{SOC}.
 
 Close behind C in availability is Python. Python is nearly as available as C is
 because of how popular it has become in the last ten years~\cite{PYPL}. Python
@@ -125,7 +127,7 @@ Python, and C~\cite{davecheney}:
 
 \begin{lstlisting}
 var gocon int32 = 2014              // Go:      4 bytes
-uint32_t gocon = 2014;             // C:       4 bytes
+uint32_t gocon = 2014;              // C:       4 bytes
 gocon = 2014                        #  Python: 24 bytes
 \end{lstlisting}
 
@@ -134,26 +136,93 @@ which is considerable since C is often the standard for fast programming
 languages. Compared to Python, as would be expected, Go and C can perform up to
 45 times faster depending on the workload~\cite{benchmarks}.
 
-\subsubsection{Security}
-
 \subsubsection{Concurrency}
 
+Concurrency is a key consideration for programming languages when implementing a
+software defined network. All operations must happen quickly and in parallel and
+must scale effortlessly. Therefore, it is necessary that all operations run in
+their own individual threads.
+
+C has an extensive and established framework for parallel computing by utilizing
+pthreads. Mutexes can help the programmer protect against race conditions in
+their code, but the responsibility is up to the programmer to make their
+software thread-safe.
+
+Python has similar tools as C, but the parallelization is handled by a global
+interpreter lock (GIL). The GIL is a "mutex that prevents multiple native
+threads from executing Python bytecodes at once." GIL is necessary in python
+because the underlying C code that implements python is not thread-safe. The GIL
+"prevents multithreaded CPython programs from taking full advantage of
+multiprocessor systems in certain situations"~\cite{GIL}.
+
+Go, on the other hand, combines the power of C and the ease of use and
+lock-handling of Python. You can use goroutines (functions that are capable of
+running concurrently with other functions) to create concurrency. Utilization of
+goroutines and other builtin language functionalities make concurrency very easy
+and lightweight in Go. An example from golang-book.com demonstrates how simple
+and lightweight threads in Go can actually be~\cite{goroutines}:
+
+\begin{lstlisting}
+package main
+
+import "fmt"
+
+func f(n int) {
+	for i := 0; i < 10; i++ {
+		fmt.Println(n, ":", i)
+	}
+}
+
+func main() {
+	go f(0)
+	var input string
+	fmt.Scanln(&input)
+}
+\end{lstlisting}
+
 \subsubsection{Ease of use}
+
+Python is by far the easiest to learn, use, and read. It focuses on
+"readability, coherence, and software quality" and is recognized by many to be
+extremely easy to use~\cite{learningpython}
+
+C, being the oldest and lowest-level language of the three, is not a simple
+language to work with. Many things that are normally abstracted away in other
+languages are required to be programmed explicitly by the programmer. String
+manipulation is especially difficult in C.
+
+Go is easier to learn than C and makes many improvements in terms of ease of
+use. It was even designed this way. Go was designed to make programming
+efficient in large-scale software development across teams with varying levels
+of experience and skill. It was designed with "built-in concurrency and garbage
+collection" and includes "rigorous dependency management."~\cite{godesign}.
+These features are important for the work required by this project.
+
+Another important note is that the rest of Ciao is written in Go, and while
+possible to create interfaces from C or Python for Go, it would be very
+difficult. Another option would be to re-implement Ciao in another language,
+which is so difficult and time consuming that it cannot even be considered as an
+option. With this consideration, Go is the clear winner in terms of ease of use.
 
 \subsection{Direct Comparison}
 
 \begin{center}
 	\begin{tabular}{| l | l | l | l | l | l |}
 		\hline
-		Language & Availability & Efficiency & Security & Concurrency &
-		Ease of use \\ \hline
-		Go & 3 & 1 & - & - & 1 \\ \hline
-		C & 1 & 2 & - & - & 3 \\ \hline
-		Python & 2 & 3 & 3 & 3 & 2 \\ \hline
+		Language & Availability & Efficiency & Concurrency & Ease of use
+		\\ \hline
+		Go     & 3 & 1 & 1 & 1 \\ \hline
+		C      & 1 & 2 & 2 & 3 \\ \hline
+		Python & 2 & 3 & 3 & 2 \\ \hline
 	\end{tabular}
 \end{center}
 
 \subsection{Selection}
+
+Based on the criteria explored above, the Go programming language is the
+language we are selecting to implement our solution in. The remainder of the
+technical review will be based on the assumption that we will be implementing
+our solution in Go.
 
 \section{Networking Libraries}
 
