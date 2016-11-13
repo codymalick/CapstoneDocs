@@ -474,7 +474,7 @@ Because Ciao works off of a virtual network, it's important to pick the right
 tool for encapsulating packets to ensure they arrive at their destination. The
 standard virtual network tools have proven to be limited in their ability to
 scale. What the following tools do is allow for networks to scale to order of
-magnatudes higher than a standard virtual network would. As for virtual networks
+magnitudes higher than a standard virtual network would. As for virtual networks
 , virtual networks allow for virtual machines, or containers (docker, rkt) to be
 visible to the virtual network switch. This is powerful as a VM or container
 does not have a physical network card.
@@ -496,7 +496,7 @@ fifty bytes. \cite{vxlan} Speed will be a deciding factor in which interface
 is chosen, so a fifty byte overhead is quite good.
 
 \subsubsection{nvGRE}
-NvGRE is another relatively new virtualization standard developed in tandum by
+NvGRE is another relatively new virtualization standard developed in tandem by
 Microsoft, HP, Intel, HP, and Dell.\cite{nvgre-info} NvGRE sports a few of the
 same features as VxLAN, the primary difference between the two being the header
 field. They use different UDP port numbers and use a different bit to indicate
@@ -514,7 +514,7 @@ a protocol to use as overhead must be minimized.
 \subsection{Goals for use in design}
 The goal for these technologies is minimization of overhead while allowing for a
 virtual network to be mapped and allow for thousands of VMs and containers to
-become available easily. This problem of scalibility is a major one, and one
+become available easily. This problem of scalability is a major one, and one
 that has to be addressed when created large networks of computers hosting VMs or
 virtual machines.
 
@@ -537,10 +537,10 @@ inspect the packet. This could be a major slowdown if the packet inspection is a
 frequent activity.\cite{nvgre-vs-vxlan}
 
 VxLAN on the otherhand, while adding an additional fifty bytes of overhead to
-every packet, still requires the deencapsulation of every packet out of
-the VxLAN format. The other downside here being reduced compatibility with
-existing routing hardware. This is less of an issue for this project as all of
-our routing devices will be implemented in software.\cite{nvgre-vs-vxlan}
+every packet, still requires the reversal of the encapsulation of every packet
+out of the VxLAN format. The other downside here being reduced compatibility
+with existing routing hardware. This is less of an issue for this project as all
+of our routing devices will be implemented in software.\cite{nvgre-vs-vxlan}
 
 STT has a significant disadvantage in the area of overhead when it comes to
 general use. It's primary design purpose at VMware was to carry large amounts of
@@ -570,6 +570,8 @@ production, on paper nvGRE seems to work better for our needs.
 %----------------------
 
 \section{GRE/Linux Bridges}
+Part of the project is generating GRE tunnels. Often the implementation of these
+different methods will vary.
 
 \subsection{Options}
 
