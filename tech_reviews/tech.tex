@@ -319,14 +319,14 @@ This will be less of a focus for evaluation purposes.
 
 \subsubsection{Speed}
 Speed is a major consideration when working with a software defined network.
-Our final selection for a protocol needs to be fast. Any major delays in 
+Our final selection for a protocol needs to be fast. Any major delays in
 communication due to encryption or protocol overhead is a concern. While each
 implementation of the protocol will have its pros and cons, here the focus
 will be on application overhead to keep the metric in measurable territory.
 
 SSL has two major components, the protocol, and the handshake protocol. The
 handshake protocol is important as it ensures the overall security and
-authenticity of the communication between point A and point B. 
+authenticity of the communication between point A and point B.
 ~\cite{topdown-ssl}
 
 %Diagram of SSL handshake here
@@ -337,6 +337,7 @@ authenticity of the communication between point A and point B.
 	\end{center}
 \end{figure}
 
+<<<<<<< HEAD
 The SSL/TLS handshakes are identical. As far as overhead the two protocols
 are very similar. The primary difference between them is their security levels,
 which will be discussed in the following section.
@@ -348,7 +349,7 @@ only have to do an authentication handshake, or SNTP Connection in this case,
 once. Once the client knows which server it is talking to, all connections
 no longer require a handshake step. This is a massive drop in needed overhead.
 \cite{ssntp} Once the handshake is established, the client communicates with
-the server in an asynchronous fashion as needed. 
+the server in an asynchronous fashion as needed.
 
 \subsubsection{Security}
 Security is important in choosing a communication protocol. If it wasn't, we
@@ -366,9 +367,9 @@ security or encryption at all.
 TLS is much better on this front as it is continually being updated. The latest
 release, version 1.2, uses AES, RC4, and a few other modern encryption ciphers.
 \cite{tls} Which encryption cipher is used is negotiated between the host and
-the client before communication begins. 
+the client before communication begins.
 
-SSNTP uses the TLS encryption protocols. On this front, it is equal to TLS. 
+SSNTP uses the TLS encryption protocols. On this front, it is equal to TLS.
 
 \subsubsection{Accessibility}
 All of the above protocols are well documented and easy to implement. In the
@@ -392,7 +393,7 @@ Here is a side by side comparison of the protocols in the form of a table:
 \subsection{Selection}
 For our project, the technology for protocols will be SSNTP. It does what SSL
 and TLS do equally security wise, but is much more light weight and is more
-accessible in the context of the project. 
+accessible in the context of the project.
 
 %----------------------
 
