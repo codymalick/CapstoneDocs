@@ -184,7 +184,7 @@ func main() {
 
 Python is by far the easiest to learn, use, and read. It focuses on
 "readability, coherence, and software quality" and is recognized by many to be
-extremely easy to use~\cite{learningpython}
+extremely easy to use~\cite{learningpython}.
 
 C, being the oldest and lowest-level language of the three, is not a simple
 language to work with. Many things that are normally abstracted away in other
@@ -252,31 +252,103 @@ our solution in Go.
 
 \section{Functional Testing Frameworks}
 
+There are several testing frameworks available for Go. These range from the
+basic and simple 'testing' library to the more complicated and in-depth GoConvey
+and Ginkgo frameworks. Depending on our choice here, we could either add too
+much extraneous work getting a testing framework setup, or we could end up with
+simple tests that do not meet our needs.
+
 \subsection{Options}
 
-\subsubsection{}
+\subsubsection{Standard 'testing' library}
 
-\subsubsection{}
+The simplest and most lightweight option is the standard 'testing' library. This
+can be expanded with the additional 'testify' library, which adds functionality
+for mocking, assertions, HTTP protocol, and basic functions.
 
-\subsubsection{}
+\subsubsection{GoConvey}
+
+GoConvey is a testing framework that allows you to track your test status with a
+generated web UI. The tests can run automatically every time you save a .go
+file. GoConvey also generates an html test coverage report that allows you to
+review where your tests are falling short.
+
+\subsubsection{Ginkgo}
+
+GinkGo is a testing framework that allows you to write specifications for your
+tests. It is lighter-weight than GoConvey and works primarily from the command
+line. GinkGo takes a black box approach to testing.
 
 \subsection{Goals for use in design}
 
+The goal of the testing framework is to continuously verify our solution.
+Testing is important for any software, but it is particularly important in cloud
+orchestration networking. Our solution must be robust, and that can only be
+verified through rigorous testing.
+
 \subsection{Criteria being evaluated}
 
-\subsubsection{Availability}
+The two important criteria when selecting a testing framework is the
+capabilities of the framework itself and the complexity of the framework. On one
+hand we want the tests to be powerful and support important features such as
+mocking and assertion. On the other hand we do not want the test framework to be
+so complicated that it is difficult to write tests.
 
-\subsubsection{Speed}
+\subsubsection{Capability}
 
-\subsubsection{Security}
+The most important aspect of the testing framework is its ability to perform
+mocking. This is essential in unit testing. All three of the test frameworks
+allow the programmer to perform mocking.
 
-\subsubsection{Concurrency}
+Another important capability is assertion testing. Once again, all three support
+assertion tests.
 
-\subsection{Discussion}
+A third important capability is randomization in testing. This is the best way
+to ensure corner cases are hit. This aspect, however, is provided by the Go
+standard library and therefore does not factor into this analysis.
+
+One area where GoConvey shines is in its ability to perform testing analysis and
+output an easy-to-use web user interface. Ginkgo also provides some extra
+functionality related to black box testing.
+
+\subsubsection{Complexity}
+
+Of the three frameworks, the testing package is by far the simplest. Since it
+exists in the standard library, there is no overhead of installation or setup to
+get started writing tests~\cite{testing}.
+
+Ginkgo is slightly more complicated to setup, since it is necessary to install
+and run a few Ginkgo-specific commands before ready to start writing tests. Once
+everything is ready, you can write tests, but must use Ginkgo-specific keywords
+and tests to utilize its full potential~\cite{ginkgo}.
+
+The most complex framework is the GoConvey suite. This is no surprise,
+considering how powerful it is. GoConvey requires the programmer to view the
+test results in a browser, as well~\cite{goconvey}. This is difficult for our
+purposes, since we will be doing much of our development on remote machines via
+ssh, and will not have access to an X server to view the results.
+
+\subsection{Direct Comparison}
+
+\begin{center}
+	\begin{tabular}{| l | l | l |}
+		\hline
+		Framework & Capability & Complexity
+		\\ \hline
+		testing  & 3 & 1  \\ \hline
+		GinkGo   & 2 & 2  \\ \hline
+		GoConvey & 1 & 3  \\ \hline
+	\end{tabular}
+\end{center}
 
 \subsection{Selection}
 
-\section{References}
+Although the direct comparison reveals that all three are equally averaged to
+second place overall, the decision here is weighted towards the lowest in
+complexity. Our solution will be complex and difficult to implement, we do not
+want to have to worry about learning how to use a complicate testing framework
+on top of everything else. The standard 'testing' package will be used for
+functional and unit testing of our solution.
 
 \bibliographystyle{IEEEtran}
 \bibliography{tech}
