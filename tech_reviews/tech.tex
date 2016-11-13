@@ -351,26 +351,73 @@ functional and unit testing of our solution.
 
 % Cody
 \section{Packet Level Protocols}
+One of the main components of our system is deciding which protocol will be
+used to move data from one node to the next. Ciao provides its own data
+transfer protocol using SSNTP. Comparing how SSNTP works in general to other
+data transfer formats will provide insight into which protocol should be used.
 
 \subsection{Options}
 
 \subsubsection{SSNTP}
+Simple and Secure Node Transfer Protocol is Intel's solution for the transfer
+of data inside of Ciao networks. It is based on Transport Layer Security (TLS),
+the defacto standard for secure data transfer over the Internet. Part of what
+sets Ciao apart from the competition is its simplicity, as well as concise
+message format.\cite{ssntp}
 
-\subsubsection{}
+\subsubsection{TLS}
+Transport Layer Security, or TLS, is the contemporary standard for secure data
+transfer across the Internet. It was built as an improvement upon the Secure
+Socket Layer protocol. It has great appeal as it is widely utilized, modern,
+and well studied.\cite{tls}
 
-\subsubsection{}
+\subsubsection{SSL}
+Secure Socket Layer, or SSL, was the first version of what eventually became
+TLS following its third major revision. Originally utilized in Netscape, it
+wasn't widely utilized until it's third major revision. Secure Socket Layer
+encrypts at the application layer, allowing broad general use. While being
+somewhat older than the other protocols on the list, it is well understood and
+the security has been well proven.\cite{ssl}
 
 \subsection{Goals for use in design}
+The primary goal of the selected protocol is fast, stable, secure, and
+scalable communication between compute nodes and the orchestration node in
+Ciao. These are simple, but critical goals for the project.
 
 \subsection{Criteria being evaluated}
-
-\subsubsection{Availability}
+The criteria for each protocol will be their security capabilities, protocol
+overhead, and ease of use. While stability is a concern, each protocol has
+shown stability through implementation in other applications many times over.
+This will be less of a focus for evaluation purposes.
 
 \subsubsection{Speed}
+Speed is a major consideration when working with a software defined network.
+Our final selection for a protocol needs to be fast. Any major delays in
+communication due to encryption or protocol overhead is a concern. While each
+implementation of the protocol will have its pros and cons, here the focus
+will be on application overhead to keep the metric in measurable territory.
+
+SSL has two major components, the protocol, and the handshake protocol. The
+handshake protocol is important as it ensures the overall security and
+authenticity of the communication between point A and point B.
+
+%Diagram of SSL handshake here
+\begin{figure}[H]
+	\begin{center}
+		\makebox[\textwidth]{\includegraphics[scale=.35]{ssl-diag.eps}}
+		\caption{Simple SSL and TLS Handshake\cite{ibm-diagram}}
+	\end{center}
+\end{figure}
+
+The SSL/TLS handshakes are identical, but
+
+
+
+\cite{topdown-ssl}
 
 \subsubsection{Security}
 
-\subsubsection{Concurrency}
+\subsubsection{Accessibility}
 
 \subsection{Discussion}
 
@@ -437,7 +484,6 @@ functional and unit testing of our solution.
 %End Cody
 
 \section{References}
->>>>>>> Sections added
 
 \bibliographystyle{IEEEtran}
 \bibliography{tech}
