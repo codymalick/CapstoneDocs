@@ -450,8 +450,6 @@ components of the system already use it. For that reason alone, it is simpler
 to get working for the project.
 
 \subsection{Direct Comparison}
-Here is a side by side comparison of the protocols in the form of a table:
-
 \begin{center}
 	\begin{tabular}{| l | l | l | l |}
 		\hline
@@ -569,33 +567,75 @@ production, on paper nvGRE seems to work better for our needs.
 
 %----------------------
 
-\section{GRE/Linux Bridges}
-Part of the project is generating GRE tunnels. Often the implementation of these
-different methods will vary.
+\section{Network Bridges}
+Part of the project is generating GRE tunnels. Tunnels are very important when
+dealing with virtual networks. It allows a given VM to be mapped to the same
+network that another VM is on. This allows an arbitrary network to be created
+where a given set of VMs can be treated as a single network, regardless of their
+actual physical location. This allows a tenant to rent a set of VMs regardless
+of the set of servers they are on. While the GRE tunnels themselves are often
+identical, which is often the case when a standard exists, the features of the
+individual interfaces vary. There are two main options for this particular
+technology: Linux Bridges and Open vSwitch bridges. The third alternative, is
+not using them.
 
 \subsection{Options}
 
 \subsubsection{Linux Bridges}
+Linux bridges are the standard for any user to create a network bridge from
+one network location to another. Linux bridges, as the name implies, ships with
+the Linux kernel. The big attraction to Linux bridges is that they are tried and
+tested, as well as being relatively simple. While being great for consistent
+deployment across devices, there are no updates occurring in the development
+area outside of the occasional security patch.\cite{ovs-linuxbridge}
 
-\subsubsection{}
+\subsubsection{Open vSwitch Bridge}
+Open vSwitch is the only current area of major network innovation in the area of
+network bridging on Linux. While functionally, Linux bridges and OVS bridges are
+the same, OVS supports packet acceleration frameworks that Linux bridges do not.
+\cite{ovs-linuxbridge}
 
-\subsubsection{}
+\subsubsection{No Bridge}
+The alternative to these two technologies is not having a bridge, and manually
+having to bridge networks with physical cabling. While possible, this is not a
+cost-effective method nor one that is easily accomplished without great
+manpower.
 
 \subsection{Goals for use in design}
+The goal in design of this system is to add an interface with the possibility
+for future expansion of capabilities as new systems and algorithms are created
+to improve bridging. For this implementation, larger feature sets, and an
+actively updated code base are ideal.
 
 \subsection{Criteria being evaluated}
+For this component, available features, as well as an actively updated code base
+are needed. This component is a preliminary for future implementation
+improvements, more concisely, it is groundwork.
 
-\subsubsection{}
-
-\subsubsection{}
-
-\subsubsection{}
-
-\subsubsection{}
+\subsubsection{Feature Set}
+In this metric, OVS vastly outstrips Linux bridges, and both Linux bridges and
+OVS are better than nothing at all. OVS has an actively updated code base, and
+has many more features available than Linux bridges. \cite{ovs-linuxbridge} One
+of the main features that make OVS bridges more appealing than Linux bridges are
+the availablilty of package acceleration frameworks. Not having any bridge at
+all, on the other hand, falls outside of our project requirements, and therefore
+is not a good option.
 
 \subsection{Direct Comparison}
+\begin{center}
+	\begin{tabular}{| l | l |}
+		\hline
+		Bridge & Features \\ \hline
+		Linux Bridge & 2 \\ \hline
+		OVS Bridge & 1 \\ \hline
+		None & 3 \\ \hline
+	\end{tabular}
+\end{center}
 
 \subsection{Selection}
+OVS is the right choice for this project, and the goals Intel has in the future
+for Ciao. It opens open a large feature set to be utilized, as well as opens
+Ciao up to benefit from any innovations made in OVS in the future.
 
 \section{References}
 
