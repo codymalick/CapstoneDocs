@@ -342,13 +342,188 @@ ssh, and will not have access to an X server to view the results.
 \end{center}
 
 \subsection{Selection}
-
 Although the direct comparison reveals that all three are equally averaged to
 second place overall, the decision here is weighted towards the lowest in
 complexity. Our solution will be complex and difficult to implement, we do not
 want to have to worry about learning how to use a complicate testing framework
 on top of everything else. The standard 'testing' package will be used for
 functional and unit testing of our solution.
+
+% Cody
+\section{Packet Level Protocols}
+One of the main components of our system is deciding which protocol will be
+used to move data from one node to the next. Ciao provides its own data
+transfer protocol using SSNTP. Comparing how SSNTP works in general to other
+data transfer formats will provide insight into which protocol should be used.
+
+\subsection{Options}
+
+\subsubsection{SSNTP}
+Simple and Secure Node Transfer Protocol is Intel's solution for the transfer
+of data inside of Ciao networks. It is based on Transport Layer Security (TLS),
+the defacto standard for secure data transfer over the Internet. Part of what
+sets Ciao apart from the competition is its simplicity, as well as concise
+message format.\cite{ssntp}
+
+\subsubsection{TLS}
+Transport Layer Security, or TLS, is the contemporary standard for secure data
+transfer across the Internet. It was built as an improvement upon the Secure
+Socket Layer protocol. It has great appeal as it is widely utilized, modern,
+and well studied.\cite{tls}
+
+\subsubsection{SSL}
+Secure Socket Layer, or SSL, was the first version of what eventually became
+TLS following its third major revision. Originally utilized in Netscape, it
+wasn't widely utilized until it's third major revision. Secure Socket Layer
+encrypts at the application layer, allowing broad general use. While being
+somewhat older than the other protocols on the list, it is well understood and
+the security has been well proven.\cite{ssl}
+
+\subsection{Goals for use in design}
+The primary goal of the selected protocol is fast, stable, secure, and
+scalable communication between compute nodes and the orchestration node in
+Ciao. These are simple, but critical goals for the project.
+
+\subsection{Criteria being evaluated}
+The criteria for each protocol will be their security capabilities, protocol
+overhead, and ease of use. While stability is a concern, each protocol has
+shown stability through implementation in other applications many times over.
+This will be less of a focus for evaluation purposes.
+
+\subsubsection{Speed}
+Speed is a major consideration when working with a software defined network.
+Our final selection for a protocol needs to be fast. Any major delays in
+communication due to encryption or protocol overhead is a concern. While each
+implementation of the protocol will have its pros and cons, here the focus
+will be on application overhead to keep the metric in measurable territory.
+
+SSL has two major components, the protocol, and the handshake protocol. The
+handshake protocol is important as it ensures the overall security and
+authenticity of the communication between point A and point B.
+~\cite{topdown-ssl}
+
+%Diagram of SSL handshake here
+\begin{figure}[H]
+	\begin{center}
+		\makebox[\textwidth]{\includegraphics[scale=.35]{ssl-diag.eps}}
+		\caption{Simple SSL and TLS Handshake\cite{ibm-diagram}}
+	\end{center}
+\end{figure}
+
+The SSL/TLS handshakes are identical. As far as overhead the two protocols
+are very similar. The primary difference between them is their security levels,
+which will be discussed in the following section.
+
+The SSNTP equivalent of a handshake is called a SSNTP Connection. There is a
+fundamental difference that needs to be noted between SSNTP and the other two
+options. The difference is that the computers running SSNTP client software
+only have to do an authentication handshake, or SNTP Connection in this case,
+once. Once the client knows which server it is talking to, all connections
+no longer require a handshake step. This is a massive drop in needed overhead.
+\cite{ssntp} Once the handshake is established, the client communicates with
+the server in an asynchronous fashion as needed.
+
+\subsubsection{Security}
+Security is important in choosing a communication protocol. If it wasn't, we
+could just use TCP, the protocol that all of these security protocols
+encapsulate.
+
+SSL is unfortunately at the bottom of the list as far as the
+protocols listed here are concerned. Has a few vulnerabilities that have been
+found in the decade or so. While some of these are less of an issue, one attack
+in particular called POODLE has caused several major groups to call for SSL 3.0
+to be deprecated.\cite{poodle} While calling into question consideration for
+using this protocol on this system, it is still better than not having any
+security or encryption at all.
+
+TLS is much better on this front as it is continually being updated. The latest
+release, version 1.2, uses AES, RC4, and a few other modern encryption ciphers.
+\cite{tls} Which encryption cipher is used is negotiated between the host and
+the client before communication begins.
+
+SSNTP uses the TLS encryption protocols. On this front, it is equal to TLS.
+
+\subsubsection{Accessibility}
+All of the above protocols are well documented and easy to implement. In the
+scope of the project, however, SSNTP would be easier to use because other
+components of the system already use it. For that reason alone, it is simpler
+to get working for the project.
+
+\subsection{Direct Comparison}
+Here is a side by side comparison of the protocols in the form of a table:
+
+\begin{center}
+	\begin{tabular}{| l | l | l | l |}
+		\hline
+		Protocol & Speed & Security & Accessibility \\ \hline
+		SSNTP & 1 & 1 & 1 \\ \hline
+		SSL & 2 & 3 & 2 \\ \hline
+		TLS & 2 & 1 & 2 \\ \hline
+	\end{tabular}
+\end{center}
+
+\subsection{Selection}
+For our project, the technology for protocols will be SSNTP. It does what SSL
+and TLS do equally security wise, but is much more light weight and is more
+accessible in the context of the project.
+
+%----------------------
+
+\section{nvGRE and VxLAN Switches}
+
+\subsection{Options}
+
+\subsubsection{nvGRE}
+
+\subsubsection{VxLAN}
+
+\subsubsection{}
+
+\subsection{Goals for use in design}
+
+\subsection{Criteria being evaluated}
+
+\subsubsection{}
+
+\subsubsection{}
+
+\subsubsection{}
+
+\subsubsection{}
+
+\subsection{Direct Comparison}
+
+\subsection{Selection}
+
+%----------------------
+
+\section{GRE/Linux Bridges}
+
+\subsection{Options}
+
+\subsubsection{Linux Bridges}
+
+\subsubsection{}
+
+\subsubsection{}
+
+\subsection{Goals for use in design}
+
+\subsection{Criteria being evaluated}
+
+\subsubsection{}
+
+\subsubsection{}
+
+\subsubsection{}
+
+\subsubsection{}
+
+\subsection{Direct Comparison}
+
+\subsection{Selection}
+
+\section{References}
 
 \bibliographystyle{IEEEtran}
 \bibliography{tech}
