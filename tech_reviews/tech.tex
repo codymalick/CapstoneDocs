@@ -580,8 +580,6 @@ components of the system already use it. For that reason alone, it is simpler
 to get working for the project.
 
 \subsection{Direct Comparison}
-Here is a side by side comparison of the protocols in the form of a table:
-
 \begin{center}
 	\begin{tabular}{| l | l | l | l |}
 		\hline
@@ -599,62 +597,177 @@ accessible in the context of the project.
 
 %----------------------
 
-\section{nvGRE and VxLAN Switches}
+\section{Network Virtualization}
+Because Ciao works off of a virtual network, it's important to pick the right
+tool for encapsulating packets to ensure they arrive at their destination. The
+standard virtual network tools have proven to be limited in their ability to
+scale. What the following tools do is allow for networks to scale to order of
+magnitudes higher than a standard virtual network would. As for virtual networks
+, virtual networks allow for virtual machines, or containers (docker, rkt) to be
+visible to the virtual network switch. This is powerful as a VM or container
+does not have a physical network card.
+
+As we move to Open vSwitch, it gives us the option of using Network
+Virtualization using Generic Routing Encapsulation (nvGRE) or Virtual Extensible
+Local Area Network (VxLAN). Along with these two, a third option, Stateless
+Transport Tunneling (STT), will be contrasted to see which option fits the
+project needs best.
 
 \subsection{Options}
+\subsubsection{VxLAN}
+VxLAN is a relatively new virtualization standard developed by a few major
+players in the network industry. Cisco, VMware, Citrix, and Redhat all came
+together to work on this standard to resolve the major problem of massive
+virtual networks. VxLAN's primary advantage is that it has a massive address
+space, about sixteen million, and that it's overall overhead increase is only
+fifty bytes. \cite{vxlan} Speed will be a deciding factor in which interface
+is chosen, so a fifty byte overhead is quite good.
 
 \subsubsection{nvGRE}
+NvGRE is another relatively new virtualization standard developed in tandem by
+Microsoft, HP, Intel, HP, and Dell.\cite{nvgre-info} NvGRE sports a few of the
+same features as VxLAN, the primary difference between the two being the header
+field. They use different UDP port numbers and use a different bit to indicate
+that encapsulation has occurred.\cite{nvgre} The primary difference between the
+two is going to be overall performance in our network setup.
 
-\subsubsection{VxLAN}
-
-\subsubsection{}
+\subsubsection{STT}
+Stateless Transport Tunneling is a protocol developed by VMware to handle the
+same problem stated by the above protocols, but is primarily used to communicate
+between virtual switches. It is quite different than the other protocols as it
+carries much larger packets, up to sixty-four kilobytes, and it's overhead in
+general is much larger. This could be a major problem when it comes to choosing
+a protocol to use as overhead must be minimized.
 
 \subsection{Goals for use in design}
+The goal for these technologies is minimization of overhead while allowing for a
+virtual network to be mapped and allow for thousands of VMs and containers to
+become available easily. This problem of scalability is a major one, and one
+that has to be addressed when created large networks of computers hosting VMs or
+virtual machines.
 
 \subsection{Criteria being evaluated}
+The primary attribute being evaluated here is performance or lack of overhead.
+Performance and overhead go hand in hand, so they will be the primary metric of
+evaluation for this project. In terms of speed, all of these protocols move at
+the speed of hardware, so overhead makes sense for evaluation of the speed of
+the protocol. Less overhead equals more packets moved per second.
 
-\subsubsection{}
+\subsubsection{Overhead}
+NvGRE and VxLAN share almost identical header formats, with the primary
+difference in how they encapsulate their packets. NvGRE uses existing tunneling
+functionality in a TCP packet to encapsulate the data. All that is different is
+that is alters the twenty-four bits of data usually used for regular GRE to
+identify itself. This quite useful as it allows a great deal of existing
+hardware to support this "new" protocol. The primary downside here being that
+loadbalancers and firewalls have to expand the the full packet, removing GRE, to
+inspect the packet. This could be a major slowdown if the packet inspection is a
+frequent activity.\cite{nvgre-vs-vxlan}
 
-\subsubsection{}
+VxLAN on the otherhand, while adding an additional fifty bytes of overhead to
+every packet, still requires the reversal of the encapsulation of every packet
+out of the VxLAN format. The other downside here being reduced compatibility
+with existing routing hardware. This is less of an issue for this project as all
+of our routing devices will be implemented in software.\cite{nvgre-vs-vxlan}
 
-\subsubsection{}
-
-\subsubsection{}
+STT has a significant disadvantage in the area of overhead when it comes to
+general use. It's primary design purpose at VMware was to carry large amounts of
+data from point A to point B. In our use case, it doesn't make much sense. Its
+overall packet header size will be between sixty-two bytes to eighty bytes. This
+is much larger than the other two. While this may not be a huge issue for VM to
+VM traffic, it becomes an issue when it travels across physical networks.
+\cite{stt}
 
 \subsection{Direct Comparison}
+\begin{center}
+	\begin{tabular}{| l | l |}
+		\hline
+		Protocol & Overhead \\ \hline
+		nvGRE & 1 \\ \hline
+		VxLAN & 2 \\ \hline
+		STT & 3 \\ \hline
+	\end{tabular}
+\end{center}
 
 \subsection{Selection}
+For the purposes of the project, we will work with nvGRE in order to provide the
+lowest overhead. Live testing of nvGRE and VxLAN are part of the project. While
+it is difficult to tell during the design phase which will be better in
+production, on paper nvGRE seems to work better for our needs.
 
 %----------------------
 
-\section{GRE/Linux Bridges}
+\section{Network Bridges}
+Part of the project is generating GRE tunnels. Tunnels are very important when
+dealing with virtual networks. It allows a given VM to be mapped to the same
+network that another VM is on. This allows an arbitrary network to be created
+where a given set of VMs can be treated as a single network, regardless of their
+actual physical location. This allows a tenant to rent a set of VMs regardless
+of the set of servers they are on. While the GRE tunnels themselves are often
+identical, which is often the case when a standard exists, the features of the
+individual interfaces vary. There are two main options for this particular
+technology: Linux Bridges and Open vSwitch bridges. The third alternative, is
+not using them.
 
 \subsection{Options}
 
 \subsubsection{Linux Bridges}
+Linux bridges are the standard for any user to create a network bridge from
+one network location to another. Linux bridges, as the name implies, ships with
+the Linux kernel. The big attraction to Linux bridges is that they are tried and
+tested, as well as being relatively simple. While being great for consistent
+deployment across devices, there are no updates occurring in the development
+area outside of the occasional security patch.\cite{ovs-linuxbridge}
 
-\subsubsection{}
+\subsubsection{Open vSwitch Bridge}
+Open vSwitch is the only current area of major network innovation in the area of
+network bridging on Linux. While functionally, Linux bridges and OVS bridges are
+the same, OVS supports packet acceleration frameworks that Linux bridges do not.
+\cite{ovs-linuxbridge}
 
-\subsubsection{}
+\subsubsection{No Bridge}
+The alternative to these two technologies is not having a bridge, and manually
+having to bridge networks with physical cabling. While possible, this is not a
+cost-effective method nor one that is easily accomplished without great
+manpower.
 
 \subsection{Goals for use in design}
+The goal in design of this system is to add an interface with the possibility
+for future expansion of capabilities as new systems and algorithms are created
+to improve bridging. For this implementation, larger feature sets, and an
+actively updated code base are ideal.
 
 \subsection{Criteria being evaluated}
+For this component, available features, as well as an actively updated code base
+are needed. This component is a preliminary for future implementation
+improvements, more concisely, it is groundwork.
 
-\subsubsection{}
-
-\subsubsection{}
-
-\subsubsection{}
-
-\subsubsection{}
+\subsubsection{Feature Set}
+In this metric, OVS vastly outstrips Linux bridges, and both Linux bridges and
+OVS are better than nothing at all. OVS has an actively updated code base, and
+has many more features available than Linux bridges. \cite{ovs-linuxbridge} One
+of the main features that make OVS bridges more appealing than Linux bridges are
+the availablilty of package acceleration frameworks. Not having any bridge at
+all, on the other hand, falls outside of our project requirements, and therefore
+is not a good option.
 
 \subsection{Direct Comparison}
+\begin{center}
+	\begin{tabular}{| l | l |}
+		\hline
+		Bridge & Features \\ \hline
+		Linux Bridge & 2 \\ \hline
+		OVS Bridge & 1 \\ \hline
+		None & 3 \\ \hline
+	\end{tabular}
+\end{center}
 
 \subsection{Selection}
+OVS is the right choice for this project, and the goals Intel has in the future
+for Ciao. It opens open a large feature set to be utilized, as well as opens
+Ciao up to benefit from any innovations made in OVS in the future.
 
 \section{Conclusion}
-
 We explored nine components of our system and three technologies of each,
 resulting in an overview and comparison of twenty-seven technologies. We settled
 on one or more technologies per comparison. A summary of the selected
@@ -674,6 +787,7 @@ technologies are listed below.
 
 These selections were made based on research, and not trial implementation.
 These selections may change if blocking issues are discovered in the future.
+\section{References}
 
 \bibliographystyle{IEEEtran}
 \bibliography{tech}
