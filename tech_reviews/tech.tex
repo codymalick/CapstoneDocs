@@ -1,4 +1,5 @@
-\documentclass[10pt,letterpaper,onecolumn,draftclsnofoot]{IEEEtran}
+\documentclass[10pt,letterpaper,onecolumn,journal]{IEEEtran}
+%draftclsnofoot
 \usepackage[margin=0.75in]{geometry}
 \usepackage{listings}
 \usepackage{color}
@@ -7,9 +8,22 @@
 \usepackage{float}
 \usepackage{tabu}
 \usepackage{enumitem}
+\usepackage{courier}
+\usepackage{hyperref}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
+
+%Subsection headers to Arabic numerals
+%\renewcommand\thesection{\arabic{section}}
+%\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+%\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+%Section headers to Arabic numerals
+%\renewcommand\thesectiondis{\arabic{section}}
+%\renewcommand\thesubsectiondis{\thesectiondis.\arabic{subsection}}
+%\renewcommand\thesubsubsectiondis{\thesubsectiondis.\arabic{subsubsection}}
+
 
 \graphicspath{{../images/}}
 
@@ -23,7 +37,8 @@ stringstyle=\color{mauve},
 breaklines=true,
 breakatwhitespace=true,
 tabsize=4,
-showstringspaces=false
+showstringspaces=false,
+basicstyle=\ttfamily
 }
 
 \setlength{\parindent}{0cm}
@@ -31,7 +46,8 @@ showstringspaces=false
 \begin{document}
 \begin{titlepage}
 	\title{CS 461 - Fall 2016 - Technology Review}
-	\author{Matthew Johnson}
+	\author{Matthew Johnson, Cody Malick, Garrett Smith\\
+		Team 51, Cloud Orchestra}
 	\date{\today}
 	\maketitle
 	\vspace{4cm}
@@ -70,22 +86,41 @@ The nine components of our system are:
 	\item[Packet Level Protocols]
 		The protocol for the creation and forwarding of packets.
 		Authored by Cody Malick.
-	\item[Switch Implementation]
+	\item[Network Virtualization Implementation]
 		The software implementation type of a networking switch.
 		Authored by Cody Malick.
-	\item[Bridge Implementation]
+	\item[Network Bridge Implementation]
 		The software implementation type of a networking bridge.
 		Authored by Cody Malick.
-	\item[CNCI Implementation]
-		The software implementation of the control nodes. Authored by
-		Garrett Smith.
-	\item[Compute Node Implementation]
-		The software implementation of the compute nodes. Authored by
-		Garrett Smith.
-	\item[Performance Testing Framework]
-		The testing framework used to measure performance of our network
+	\item[Software Switch for the Compute Node Concentrator and Compute Nodes]
+		The software implementation of the control and compute nodes.
+		Authored by Garrett Smith.
+	\item[Network Latency Measurement Tools]
+		Analysis of network latency tools that will be used to test
+		the implementation. Authored by Garrett Smith.
+	\item[Network Throughput Testing Framework]
+		The testing framework used to measure throughput of our network
 		implementation. Authored by Garrett Smith.
 \end{description}
+
+\section{Project Roles}
+\subsection{Ciao and Golang Specialist}
+Matthew is our Ciao specialist and primary Golang engineer. With deeper
+knowledge and understanding of the Ciao architecture, as well as it's
+implementation language, his primary role will be handling details related to
+Ciao.
+
+\subsection{Network Specialist}
+Cody has great familiarity with network routing and protocol implementations.
+As the project is implementing pieces of a software defined network, Cody's
+primary role will be in understanding and implementing project details related
+to networking.
+
+\subsection{OVS and Testing Specialist}
+Garrett will be in charge of understanding Open vSwitch, one of the major
+components of the project. Almost every part of the project plugs into OVS in
+some way, shape, or form. He will also be working in-depth with testing tools
+to help ensure the project's quality at the end of the class.
 
 \section{Programming Languages}
 
@@ -467,7 +502,7 @@ ssh, and will not have access to an X server to view the results.
 		\\ \hline
 		testing  & 3 & 1  \\ \hline
 		GinkGo   & 2 & 2  \\ \hline
-	Fwd: EECS Winter Term Registration PINS	GoConvey & 1 & 3  \\ \hline
+		GoConvey & 1 & 3  \\ \hline
 	\end{tabular}
 \end{center}
 
@@ -697,7 +732,7 @@ production, on paper nvGRE seems to work better for our needs.
 
 %----------------------
 
-\section{Network Bridges}
+\section{Network Bridge Implementation}
 Part of the project is generating GRE tunnels. Tunnels are very important when
 dealing with virtual networks. It allows a given VM to be mapped to the same
 network that another VM is on. This allows an arbitrary network to be created
@@ -776,233 +811,7 @@ Intel suggested we use Open vSwitch as part of the project requirements.
 The software switch needs to run on all of the platforms the Ciao supports, support GRE tunnels, VxLAN/nvGRE, and DPDK.
 I did some research on software switches and came up with LINCX and Lagopus as possible alternatives.
 
-\subsubsection{Open vSwitch}
-Open vSwitch is an open source software switch written in platform independent C~\cite{ovs-readme}.
-This means that it will run on all of the platforms supported by Ciao.
-It can operate as a kernel module paired with a daemon, or as user space application.
-For our use case we are interested in the kernel module paired with the daemon.
-Open vSwitch can be configured using a remote configuration server which works well with the CNCI and CN model.
-It has support for GRE tunnels, VxLan, nvGRE, and DPDK.
-
-\subsubsection{LINCX}
-LINCX is an open source software switch written in Erlang~\cite{lincx}.
-It requires the Erlang runtime be installed on the system it is running on.
-This means it should run on the platforms Ciao supports, but it adds another dependency.
-LINCX gets its configuration from a local configuration file.
-It does not have documented support for DPDK, or GRE tunnels.
-
-\subsubsection{Lagopus}
-Lagopus is an open source software switch written in C~\cite{lagopus}.
-It only runs on Intel x86 machines.
-The only operating systems it officially supports are Ubuntu 14.04, Ubuntu 16.04, CentOS 7, FreeBSD, and NetBSD.
-It has support for DPDK, GRE tunnels, and VxLAN.
-
-
-\subsection{Software switch comparison}
-
-\begin{center}
-	\begin{tabular}{| l | l | l | l | l | l |}
-		\hline
-		Name & GRE & VxLAN & Remote configuration & Language & DPDK support  \\ \hline
-		Open vSwitch & Yes & Yes & Yes & C & Yes \\ \hline
-		LINCX & No & Yes & No & Erlang & No \\ \hline
-		Lagopus & Yes & Yes & Yes & C & Yes \\ \hline
-	\end{tabular}
-\end{center}
-
-\subsection{Selection}
-We selected Open vSwitch for use as our software switch. 
-This is the option that Intel wants us to use, and after researching other switches I agree with their choice.
-It has support for a wide variety of platforms unlike Lagopus which only officially supports Ubunutu 14.04 and Ubuntu 16.04, CentOS 7, NetBSD, and FreeBSD.
-LINCX supports any platform Erlang runs on, but does not have documented support for DPDK.
-In addition to the platform requirements, Open vSwich allows for configuration to be provided by a server.
-Both LINCX and Lagopus only support configuration via local configuration files.
-I could not find documented support for creating GRE tunnels with LINCX which removes it from the consideration.
-Combined with its lack of DPDK support it is not a good selection for this project.
-Lagopus has support for DPDK, as well as GRE tunnels and VxLAN, but it does not officially support all of the platforms we need it to. 
-It also lacks the remote configuration support that Open vSwitch has.
-After taking all of this into consideration Open vSwitch is the best choice.
-
-
-\section{Network Latency Measurement Tools}
-One of our project requirements is to conduct network performance testing on our implementation.
-The purpose of testing network performance is to determine which tunneling protocols to use, 
-and how our Open vSwitch implementation compares to the initial implementation.
-One of the metrics we are using to determine network performance is latency.
-Latency is how long it takes data to travel between hosts on a network~\cite{topdown-ssl}.
-
-\subsection{Tool Requirements}
-The tool must work on Clear Linux which is the Linux distribution we are running Ciao on.
-It must allow us to measure network latency. 
-It must have a command line interface.
-We must be able to capture the output and easily translate it into useful data. 
-We should be able to graph the results. 
-
-\subsection{options}
-\subsubsection{Wireshark}
-Wireshark is a network protocol analyzer that can be used to measure many network statistics including latency and throughput~\cite{wireshark}. 
-It has a command line interface called tshark.
-It supports saving network traffic to a capture file that can be analyzed at a later date.
-Wireshark only analyzes network traffic, it does not generate it.
-We would need to use Wireshark in combination with one of their recommended traffic generator tools to calculate latency~\cite{wireshark-tools}.
-Wireshark is very complex and has a lot of features we do not require for our use case.
-If we take the capture file it generates and open it with the GUI version of Wireshark we can generate graphs without feeding the data into another application.
-
-\subsubsection{Ping}
-Ping is a command line tool that can be used to measure the latency between two hosts~\cite{ping}.
-It is a standard networking tool that is well tested and simple to use.
-The output is human readable, but not very machine readable. 
-We would need to parse the output into a more computer friendly format before graphing it.
-It does not support throughput statistics so we would need to use another tool to calculate throughput.
-It can be configured to send a specific number of packets and will return the latency for each packet sent, as well as the minimum, average and maximum latency for the packets sent.
-\begin{lstlisting}[caption = Example ping usage, basicstyle=\ttfamily]
-[smithgar@flip3:~ ] > ping -c 5 oregonstate.edu
-PING oregonstate.edu (54.244.95.93) 56(84) bytes of data.
-64 bytes from ec2-54-244-95-93.us-west-2.compute.amazonaws.com (54.244.95.93): icmp_seq=1 ttl=42 time=10.6 ms
-64 bytes from ec2-54-244-95-93.us-west-2.compute.amazonaws.com (54.244.95.93): icmp_seq=2 ttl=42 time=10.6 ms
-64 bytes from ec2-54-244-95-93.us-west-2.compute.amazonaws.com (54.244.95.93): icmp_seq=3 ttl=42 time=12.8 ms
-64 bytes from ec2-54-244-95-93.us-west-2.compute.amazonaws.com (54.244.95.93): icmp_seq=4 ttl=42 time=10.6 ms
-64 bytes from ec2-54-244-95-93.us-west-2.compute.amazonaws.com (54.244.95.93): icmp_seq=5 ttl=42 time=11.1 ms
-
---- oregonstate.edu ping statistics ---
-5 packets transmitted, 5 received, 0\% packet loss, time 4005ms
-rtt min/avg/max/mdev = 10.628/11.204/12.877/0.871 ms
-\end{lstlisting}
-
-\subsubsection{Qperf}
-Qperf is a command line tool that can be used to measure network latency for both TCP and UDP packets~\cite{qperf}.
-It must be run in a client/server configuration.
-The client can then make requests to the server and receive latency statistics.
-The output is in human readable format.
-The following is an example taken from OpsDash showing how to use qperf to measure UDP bandwidth and latency~\cite{qperf-example}.
-\begin{lstlisting}[caption = Using qperf to measure UDP latency,basicstyle=\ttfamily]
-root@node2:~> qperf -v 10.99.0.1 udp_lat
-udp_lat:
-    latency        =  46.7 us
-    msg_rate       =  21.4 K/sec
-    loc_cpus_used  =  11.5 \% cpus
-    rem_cpus_used  =    10 \% cpus
-\end{lstlisting}
-
-
-\subsection{Network Latency Tool Comparison}
-
-\begin{center}
-	\begin{tabular}{| l | l | l | l | l |}
-		\hline
-		Name & Output type & Single tool & TCP & UDP \\ \hline
-		Wireshark & Capture File & No, requires multiple tools & Yes & Yes \\ \hline
-		Ping & Human readable text & Yes & Yes & No \\ \hline
-		Qperf & Human readable text & Yes & Yes & Yes \\ \hline
-	\end{tabular}
-\end{center}
-
-\subsection{Selection}
-I chose qperf as the tool for latency measurement.
-Wireshark requires more setup and configuration than qperf.
-Ping does not allow you to check the latency of UDP connections.
-We will need to install qperf on each of the machines we are performing network tests on by building it from source.
-I tested the installation process in a Docker container and it only takes a couple of minutes to download and build the source.
-
-\section{Network Throughput Measurement Tools}
-As part of the network performance testing we are measuring network throughput.
-Throughput is how much data can be transferred between two hosts on a network in a fixed amount of time~\cite{topdown-ssl}.
-
-\subsection{selection}
-I chose ping as the tool for measuring network latency because it is 
-
-\subsection{Tool Requirements}
-The tool must work on Clear Linux which is the Linux distribution we are running Ciao on.
-It must allow us to measure network throughput for both TCP and UDP packets. 
-It must have a command line interface.
-We must be able to capture the output and easily translate it into useful data. 
-We should be able to graph the results. 
-
 \subsection{Options}
-
-\subsubsection{iPerf3}
-iPerf3 is an open source tool for measuring network throughput~\cite{iperf}.
-It runs in a client server configuration on two hosts and measures throughput between the client and server.
-It can be configured to use random data, or to send a file across the network.
-It supports both TCP and UDP, as well as IPv4 and IPv6.
-It can be bound to specific network inferfaces on devices with more than one network interface.
-It can be configured to produce output in JSON format. 
-This is an advantage because it is human readable, and easily parsible with many programming languages.
-It does not measure latency. 
-If we use iPerf3 to measure network throughput we will need to use another tool to measure network latencty.
-Below is an example from the iPerf3 documentation of running it from the command line to measure the latency between hosts~\cite{iperf}.
-\begin{lstlisting}[caption = Sample iPerf 3 usage, basicstyle=\ttfamily]
-node2> iperf -s
-------------------------------------------------------------
-Server listening on TCP port 5001
-TCP window size: 60.0 KByte (default)
-------------------------------------------------------------
-[  4] local <IP Addr node2> port 5001 connected with <IP Addr node1> port 2357
-[ ID] Interval       Transfer     Bandwidth
-[  4]  0.0-10.1 sec   6.5 MBytes   5.2 Mbits/sec
-
-node1> iperf -c node2
-------------------------------------------------------------
-Client connecting to node1, TCP port 5001
-TCP window size: 59.9 KByte (default)
-------------------------------------------------------------
-[  3] local <IP Addr node1> port 2357 connected with <IP Addr node2> port 5001
-[ ID] Interval       Transfer     Bandwidth
-[  3]  0.0-10.0 sec   6.5 MBytes   5.2 Mbits/sec
-\end{lstlisting}
-
-
-\subsubsection{Wireshark}
-Wireshark is a network protocol analyzer that can be used to measure many network statistics including latency and throughput~\cite{wireshark}. 
-It has a command line interface called tshark.
-It supports saving network traffic to a capture file that can be analyzed at a later date.
-Wireshark only analyzes network traffic, it does not generate it.
-We would need to use Wireshark in combination with one of their recommended traffic generator tools to gather network throughput metrics~\cite{wireshark-tools}.
-Wireshark is very complex and has a lot of features we do not require for our use case.
-If we take the capture file it generates and open it with the GUI version of Wireshark we can generate graphs without feeding the data into another application.
-
-\subsubsection{Netcat}
-Netcat is a tool that can be used to read and write data across networks from the command line~\cite{netcat}.
-When combined with timing software it can be used to calculate throughput.
-It is a standard networking utility and is well tested.
-The downsides to using Netcat are that you have to generate input using a tool such as dd.
-\begin{lstlisting}[caption = Caclulating throughput with netcat and dd~\cite{nc-example}, basicstyle=\ttfamily]
-server\$: nc -v -l 2222 > /dev/null
-client\$: dd if=/dev/zero bs=1024K count=512 | nc -v \$IP_OF_SERVER 2222
-Result from dd:
-536870912 bytes (537 MB) copied, 4.87526 s, 117 MB/s
-\end{lstlisting}
-
-
-\subsection{Network Throughput Tool Comparison}
-
-\begin{center}
-	\begin{tabular}{| l | l | l | l | l |}
-		\hline
-		Name & Output type & Single Tool & TCP & UDP \\ \hline
-		iPerf3 & Human readable text or JSON & Yes & Yes & Yes \\ \hline
-		Wireshark & Capture File & No, requires additional tools & Yes & Yes \\ \hline
-                Netcat & Human readable text & No, requires additional tools & Yes & Yes \\ \hline
-	\end{tabular}
-\end{center}
-
-\subsection{Selection}
-I chose iPerf3 as the tool for gathering network throughput statistics because it handles measuring throughput without any special configuration or other tools, and allows us to output the data in human readable format or JSON.
-This makes it easy to graph and analyze the results.
-Wireshark offers many of the same features as iPerf3 but it requires more set up and configuration, and does not output its results in as universal of a format. 
-While Wireshark's built in graphing feature is useful, it does not outweigh the downsides.
-We would also need to use one of the recommended tools to generate network traffic~\cite{wireshark-tools}.
-Netcat must be used in combination with other utilities such as dd and does not output its results in as nice of a format as iPerf3.
-
-%-----------------------------------------------
-
-%Software switches for CNCI and CNs
-\section{Software Switch for the Compute Node Concentrator and Compute Nodes}
-As part of creating a software defined network we need a software switch for the compute node concentrator(CNCI) and compute nodes(CN). 
-Intel suggested we use Open vSwitch as part of the project requirements. 
-The software switch needs to run on all of the platforms the Ciao supports, support GRE tunnels, VxLAN/nvGRE, and DPDK.
-I did some research on software switches and came up with LINCX and Lagopus as possible alternatives.
-
 \subsubsection{Open vSwitch}
 Open vSwitch is an open source software switch written in platform independent C~\cite{ovs-readme}.
 This means that it will run on all of the platforms supported by Ciao.
@@ -1134,9 +943,6 @@ I tested the installation process in a Docker container and it only takes a coup
 \section{Network Throughput Measurement Tools}
 As part of the network performance testing we are measuring network throughput.
 Throughput is how much data can be transferred between two hosts on a network in a fixed amount of time~\cite{topdown-ssl}.
-
-\subsection{selection}
-I chose ping as the tool for measuring network latency because it is 
 
 \subsection{Tool Requirements}
 The tool must work on Clear Linux which is the Linux distribution we are running Ciao on.
@@ -1232,8 +1038,8 @@ technologies are listed below.
 	\item Logging Library - glog library
 	\item Functional Testing Framework - logging library
 	\item Packet Level Protocols - SSNTP
-	\item Switch Implementation -
-	\item Bridge Implementation -
+	\item Switch Implementation - nvGRE
+	\item Bridge Implementation - Open vSwitch Bridge
 	\item Software Switch for CNCI and CNs - Open vSwitch
 	\item Network Latency Measurement Tool - Qperf
 	\item Network Throughput Measurement Tool - iPerf3
