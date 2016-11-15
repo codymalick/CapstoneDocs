@@ -361,7 +361,7 @@ The log library, being part of the standard library, has no effective size since
 it is included with the language dependency.
 
 The glog package, as an external dependency, would normally lose outright in
-this category. However, the reset of the Ciao project already uses glog, so
+this category. However, the rest of the Ciao project already uses glog, so
 using it in our portion would not add a dependency to Ciao that does not already
 exist.
 
@@ -386,7 +386,7 @@ log~\cite{log}:
 logger.Print("Hello, log file!")
 \end{lstlisting}
 
-The glog library is also very simpler, but provides the option of leveled logs.
+The glog library is also very simple, but provides the option of leveled logs.
 The following is an example of logging an info and fatal statement, each in a
 single line~\cite{glog}:
 
@@ -528,13 +528,13 @@ Simple and Secure Node Transfer Protocol is Intel's solution for the transfer
 of data inside of Ciao networks. It is based on Transport Layer Security (TLS),
 the defacto standard for secure data transfer over the Internet. Part of what
 sets Ciao apart from the competition is its simplicity, as well as concise
-message format.\cite{ssntp}
+message format~\cite{ssntp}.
 
 \subsubsection{TLS}
 Transport Layer Security, or TLS, is the contemporary standard for secure data
 transfer across the Internet. It was built as an improvement upon the Secure
 Socket Layer protocol. It has great appeal as it is widely utilized, modern,
-and well studied.\cite{tls}
+and well studied~\cite{tls}.
 
 \subsubsection{SSL}
 Secure Socket Layer, or SSL, was the first version of what eventually became
@@ -542,7 +542,7 @@ TLS following its third major revision. Originally utilized in Netscape, it
 wasn't widely utilized until it's third major revision. Secure Socket Layer
 encrypts at the application layer, allowing broad general use. While being
 somewhat older than the other protocols on the list, it is well understood and
-the security has been well proven.\cite{ssl}
+the security has been well proven~\cite{ssl}.
 
 \subsection{Goals for use in design}
 The primary goal of the selected protocol is fast, stable, secure, and
@@ -562,10 +562,10 @@ communication due to encryption or protocol overhead is a concern. While each
 implementation of the protocol will have its pros and cons, here the focus
 will be on application overhead to keep the metric in measurable territory.
 
-SSL has two major components, the protocol, and the handshake protocol. The
+SSL has two major components, the message protocol, and the handshake protocol. The
 handshake protocol is important as it ensures the overall security and
-authenticity of the communication between point A and point B.
-~\cite{topdown-ssl}
+authenticity of the communication between point A and point B
+~\cite{topdown-ssl}.
 
 %Diagram of SSL handshake here
 \begin{figure}[H]
@@ -585,7 +585,7 @@ options. The difference is that the computers running SSNTP client software
 only have to do an authentication handshake, or SNTP Connection in this case,
 once. Once the client knows which server it is talking to, all connections
 no longer require a handshake step. This is a massive drop in needed overhead.
-\cite{ssntp} Once the handshake is established, the client communicates with
+\cite{ssntp}. Once the handshake is established, the client communicates with
 the server in an asynchronous fashion as needed.
 
 \subsubsection{Security}
@@ -597,13 +597,13 @@ SSL is unfortunately at the bottom of the list as far as the
 protocols listed here are concerned. Has a few vulnerabilities that have been
 found in the decade or so. While some of these are less of an issue, one attack
 in particular called POODLE has caused several major groups to call for SSL 3.0
-to be deprecated.\cite{poodle} While calling into question consideration for
+to be deprecated~\cite{poodle}. While calling into question consideration for
 using this protocol on this system, it is still better than not having any
 security or encryption at all.
 
 TLS is much better on this front as it is continually being updated. The latest
-release, version 1.2, uses AES, RC4, and a few other modern encryption ciphers.
-\cite{tls} Which encryption cipher is used is negotiated between the host and
+release, version 1.2, uses AES, RC4, and a few other modern encryption ciphers~
+~\cite{tls}. Which encryption cipher is used is negotiated between the host and
 the client before communication begins.
 
 SSNTP uses the TLS encryption protocols. On this front, it is equal to TLS.
@@ -637,8 +637,8 @@ Because Ciao works off of a virtual network, it's important to pick the right
 tool for encapsulating packets to ensure they arrive at their destination. The
 standard virtual network tools have proven to be limited in their ability to
 scale. What the following tools do is allow for networks to scale to order of
-magnitudes higher than a standard virtual network would. As for virtual networks
-, virtual networks allow for virtual machines, or containers (docker, rkt) to be
+magnitudes higher than a standard virtual network would. As for virtual networks, 
+virtual networks allow for virtual machines, or containers (docker, rkt) to be
 visible to the virtual network switch. This is powerful as a VM or container
 does not have a physical network card.
 
@@ -655,15 +655,15 @@ players in the network industry. Cisco, VMware, Citrix, and Redhat all came
 together to work on this standard to resolve the major problem of massive
 virtual networks. VxLAN's primary advantage is that it has a massive address
 space, about sixteen million, and that it's overall overhead increase is only
-fifty bytes. \cite{vxlan} Speed will be a deciding factor in which interface
+fifty bytes~\cite{vxlan}. Speed will be a deciding factor in which interface
 is chosen, so a fifty byte overhead is quite good.
 
 \subsubsection{nvGRE}
 NvGRE is another relatively new virtualization standard developed in tandem by
-Microsoft, HP, Intel, HP, and Dell.\cite{nvgre-info} NvGRE sports a few of the
+Microsoft, HP, Intel, HP, and Dell~\cite{nvgre-info}. NvGRE sports a few of the
 same features as VxLAN, the primary difference between the two being the header
 field. They use different UDP port numbers and use a different bit to indicate
-that encapsulation has occurred.\cite{nvgre} The primary difference between the
+that encapsulation has occurred~\cite{nvgre}. The primary difference between the
 two is going to be overall performance in our network setup.
 
 \subsubsection{STT}
@@ -697,21 +697,21 @@ identify itself. This quite useful as it allows a great deal of existing
 hardware to support this "new" protocol. The primary downside here being that
 loadbalancers and firewalls have to expand the the full packet, removing GRE, to
 inspect the packet. This could be a major slowdown if the packet inspection is a
-frequent activity.\cite{nvgre-vs-vxlan}
+frequent activity~\cite{nvgre-vs-vxlan}.
 
 VxLAN on the otherhand, while adding an additional fifty bytes of overhead to
 every packet, still requires the reversal of the encapsulation of every packet
 out of the VxLAN format. The other downside here being reduced compatibility
 with existing routing hardware. This is less of an issue for this project as all
-of our routing devices will be implemented in software.\cite{nvgre-vs-vxlan}
+of our routing devices will be implemented in software~\cite{nvgre-vs-vxlan}.
 
 STT has a significant disadvantage in the area of overhead when it comes to
 general use. It's primary design purpose at VMware was to carry large amounts of
 data from point A to point B. In our use case, it doesn't make much sense. Its
 overall packet header size will be between sixty-two bytes to eighty bytes. This
 is much larger than the other two. While this may not be a huge issue for VM to
-VM traffic, it becomes an issue when it travels across physical networks.
-\cite{stt}
+VM traffic, it becomes an issue when it travels across physical networks
+~\cite{stt}.
 
 \subsection{Direct Comparison}
 \begin{center}
@@ -752,13 +752,13 @@ one network location to another. Linux bridges, as the name implies, ships with
 the Linux kernel. The big attraction to Linux bridges is that they are tried and
 tested, as well as being relatively simple. While being great for consistent
 deployment across devices, there are no updates occurring in the development
-area outside of the occasional security patch.\cite{ovs-linuxbridge}
+area outside of the occasional security patch~\cite{ovs-linuxbridge}.
 
 \subsubsection{Open vSwitch Bridge}
 Open vSwitch is the only current area of major network innovation in the area of
 network bridging on Linux. While functionally, Linux bridges and OVS bridges are
-the same, OVS supports packet acceleration frameworks that Linux bridges do not.
-\cite{ovs-linuxbridge}
+the same, OVS supports packet acceleration frameworks that Linux bridges do not
+~\cite{ovs-linuxbridge}.
 
 \subsubsection{No Bridge}
 The alternative to these two technologies is not having a bridge, and manually
@@ -780,7 +780,7 @@ improvements, more concisely, it is groundwork.
 \subsubsection{Feature Set}
 In this metric, OVS vastly outstrips Linux bridges, and both Linux bridges and
 OVS are better than nothing at all. OVS has an actively updated code base, and
-has many more features available than Linux bridges. \cite{ovs-linuxbridge} One
+has many more features available than Linux bridges~\cite{ovs-linuxbridge}. One
 of the main features that make OVS bridges more appealing than Linux bridges are
 the availablilty of package acceleration frameworks. Not having any bridge at
 all, on the other hand, falls outside of our project requirements, and therefore
@@ -874,7 +874,7 @@ It must have a command line interface.
 We must be able to capture the output and easily translate it into useful data. 
 We should be able to graph the results. 
 
-\subsection{options}
+\subsection{Options}
 \subsubsection{Wireshark}
 Wireshark is a network protocol analyzer that can be used to measure many network statistics including latency and throughput~\cite{wireshark}. 
 It has a command line interface called tshark.
@@ -916,8 +916,8 @@ root@node2:~> qperf -v 10.99.0.1 udp_lat
 udp_lat:
     latency        =  46.7 us
     msg_rate       =  21.4 K/sec
-    loc_cpus_used  =  11.5 \% cpus
-    rem_cpus_used  =    10 \% cpus
+    loc_cpus_used  =  11.5 % cpus
+    rem_cpus_used  =    10 % cpus
 \end{lstlisting}
 
 
@@ -936,7 +936,7 @@ udp_lat:
 \subsection{Selection}
 I chose qperf as the tool for latency measurement.
 Wireshark requires more setup and configuration than qperf.
-Ping does not allow you to check the latency of UDP connections.
+Ping does not allow us to check the latency of UDP connections.
 We will need to install qperf on each of the machines we are performing network tests on by building it from source.
 I tested the installation process in a Docker container and it only takes a couple of minutes to download and build the source.
 
@@ -961,8 +961,6 @@ It supports both TCP and UDP, as well as IPv4 and IPv6.
 It can be bound to specific network inferfaces on devices with more than one network interface.
 It can be configured to produce output in JSON format. 
 This is an advantage because it is human readable, and easily parsible with many programming languages.
-It does not measure latency. 
-If we use iPerf3 to measure network throughput we will need to use another tool to measure network latencty.
 Below is an example from the iPerf3 documentation of running it from the command line to measure the latency between hosts~\cite{iperf}.
 \begin{lstlisting}[caption = Sample iPerf 3 usage, basicstyle=\ttfamily]
 node2> iperf -s
