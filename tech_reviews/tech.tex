@@ -833,8 +833,32 @@ It only runs on Intel x86 machines.
 The only operating systems it officially supports are Ubuntu 14.04, Ubuntu 16.04, CentOS 7, FreeBSD, and NetBSD.
 It has support for DPDK, GRE tunnels, and VxLAN.
 
+\subsection{Goals for use in design}
+We are using a software switch as part of our SDN implementation to add functionality to Ciao.
+The software switch we use needs to support GRE tunnels, VxLAN, nvGRE, and DPDK to provide the additional functionality we are trying to add.
 
-\subsection{Software switch comparison}
+\subsection{Criteria being evaluated}
+\subsubsection{Supported Platforms}
+The software switch must support all of the platforms that Ciao currently supports so it does
+not reduce the number of platforms that Ciao can run on.
+\subsubsection{GRE Support}
+One of the requirements for the project is to use GRE tunnels.
+The software switch must support GRE tunnels to comply with the project requirements.
+\subsubsection{VxLAN Support}
+One of the requirements for the project is to use VxLAN.
+The software switch must support VxLAN to comply with the project requirements.
+\subsubsection{nvGRE Support}
+One of the requirements for the project is to use nvGRE.
+The software switch must support nvGRE to comply with the project requirements.
+\subsubsection{DPDK Support}
+One of the stretch goals for the project is to use DPDK with our SDN implementation.
+Even if we do not make it that far into the project the software switch still needs
+to support DPDK.
+\subsubsection{Configuration}
+One of Ciao's goals is minimal configuration.
+The software switch should be easy to configure, and needs to support remote configuration by the Ciao control nodes. 
+
+\subsection{Direct Comparison}
 
 \begin{center}
 	\begin{tabular}{| l | l | l | l | l | l |}
@@ -867,13 +891,6 @@ and how our Open vSwitch implementation compares to the initial implementation.
 One of the metrics we are using to determine network performance is latency.
 Latency is how long it takes data to travel between hosts on a network~\cite{topdown-ssl}.
 
-\subsection{Tool Requirements}
-The tool must work on Clear Linux which is the Linux distribution we are running Ciao on.
-It must allow us to measure network latency. 
-It must have a command line interface.
-We must be able to capture the output and easily translate it into useful data. 
-We should be able to graph the results. 
-
 \subsection{Options}
 \subsubsection{Wireshark}
 Wireshark is a network protocol analyzer that can be used to measure many network statistics including latency and throughput~\cite{wireshark}. 
@@ -901,7 +918,7 @@ PING oregonstate.edu (54.244.95.93) 56(84) bytes of data.
 64 bytes from ec2-54-244-95-93.us-west-2.compute.amazonaws.com (54.244.95.93): icmp_seq=5 ttl=42 time=11.1 ms
 
 --- oregonstate.edu ping statistics ---
-5 packets transmitted, 5 received, 0\% packet loss, time 4005ms
+5 packets transmitted, 5 received, 0% packet loss, time 4005ms
 rtt min/avg/max/mdev = 10.628/11.204/12.877/0.871 ms
 \end{lstlisting}
 
@@ -920,8 +937,18 @@ udp_lat:
     rem_cpus_used  =    10 % cpus
 \end{lstlisting}
 
+\subsection{Goals for use in design}
+This tool will be used to compare the latency of our SDN implementation against the starting Ciao SDN implementation.
 
-\subsection{Network Latency Tool Comparison}
+\subsection{Criteria being evaluated}
+The tool must work on Clear Linux which is the Linux distribution we are running Ciao on.
+It must allow us to measure network latency. 
+It must have a command line interface.
+We must be able to capture the output and easily translate it into useful data. 
+We should be able to graph the results. 
+
+
+\subsection{Direct Comparison}
 
 \begin{center}
 	\begin{tabular}{| l | l | l | l | l |}
@@ -944,12 +971,6 @@ I tested the installation process in a Docker container and it only takes a coup
 As part of the network performance testing we are measuring network throughput.
 Throughput is how much data can be transferred between two hosts on a network in a fixed amount of time~\cite{topdown-ssl}.
 
-\subsection{Tool Requirements}
-The tool must work on Clear Linux which is the Linux distribution we are running Ciao on.
-It must allow us to measure network throughput for both TCP and UDP packets. 
-It must have a command line interface.
-We must be able to capture the output and easily translate it into useful data. 
-We should be able to graph the results. 
 
 \subsection{Options}
 
@@ -998,14 +1019,23 @@ When combined with timing software it can be used to calculate throughput.
 It is a standard networking utility and is well tested.
 The downsides to using Netcat are that you have to generate input using a tool such as dd.
 \begin{lstlisting}[caption = Caclulating throughput with netcat and dd~\cite{nc-example}, basicstyle=\ttfamily]
-server\$: nc -v -l 2222 > /dev/null
-client\$: dd if=/dev/zero bs=1024K count=512 | nc -v \$IP_OF_SERVER 2222
+server$: nc -v -l 2222 > /dev/null
+client$: dd if=/dev/zero bs=1024K count=512 | nc -v IP_OF_SERVER 2222
 Result from dd:
 536870912 bytes (537 MB) copied, 4.87526 s, 117 MB/s
 \end{lstlisting}
 
+\subsection{Goals for use in design}
+We will be using this tool to compare the throughput of our SDN implementation against the starting Ciao SDN implementation.
 
-\subsection{Network Throughput Tool Comparison}
+\subsection{Criteria being evaluated}
+The tool must work on Clear Linux which is the Linux distribution we are running Ciao on.
+It must allow us to measure network throughput for both TCP and UDP packets. 
+It must have a command line interface.
+We must be able to capture the output and easily translate it into useful data. 
+We should be able to graph the results. 
+
+\subsection{Direct Comparison}
 
 \begin{center}
 	\begin{tabular}{| l | l | l | l | l |}
