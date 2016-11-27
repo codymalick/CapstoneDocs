@@ -59,7 +59,91 @@ basicstyle=\ttfamily
 \tableofcontents
 \clearpage
 
-\cite{ciao}
+\section{Introduction}
+
+
+
+\section{High-level considerations}
+
+Our software defined network will be written in the Go programming language and
+fully integrated in to the Cloud Integrated Advanced Orchestrator
+(Ciao)~\cite{ciao}. The Go programming language was selected for
+several reasons, including the efficiency of the language regarding both speed
+and memory, the concurrency capabilities, and the ease of implementation. Go was
+compared against C and Python as alternatives, and prevailed in every criteria
+except for availability of the language.
+
+This network mode will be written as a standalone networking mode for Ciao as an
+additional option to the standard Linux bridges available now. For this reason
+it must be fully integrated with the Ciao networking framework as it currently
+exists~\cite{ciaoNetworking}.
+
+\section{Conclusion}
+
+
+
+\section{Glossary}
+
+\begin{description}[leftmargin=12em,style=nextline]
+	\item[Bridge]
+		Software or hardware that connects two or more network segments.
+	\item[Ciao]
+		Ciao is a cloud orchestrator that provides an easy to deploy,
+		secure, scalable cloud orchestration system which handles
+		virtual machines, containers, and bare metal apps agnostically
+		as generic workloads. Implemented in the Go language, it
+		separates logic into "controller", "scheduler" and "launcher"
+		components which communicate over the "Simple and Secure Node
+		Transfer Protocol (SSNTP)"~\cite{ciao}.
+	\item[Cloud]
+		A huge, amorphous network of servers somewhere~\cite{xkcd908}.
+	\item[Cloud Orchestration]
+		An easy to deploy, secure, scalable cloud orchestration system
+		which handles virtual machines, containers, and bare metal apps
+		agnostically as generic workloads~\cite{ciaoReadme}.
+	\item[CNCI]
+		Virtual Machines automatically configured by the
+		ciao-controller, scheduled by the ciao-scheduler on a need
+		basis, when tenant workloads are created~\cite{ciaoNetworking}.
+	\item[Generic Routing Encapsulation (GRE)]
+		Encapsulation of an arbitrary network layer protocol so it can
+		be sent over another arbitrary network layer
+		protocol~\cite{rfc1701}.
+	\item[Linux Bridge]
+		Configurable software bridge built into the Linux
+		kernel~\cite{linuxBridge}.
+	\item[Network Node (NN)]
+		A Network Node is used to aggregate network traffic for all
+		tenants while still keeping individual tenant traffic isolated
+		from all other the tenants using special virtual machines called
+		Compute Node Concentrators (or CNCIs)~\cite{ciaoNetworking}.
+	\item[nvGRE]
+		Network Virtualization using Generic Routing
+		Encapsulation~\cite{rfc7637}.
+	\item[Open vSwitch]
+		Open source multilayer software switch with support for
+		distribution across multiple physical devices~\cite{ovs}.
+	\item[OVS]
+		Open vSwitch~\cite{ovs}.
+	\item[Packet Acceleration]
+		Increasing the speed of the processing and transfer of network
+		packets.
+	\item[Packet Encapsulation]
+		Attaching the headers for a network protocol to a packet so it
+		can be transmitted using that
+		protocol~\cite{networkingTextbook}.
+	\item[SSNTP]
+		The Simple and Secure Node Transfer Protocol (SSNTP) is a
+		custom, fully asynchronous and TLS based application layer
+		protocol. All Cloud Integrated Advanced Orchestrator (CIAO)
+		components communicate with each others over
+		SSNTP~\cite{ciaoSSNTP}.
+	\item[Tunnel]
+		Point to point network connection that encapsulates traffic
+		between points~\cite{networkingTextbook}.
+	\item[VxLAN]
+		Virtual Extensible Local Area Network~\cite{rfc7348}.
+\end{description}
 
 \bibliographystyle{IEEEtran}
 \bibliography{design}
