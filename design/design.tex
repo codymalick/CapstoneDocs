@@ -52,7 +52,12 @@ basicstyle=\ttfamily
 	\maketitle
 	\vspace{4cm}
 	\begin{abstract}
-		\noindent
+		\noindent This document outlines the design considerations for
+		the implementation of Open vSwitch and other networking
+		technologies in the Cloud Integrated Advanced Orchestrator
+		(Ciao). It describes the various techniques, structure, and
+		technology choices that will be used in the execution of our
+		project.
 	\end{abstract}
 
 \end{titlepage}
@@ -61,7 +66,13 @@ basicstyle=\ttfamily
 
 \section{Introduction}
 
-
+Our project is to first switch the Linux-created GRE tunnel implementation in
+Ciao to use GRE tunnels created by Open vSwitch. From that point we will switch
+the actual tunneling implementation from GRE to VxLAN/nvGRE based on performance
+measurements of each on data center networking cards. After this is completed, a
+stretch goal is to replace Linux bridges with Open vSwitch switch instances.
+This document outlines the steps, techniques, and methodology we will utilize to
+achieve each goal.
 
 \section{High-level considerations}
 
@@ -80,7 +91,10 @@ exists~\cite{ciaoNetworking}.
 
 \section{Conclusion}
 
-
+We have outlined the steps and design strategy we will take for each goal. Our
+design methodology is incremental design, starting with the first goal (Open
+vSwitch-created GRE tunnels) and incrementing through each feature until all
+goals are achieved.
 
 \section{Glossary}
 
@@ -98,9 +112,9 @@ exists~\cite{ciaoNetworking}.
 	\item[Cloud]
 		A huge, amorphous network of servers somewhere~\cite{xkcd908}.
 	\item[Cloud Orchestration]
-		An easy to deploy, secure, scalable cloud orchestration system
-		which handles virtual machines, containers, and bare metal apps
-		agnostically as generic workloads~\cite{ciaoReadme}.
+		A networking tool designed to aid in the deployment of multiple
+		virtual machines, containers, or bare-metal
+		applications~\cite{ciao}.
 	\item[CNCI]
 		Virtual Machines automatically configured by the
 		ciao-controller, scheduled by the ciao-scheduler on a need
@@ -116,7 +130,7 @@ exists~\cite{ciaoNetworking}.
 		A Network Node is used to aggregate network traffic for all
 		tenants while still keeping individual tenant traffic isolated
 		from all other the tenants using special virtual machines called
-		Compute Node Concentrators (or CNCIs)~\cite{ciaoNetworking}.
+		Compute Node Concentrators (CNCIs)~\cite{ciaoNetworking}.
 	\item[nvGRE]
 		Network Virtualization using Generic Routing
 		Encapsulation~\cite{rfc7637}.
@@ -135,8 +149,7 @@ exists~\cite{ciaoNetworking}.
 	\item[SSNTP]
 		The Simple and Secure Node Transfer Protocol (SSNTP) is a
 		custom, fully asynchronous and TLS based application layer
-		protocol. All Cloud Integrated Advanced Orchestrator (CIAO)
-		components communicate with each others over
+		protocol. All Ciao components communicate with each others over
 		SSNTP~\cite{ciaoSSNTP}.
 	\item[Tunnel]
 		Point to point network connection that encapsulates traffic
