@@ -74,29 +74,27 @@ stretch goal is to replace Linux bridges with Open vSwitch switch instances.
 This document outlines the steps, techniques, and methodology we will utilize to
 achieve each goal.
 
-\section{High-level considerations}
+\section{Overview}
 
-Our software defined network will be written in the Go programming language and
-fully integrated in to the Cloud Integrated Advanced Orchestrator
-(Ciao)~\cite{ciao}. The Go programming language was selected for
-several reasons, including the efficiency of the language regarding both speed
-and memory, the concurrency capabilities, and the ease of implementation. Go was
-compared against C and Python as alternatives, and prevailed in every criteria
-except for availability of the language.
 
-This network mode will be written as a standalone networking mode for Ciao as an
-additional option to the standard Linux bridges available now. For this reason
-it must be fully integrated with the Ciao networking framework as it currently
-exists~\cite{ciaoNetworking}.
 
-\section{Conclusion}
+\subsection{Scope}
 
-We have outlined the steps and design strategy we will take for each goal. Our
-design methodology is incremental design, starting with the first goal (Open
-vSwitch-created GRE tunnels) and incrementing through each feature until all
-goals are achieved.
 
-\section{Glossary}
+
+\subsection{Purpose}
+
+
+
+\subsection{Intended audience}
+
+
+
+\subsection{Conformance}
+
+
+
+\section{Definitions}
 
 \begin{description}[leftmargin=12em,style=nextline]
 	\item[Bridge]
@@ -157,6 +155,142 @@ goals are achieved.
 	\item[VxLAN]
 		Virtual Extensible Local Area Network~\cite{rfc7348}.
 \end{description}
+
+\section{Conceptual model for software design descriptions}
+
+
+
+\subsection{Software design in context}
+
+
+
+\subsection{Software design descriptions within the live cycle}
+
+
+
+\subsubsection{Influences on SDD preparation}
+
+
+
+\subsubsection{Influences on software life cycle products}
+
+
+
+\subsubsection{Design verification and design role in validation}
+
+
+
+\section{Design description information content}
+
+
+
+\subsection{Introduction}
+
+
+
+\subsection{SDD identification}
+
+
+
+\subsection{Design stakeholders and their concerns}
+
+
+
+\subsection{Design views}
+
+
+
+\subsection{Design viewpoints}
+
+
+
+\subsection{Design elements}
+
+
+
+\subsubsection{Design entities}
+
+
+
+\subsubsection{Design attributes}
+
+Name attribute
+
+Type attribute
+
+Purpose attribute
+
+Author attribute
+
+\subsubsection{Design relationships}
+
+
+
+\subsubsection{Design constraints}
+
+
+
+\subsection{Design overlays}
+
+
+
+\subsection{Design rationale}
+
+
+
+\subsection{Design languages}
+
+
+
+\section{Design viewpoints}
+
+
+
+\subsection{Introduction}
+
+
+
+\subsection{Context viewpoint}
+% can be any of the viewpoints listed in the ieee doc
+% there will be many of these subsections
+
+
+
+\subsubsection{Design concerns}
+
+
+
+\subsubsection{Design elements}
+
+
+
+\subsubsection{Example languages}
+
+
+
+\section{High-level considerations}
+% I don't know where to put this yet
+
+Our software defined network will be written in the Go programming language and
+fully integrated in to the Cloud Integrated Advanced Orchestrator
+(Ciao)~\cite{ciao}. The Go programming language was selected for
+several reasons, including the efficiency of the language regarding both speed
+and memory, the concurrency capabilities, and the ease of implementation. Go was
+compared against C and Python as alternatives, and prevailed in every criteria
+except for availability of the language.
+
+This network mode will be written as a standalone networking mode for Ciao as an
+additional option to the standard Linux bridges available now. For this reason
+it must be fully integrated with the Ciao networking framework as it currently
+exists~\cite{ciaoNetworking}.
+
+\section{Conclusion}
+
+We have outlined the steps and design strategy we will take for each goal. Our
+design methodology is incremental design, starting with the first goal (Open
+vSwitch-created GRE tunnels) and incrementing through each feature until all
+goals are achieved.
+
 
 \bibliographystyle{IEEEtran}
 \bibliography{design}
