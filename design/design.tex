@@ -31,6 +31,28 @@
 
 \graphicspath{{../images/}}
 
+\usepackage{booktabs}
+
+\newcommand\addrow[2]{#1 &#2\\ }
+
+\newcommand\addheading[2]{#1 &#2\\ \hline}
+\newcommand\tabularhead{\begin{tabular}{lp{8cm}}
+\hline
+}
+\newcommand\addmulrow[2]{
+\begin{minipage}[t][][t]{2.5cm}#1\end{minipage}% 
+   &\begin{minipage}[t][][t]{8cm}
+    \begin{enumerate} #2   \end{enumerate}
+    \end{minipage}\\ }
+
+\newenvironment{usecase}{\tabularhead}
+{\hline\end{tabular}}
+%\newenvironment{usecase}
+%  \addheading{}{}
+%  \addrow{}{}
+%  \addmulrow{}{}
+%\end{usecase}
+
 \lstset{frame=tb,
 language=C,
 columns=flexible,
@@ -259,7 +281,9 @@ our solution.
 \subsection{Design Stakeholders}
 The stakeholders are Intel, and the members of the Oregon State University
 capstone group working on the project, Matthew Johnson, Cody Malick and Garrett
-Smith.
+Smith. Additional obvious stakeholders are the existing and future users of
+Ciao.
+
 \subsection{Design Concerns}
 The design concerns are the operating systems that need to be supported,
 the implementation of Open vSwitch created GRE tunnels,
@@ -275,11 +299,24 @@ will be using Ciao.
 \subsection{Context Design Viewpoint}
 %High-level concerns - Go, Platform, Ciao integration
 %Viewpoint Name
+The users of the networking mode we are implementing are the current and future
+users of Ciao, system administrators of small to medium enterprises running
+private clouds.
 %Design Concerns that are the topics of the viewpoint
 %Design Elements
 %Analytical Methods
 %Viewpoint Source
 %Rationale for selection
+
+\begin{usecase}
+	\addheading{Actor}{System user} 
+	\addrow{Precondition}{The system, shows, in the form part of an
+	object type, the number   indication.}
+	\addrow{Postcondition}{A disconnected number indicating the type of 
+	`other constructed object'.}
+	\addmulrow{Main path (M)}{\item User selects \ldots
+			\item System demands \ldots}
+\end{usecase}
 
 \subsection{Context Design View}
 %Conforms to viewpoint
