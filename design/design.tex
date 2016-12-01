@@ -9,6 +9,7 @@
 \usepackage{enumitem}
 \usepackage{courier}
 \usepackage{hyperref}
+\usepackage{parskip}
 \definecolor{dkgreen}{rgb}{0,0.6,0}
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
@@ -60,7 +61,8 @@ basicstyle=\ttfamily
 		\noindent This document outlines the design considerations for
 		the implementation of Open vSwitch and other networking
 		technologies in the Cloud Integrated Advanced Orchestrator
-		(Ciao). It describes the various techniques, structure, and
+		(Ciao), Intel Corporation's advanced cloud orchestration
+		software. It describes the various techniques, structure, and
 		technology choices that will be used in the execution of our
 		project.
 	\end{abstract}
@@ -85,10 +87,99 @@ measurements of each on data center networking cards. After this is completed, a
 stretch goal is to replace Linux bridges with Open vSwitch switch instances.
 This document outlines the steps, techniques, and methodology we will utilize to
 achieve each goal.
+
 \subsection{Purpose}
+
+The current implementation of Ciao tightly integrates software defined
+networking principles to leverage a limited local awareness of just enough of
+the global cloud's state. Tenant overlay networks are used to overcome
+traditional hardware networking challenges by using a distributed, stateless,
+self-configuring network topology running over dedicated network software
+appliances. This design is achieved using Linux-native Global Routing
+Encapsulation (GRE) tunnels and Linux bridges and scales well in an environment
+of a few hundred nodes.
+
+While this initial network implementation in Ciao satisfies current simple
+networking needs in Ciao, all innovation around software defined networks has
+shifted to the Open vSwtich (OVS) framework. Moving Ciao to OVS will allow
+leverage of packet acceleration frameworks like the Data Plane Development Kit
+(DPDK) as well as provide support for multiple tunneling protocols such as VxLAN
+and nvGRE. VxLAN and nvGRE are equal cost multipath routing (ECMP) friendly,
+which could increase network performance overall.
+
 \subsection{Scope}
+
+Ciao exists as a cloud orchestrator for cloud clusters. It is inherently Ciao
+exists as a cloud orchestrator for cloud clusters. It is inherently necessary
+for the separate nodes in the cloud cluster to be able to talk to each other.
+Without a reliable and secure software defined network Ciao would have little
+purpose. Utilization of Open VSwitch GRE tunnels allows Ciao to become more
+scalable and enables the inclusion of packet-acceleration technology such as the
+Data Plane Development Kit (DPDK).
+
 \subsection{Context}
+
+Our network mode will exist within Ciao, a cloud orchestrator designed to be
+fast and easy to deploy. Ciao is sectioned into three parts, each with
+distinctive purposes~\cite{ciao}.
+
+\begin{description}[leftmargin=12em,style=nextline]
+	\item[Controller]
+		Responsible for policy choices around tenant
+		workloads~\cite{ciao}.
+	\item[Scheduler]
+		The Scheduler implements a "push/pull" scheduling algorithm. In
+		response to a controller approved workload instance arriving at
+		the scheduler, it finds a first fit among cluster compute nodes
+		currently requesting work~\cite{ciao}.
+	\item[Launcher]
+		The Launcher abstracts the specific launching details for the
+		different workload types (eg: virtual machine, container, bare
+		metal). Launcher reports compute node statistics to the
+		scheduler and controller. It also reports per-instance
+		statistics up to controller ~\cite{ciao}.
+\end{description}
+
+Our networking mode must facilitate the communication of packets between all
+three levels of Ciao, as well as individual compute and network
+nodes and the Compute Node Concentrator (CNCI)~\cite{ciaoNetworking}.
+
+\begin{description}[leftmargin=12em,style=nextline]
+	\item[Compute Node]
+		A compute node typically runs VM and Container workloads for
+		multiple tenants~\cite{ciaoNetworking}.
+	\item[Network Node]
+		A Network Node is used to aggregate network traffic for all
+		tenants while still keeping individual tenant traffic isolated
+		from all other the tenants using special virtual machines called
+		Compute Node Concentrators (CNCIs)~\cite{ciaoNetworking}.
+	\item[Compute Node Concentrator (CNCI)]
+		CNCIs are Virtual Machines automatically configured by the
+		ciao-controller, scheduled by the ciao-scheduler on a need
+		basis, when tenant workloads are created~\cite{ciaoNetworking}.
+\end{description}
+
+Specifically, the Ciao network components must communicate securely using the
+Simple and Secure Node Transfer Protocol (SSNTP). The network node aggregates
+traffic between compute nodes while keeping the tenant traffic isolated from
+other tenants in the cluster. Network nodes achieve this with CNCIs. A graphic
+of the lowest-level of this network configuration shows their relation to each
+other.
+
+\begin{figure}[H]
+	\caption{Ciao Network Topology~\cite{ciaoNetTopology}}
+	\begin{center}
+		\makebox[\textwidth]{\includegraphics[width=\textwidth]{ciao-networking.eps}}
+	\end{center}
+\end{figure}
+
 \subsection{Summary}
+
+We will implement an Open vSwitch Generic Routing Encapsulation (OVS-GRE) mode
+in Ciao in order to leverage DPDK and other software defined networking
+technology innovations which are dependent on OVS. This document will outline
+our design strategy, design views, and design viewpoints for each component of
+our solution.
 
 \bibliographystyle{IEEEtran}
 \bibliography{design}
@@ -111,10 +202,20 @@ achieve each goal.
 		A networking tool designed to aid in the deployment of multiple
 		virtual machines, containers, or bare-metal
 		applications~\cite{ciao}.
-	\item[CNCI]
+	\item[Compute Node Concentrator (CNCI)]
 		Virtual Machines automatically configured by the
 		ciao-controller, scheduled by the ciao-scheduler on a need
 		basis, when tenant workloads are created~\cite{ciaoNetworking}.
+	\item[Data Plane Developement Kit (DPDK)]
+		DPDK is a set of libraries and drivers for fast packet
+		processing. It was designed to run on any processors. The first
+		supported CPU was Intel x86 and it is now extended to IBM Power
+		8, EZchip TILE-Gx and ARM. It runs mostly in Linux
+		userland~\cite{dpdk}.
+	\item[Equal Cost Multipath Routing (ECMP)]
+		Equal cost multipath routing is a routing strategy in which next
+		path routing for a packet can occur along one of several
+		equal-cost paths to the destination~\cite{rfc2991}.
 	\item[Generic Routing Encapsulation (GRE)]
 		Encapsulation of an arbitrary network layer protocol so it can
 		be sent over another arbitrary network layer
