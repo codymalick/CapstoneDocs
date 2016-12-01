@@ -1,5 +1,4 @@
-\documentclass[10pt,letterpaper,onecolumn,journal]{IEEEtran}
-%draftclsnofoot
+\documentclass[10pt,onecolumn,journal,draftclsnofoot]{IEEEtran}
 \usepackage[margin=0.75in]{geometry}
 \usepackage{listings}
 \usepackage{color}
@@ -48,11 +47,13 @@ basicstyle=\ttfamily
 \setlength{\parindent}{0cm}
 
 \begin{document}
+
 \begin{titlepage}
-	\title{CS 461 - Fall 2016 - Design Document}
-	\author{Matthew Johnson, Cody Malick, Garrett Smith\\
-		Team 51, Cloud Orchestra}
+	\title{Intel Cloud Orchestration Networking\\ Design Document}
+	%\author{Matthew~Johnson,~Cody~Malick,~and~Garrett~Smith\\
+	%	Team 51, Cloud Orchestra}
 	\date{\today}
+	\markboth{Senior Design, CS 461, Fall 2016}{}
 	\maketitle
 	\vspace{4cm}
 	\begin{abstract}
@@ -63,7 +64,14 @@ basicstyle=\ttfamily
 		technology choices that will be used in the execution of our
 		project.
 	\end{abstract}
-
+	\vspace{6cm}
+\begin{center}	
+	Date of Issue: December 2nd, 2016\\
+	Issuing Organization: Intel Corporation\\
+	Authorship: Matthew~Johnson,~Cody~Malick,~and~Garrett~Smith\\
+	Change History: First Draft, 12-02-2016 \\
+\end{center}
+	
 \end{titlepage}
 \tableofcontents
 \clearpage
@@ -181,4 +189,14 @@ design methodology is incremental design, starting with the first goal (Open
 vSwitch-created GRE tunnels) and incrementing through each feature until all
 goals are achieved.
 
+\clearpage
+\section{Signatures}
+\vspace{2cm}
+\noindent Kent Helm, Engineering Manager\hspace{0.7cm} \makebox[1.5in]
+{\hrulefill}\\\\\\
+\noindent Robert Nesius, Engineering Manager\hspace{0.7cm} \makebox[1.5in]
+{\hrulefill}\\\\\\
+\noindent Matthew Johnson\hspace{0.3cm} \makebox[1.5in]{\hrulefill}\\\\\\
+\noindent Garrett Smith\hspace{0.7cm} \makebox[1.5in]{\hrulefill}\\\\\\
+\noindent Cody Malick\hspace{0.7cm} \makebox[1.5in]{\hrulefill}\\\\\\
 \end{document}
