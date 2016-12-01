@@ -370,11 +370,20 @@ exists~\cite{ciaoNetworking}.
 Since Ciao targets the Linux family of operating systems, our networking
 solution must also support Linux operating systems.
 
+%Cody
 \subsection{Interface Design Viewpoint}
 %OVS-GRE tunneling implementation
+One of the main project goals is switching the GRE tunneling implementation 
+from standard GRE tunnels to Open vSwitch generated GRE tunnels. The
+implementation of this object will be through designing and building an
+interface for Open vSwitch to hook into Ciao. 
+
+The main design concerns for an interface are service definitions and service
+access. 
 
 \subsection{Interface Design View}
 
+%Cody
 \subsection{Interaction Design Viewpoint}
 % VxLAN/nvGRE tunneling protocol implementation
 
