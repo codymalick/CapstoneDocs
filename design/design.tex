@@ -24,6 +24,10 @@
 %\renewcommand\thesubsectiondis{\thesectiondis.\arabic{subsection}}
 %\renewcommand\thesubsubsectiondis{\thesubsectiondis.\arabic{subsubsection}}
 
+%Remove numbering from the bibliography section
+\usepackage{etoolbox}
+\patchcmd{\thebibliography}{\section*}{\section}{}{}
+\patchcmd{\thebibliography}{\addcontentsline{toc}{section}{\refname}}{}{}{}
 
 \graphicspath{{../images/}}
 
@@ -77,8 +81,6 @@ achieve each goal.
 \subsection{Scope}
 \subsection{Context}
 \subsection{Summary}
-
-\section{References}
 
 \bibliographystyle{IEEEtran}
 \bibliography{design}
@@ -148,9 +150,10 @@ achieve each goal.
 \subsection{Design Stakeholders}
 \subsection{Design Concerns}
 
-\subsection{Design Views}
-\subsubsection{Design Viewpoint 1}
-\subsubsection{Design Viewpoints 2}
+\subsection{Design Viewpoint 1}
+\subsection{Design View 1}
+\subsection{Design Viewpoints 2}
+\subsection{Design View 2}
 %Repeat these sections as needed for each component
 
 \subsection{Design Rationale}
