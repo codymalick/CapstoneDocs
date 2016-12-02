@@ -471,10 +471,90 @@ software.
 
 \subsection{Resource Design Viewpoint}
 % Network performance testing
-This viewpoint is from the IEEE 1016-2009 standard~\cite{ieee1016}. 
+%Viewpoint Name
+%Design Concerns that are the topics of the viewpoint
+%Design Elements
+%Analytical Methods
+%Viewpoint Source
+The resource design viewpoint used here is from the IEEE 1016-2009 
+standard~\cite{ieee1016}.
+We must provide explicit performance metrics for our SDN imlementation.
+These metrics will be what we use to determine how our SDN implementation
+compares against the pre existing Ciao SDN implementation. 
+The performance metrics must have numbers we can use to calculate actual and 
+percentage differences in bandwidth and latency.
+
+\subsubsection{Design Concerns}
+The resource viewpoint was chosen because it covers the 
+concerns of resource utilization and performance for the network and servers 
+Ciao is running on.
+The specific resources we are interested in when gathering performance metrics 
+for are network bandwidth and latency, and server CPU usage.
+
+\subsubsection{Design Elements}
+To compare our changes to Ciao with the current implementation, and decide 
+which tunneling protocols to use in our final implementation we need to gather 
+performance metrics.
+To do this we will measure network bandwidth, latency, 
+and CPU the usage of the hardware the SDN is running on before we make any 
+changes, and using different tunneling protocols.
 
 \subsection{Resource Design View}
 %Repeat these sections as needed for each component
+To improve network performance we will use either the VxLAN or nvGRE tunneling 
+protocol.
+We will gather performance metrics for the Ciao SDN when it is using the VxLAN 
+and nvGRE tunneling protocols, and decide which protocol to use depending on 
+which protocol performs better. Bandwidth and throughput are more important 
+performance metrics than CPU usage.
+To measure the performance metrics for the tunneling protocols we will use 
+the iperf3~\cite{iperf} and qperf~\cite{qperf} network tools.
+We will use iperf3 to measure network bandwidth and 
+CPU usage. We will use qperf to measure network latency.
+
+\subsubsection{Design Elements}
+\paragraph{iperf3}
+iperf3 will be used to gather network bandwidth measurements, and the CPU usage 
+of machines sending and receiving network traffic.
+We can run iperf3 in a Docker container. 
+There is a public Docker image we can use 
+so we will not need to build a Docker image for it~\cite{iperfdocker}.
+iperf3 must be run in a client server configuration.
+The docker image supports running in either client or server mode.
+We will measure network bandwidth between different tenants on the network 
+by running the iperf3 docker container in server mode on one tenant, and in 
+client mode on other tenants.
+We can measure the CPU usage at the same time as the bandwidth because iperf3
+will output both at the same time.
+
+\begin{lstlisting}[caption = Running an iperf3 docker container in server mode]
+docker run  -it --rm --name=iperf3-server -p 5201:5201 networkstatic/iperf3 -s
+\end{lstlisting}
+
+\begin{lstlisting}[caption = Running an iperf3 docker container in client mode]
+docker run  -it --rm networkstatic/iperf3 -c 172.17.0.2
+\end{lstlisting}
+
+\paragraph{qperf}
+qperf will be used to gather network latency measurements.
+We can run qperf in a Docker container. There is a public docker image we can 
+use so we will not need to build our own qperf docker image 
+%~\cite{qperfdocker}.
+qperf must be run in a client server configuration. The docker image supports 
+running in either client or server mode.
+To measure TCP latency the \texttt{tcp\_lat} flag must be passed to the qperf 
+client.
+To measure UDP latency the \texttt{udp\_lat} flag must be passed to the qperf 
+client.
+
+\begin{lstlisting}[caption = Running a qperf docker container in server mode]
+docker run -dti -p 4000:4000 -p 4001:4001 arjanschaaf/centos-qperf -lp 4000
+\end{lstlisting}
+
+\begin{lstlisting}[caption = Running a qperf docker container in client mode to 
+measure TCP and UDP latency]
+docker run -ti --rm arjanschaaf/centos-qperf 172.17.0.2 -lp 4000 -ip 4001 tcp_lat udp_lat
+\end{lstlisting}
 
 \subsection{Design Rationale}
 
