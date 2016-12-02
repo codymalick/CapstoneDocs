@@ -447,13 +447,27 @@ While GRE tunnels get the job done, a new and more modern protocol is needed to
 support advanced virtualization features and scaling to large address spaces.
 
 \subsection{Interaction Design View}
+VxLAN is a relatively new virtualization standard developed by a few major
+players in the network industry. Cisco, VMware, Citrix, and Redhat all worked
+together to create this standard to resolve the major problem of massive
+virtual networks. VxLAN's primary advantage is that it has a massive address
+space, about sixteen million, and that its overall overhead increase is only
+fifty bytes~\cite{vxlan}. Speed will be a deciding factor in which interface is
+chosen, so a smaller overhead is good.
+
+NvGRE is another relatively new virtualization standard developed in tandem by
+Microsoft, HP, INtel, and Dell~\cite{nvgre-info}. NvGRE sports a few of the
+same features as VxLAN, the primary difference between the two being the header
+field. They use different UDP port numbers and use a different bit to indicate
+that encapsulation has occured~\cite{nvgre}. The primary difference between the
+two is going to be overall performance in our testing environment, and in
+production.
+
 Part of the implementation is selecting a more advanced tunneling protocol than
 standard GRE tunnels. The project will be implementing both NvGRE, and VxLAN,
 and testing the performance of both protocols in order to determine the best
 fit. Both protocols implement improved and more modern versions of tunneling
-software. The project will implement both and choose.
-
-
+software. 
 
 \subsection{Resource Design Viewpoint}
 % Network performance testing
