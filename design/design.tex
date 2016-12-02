@@ -36,16 +36,16 @@
 \newcommand\addrow[2]{#1 &#2\\ }
 
 \newcommand\addheading[2]{#1 &#2\\ \hline}
-\newcommand\tabularhead{\begin{tabular}{lp{8cm}}
-\hline
-}
-\newcommand\addmulrow[2]{
-\begin{minipage}[t][][t]{2.5cm}#1\end{minipage}% 
-   &\begin{minipage}[t][][t]{8cm}
-    \begin{enumerate} #2   \end{enumerate}
-    \end{minipage}\\ }
+\newcommand\tabularhead{\begin{tabular}{lp{15cm}}
+	\hline
+	}
+	\newcommand\addmulrow[2]{
+		\begin{minipage}[t][][t]{2.5cm}#1\end{minipage}%
+			&\begin{minipage}[t][][t]{15cm}
+				\begin{enumerate} #2   \end{enumerate}
+			\end{minipage}\\ }
 
-\newenvironment{usecase}{\tabularhead}
+	\newenvironment{usecase}{\tabularhead}
 {\hline\end{tabular}}
 %\newenvironment{usecase}
 %  \addheading{}{}
@@ -89,12 +89,12 @@ basicstyle=\ttfamily
 		project.
 	\end{abstract}
 	\vspace{6cm}
-\begin{center}
-	Date of Issue: December 2nd, 2016\\
-	Issuing Organization: Intel Corporation\\
-	Authorship: Matthew~Johnson,~Cody~Malick,~and~Garrett~Smith\\
-	Change History: First Draft, 12-02-2016 \\
-\end{center}
+	\begin{center}
+		Date of Issue: December 2nd, 2016\\
+		Issuing Organization: Intel Corporation\\
+		Authorship: Matthew~Johnson,~Cody~Malick,~and~Garrett~Smith\\
+		Change History: First Draft, 12-02-2016 \\
+	\end{center}
 
 \end{titlepage}
 \tableofcontents
@@ -299,29 +299,76 @@ will be using Ciao.
 \subsection{Context Design Viewpoint}
 %High-level concerns - Go, Platform, Ciao integration
 %Viewpoint Name
+The context design viewpoint used here is from the IEEE 1016-2009
+standard~\cite{ieee1016}.
+
+\subsubsection{Context Design Concerns}
+
+The design concerns for the context viewpoint are related to overall
+compatibility both with the platform the software is running on as well as the
+software the networking mode is running in. It must also be compatible with
+existing networking protocols as used within Ciao already. Other major concerns
+include security and performance of the software defined network.
+
+There is one primary use case initiated by a compute node sending a data packet
+to another compute node within the SDN.
+
+\begin{usecase}
+	\addheading{Actor}{Compute Node 1}
+	\addrow{Precondition}{Compute Node 1 attempts to send data over network
+	to Compute Node 2.}
+	\addrow{Postcondition}{Compute Node 2 receives data sent by Compute Node
+	1}
+	\addmulrow{Main Path}{
+	\item Compute Node 1 encapsulates packet.
+	\item Compute Node 1 sends packet to Network Node.
+	\item Network Node routes packet via relevant CNCI to Compute Node 2.
+	\item Compute Node 2 receives packet and de-encapsulates.\\
+	}
+\end{usecase}
+
+\subsubsection{Design Entities}
+
 The users of the networking mode we are implementing are the current and future
 users of Ciao, system administrators of small to medium enterprises running
 private clouds.
-%Design Concerns that are the topics of the viewpoint
-%Design Elements
-%Analytical Methods
-%Viewpoint Source
-%Rationale for selection
 
-\begin{usecase}
-	\addheading{Actor}{System user} 
-	\addrow{Precondition}{The system, shows, in the form part of an
-	object type, the number   indication.}
-	\addrow{Postcondition}{A disconnected number indicating the type of 
-	`other constructed object'.}
-	\addmulrow{Main path (M)}{\item User selects \ldots
-			\item System demands \ldots}
-\end{usecase}
+The actors of the networking mode are the components of Ciao networking, the
+compute nodes, network nodes, and CNCIs. These nodes handle the encapsulation,
+routing, and de-encapsulation of packets.
+
+\subsubsection{Design Relationships}
+
+Compute nodes both send and receive packets to other compute nodes. Network
+nodes aggregate this tenant network traffic while CNCIs within the network nodes
+keep tenant traffic isolated from each other.
+
+\subsubsection{Design Constraints}
+
+Design of the solution must integrate fully with Ciao as well as the Linux
+family of operating systems it runs on. This constraint demands specific
+technology choices as described below in the Context Design View section.
 
 \subsection{Context Design View}
-%Conforms to viewpoint
-%Has one or more concerns from the concerns section
-%No conflicts between the design elements
+
+Compatibility with the rest of the Ciao system is paramount and drives many
+design decisions. The network implementation will be done in the Go programming
+
+Because compatibility with the reset of the Ciao system is paramount, our
+software defined network will be written in the Go programming language and
+fully integrated in to Ciao. The Go programming language was selected for
+several reasons, including the efficiency of the language regarding both speed
+and memory, the concurrency capabilities, and the ease of implementation. Go was
+compared against C and Python as alternatives, and prevailed in every criteria
+except for availability of the language.
+
+This network mode will be written as a standalone networking mode for Ciao as an
+additional option to the standard Linux bridges available now. For this reason
+it must be fully integrated with the Ciao networking framework as it currently
+exists~\cite{ciaoNetworking}.
+
+Since Ciao targets the Linux family of operating systems, our networking
+solution must also support Linux operating systems.
 
 \subsection{Interface Design Viewpoint}
 %OVS-GRE tunneling implementation
@@ -341,39 +388,27 @@ private clouds.
 
 \subsection{Design Rationale}
 
-% Don't know where this goes
-\section{High-level considerations}
-% I don't know where to put this yet
+Our design decisions were based largely around the goal of maintaining
+compatibility with Ciao and the platforms that Ciao runs on, as well as
+improving the capabilities and performance of Ciao's SDN. Implementation will be
+done in Go in order to integrate with the larger system and because the Go
+programming language is platform independent~\cite{gogoodfor}.
 
-Our software defined network will be written in the Go programming language and
-fully integrated in to the Cloud Integrated Advanced Orchestrator
-(Ciao)~\cite{ciao}. The Go programming language was selected for
-several reasons, including the efficiency of the language regarding both speed
-and memory, the concurrency capabilities, and the ease of implementation. Go was
-compared against C and Python as alternatives, and prevailed in every criteria
-except for availability of the language.
-
-This network mode will be written as a standalone networking mode for Ciao as an
-additional option to the standard Linux bridges available now. For this reason
-it must be fully integrated with the Ciao networking framework as it currently
-exists~\cite{ciaoNetworking}.
-
-\section{Summary}
-We have outlined the steps and design strategy we will take for each goal. Our
-design methodology is incremental design, starting with the first goal (Open
-vSwitch-created GRE tunnels) and incrementing through each feature until all
-goals are achieved.
+Open vSwitch was chosen because of the various features offered. OVS has support
+for packet acceleration frameworks such as DPDK and advanced SDN tunneling
+protocols such as nvGRE and VxLAN which would allow leverage of ECMP routing and
+potentially increase network performance.
 
 \clearpage
 \section{Signatures}
 \vspace{2cm}
 \begin{flushleft}
-\noindent\hspace{0.7cm}\makebox[1.5in]{\hrulefill}~Robert Nesius, Engineering Manager\\
-\vspace{1cm}
-\hspace{0.7cm}\makebox[1.5in]{\hrulefill}~Matthew Johnson\\
-\vspace{1cm}
-\hspace{0.7cm}\makebox[1.5in]{\hrulefill}~Garrett Smith\\
-\vspace{1cm}
-\hspace{0.7cm}\makebox[1.5in]{\hrulefill}~Cody Malick
+	\noindent\hspace{0.7cm}\makebox[1.5in]{\hrulefill}~Robert Nesius, Engineering Manager\\
+	\vspace{1cm}
+	\hspace{0.7cm}\makebox[1.5in]{\hrulefill}~Matthew Johnson\\
+	\vspace{1cm}
+	\hspace{0.7cm}\makebox[1.5in]{\hrulefill}~Garrett Smith\\
+	\vspace{1cm}
+	\hspace{0.7cm}\makebox[1.5in]{\hrulefill}~Cody Malick
 \end{flushleft}
 \end{document}
