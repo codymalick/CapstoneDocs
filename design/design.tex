@@ -53,7 +53,7 @@
 %  \addmulrow{}{}
 %\end{usecase}
 
-\lstset{frame=tb,
+\lstset{frame=none,
 language=C,
 columns=flexible,
 numberstyle=\tiny\color{gray},
@@ -378,11 +378,61 @@ from standard GRE tunnels to Open vSwitch generated GRE tunnels. The
 implementation of this object will be through designing and building an
 interface for Open vSwitch to hook into Ciao. 
 
-The main design concerns for an interface are service definitions and service
-access. 
+\subsubsection{Design Concerns}
+Ciao will need to implement an interface for Open vSwitch in order to utilize
+the new feature set that OVS supplies. In order to access the OVS Management
+Database, we will need to access the Open vSwitch Database Management Protocol
+\cite{rfc7047}. The following functions of the protocol will need to be created:
+\cite{rfc7047}\\
+
+\begin{center}
+	\begin{tabular}{| p{3cm} | p{4cm} | p{6cm} |}
+		\hline
+		Function Name & Parameters & Description \\ \hline
+		Insert & \textit{table}~:~required \newline
+		\textit{row}~:~required \newline \textit{id}~:~optional &
+		The operation inserts specified value into
+		table at row. If no id is specified, then a new unique
+		id is generated.\\ \hline
+		Select & \textit{table}~:~required \newline \textit{where}~:~
+		required \newline \textit{columns}~:~optional & Searches
+		\textit{table} for rows that match all the conditions specified
+		in \textit{where}. If \textit{columns} is not specified, all
+		columns from the table are returned.\\ \hline
+		Update & \textit{table}~:~required \newline \textit{where}~:~
+		required \newline \textit{row}~:~required & Updates specified
+		rows in a table. It searches \textit{table} for rows that match
+		all conditions specified in \textit{where}.\\ \hline
+		Delete & \textit{table}~:~required \newline \textit{where}~:~
+		required & Operation deletes all the rows from \textit{table}
+		that match all the conditions specified in \textit{where} \\ \hline
+	\end{tabular}
+\end{center}
+
+\subsubsection{Design Elements}
+The primary method of interaction with Open vSwitch is through the Configuration
+Management Database, which provides a programmatic interface for updating and
+changing OVS on the fly. This will be the primary interface for our
+implementation.
 
 \subsection{Interface Design View}
+In order to interact with the interface using Golang, the implementation will
+use the libovsdb library\cite{libovsdb}. Libovsdb provides a direct interface
+for Golang to access and modify the OVS Database configurations. The following
+is an example function call to call the above functions:\cite{gosample}\\
 
+\begin{lstlisting}[caption=Example insert operation in the OVS Database]
+	// simple insert operation
+	insertOp := libovsdb.Operation{
+		Op:       "insert",
+		Table:    "Bridge",
+		Row:      bridge,
+		UUIDName: namedUUID,
+	}
+\end{lstlisting}
+
+Using the above code, slightly altered for each required operation, Golang can
+be used to insert, select, update, and delete using a standard format.
 %Cody
 \subsection{Interaction Design Viewpoint}
 % VxLAN/nvGRE tunneling protocol implementation
