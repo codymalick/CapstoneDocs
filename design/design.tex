@@ -131,17 +131,16 @@ which could increase network performance overall.
 
 \subsection{Scope}
 
-Ciao exists as a cloud orchestrator for cloud clusters. It is inherently Ciao
-exists as a cloud orchestrator for cloud clusters. It is inherently necessary
+Ciao exists as a cloud orchestrator for cloud clusters. It is inherently necessary
 for the separate nodes in the cloud cluster to be able to talk to each other.
-Without a reliable and secure software defined network Ciao would have little
-purpose. Utilization of Open VSwitch GRE tunnels allows Ciao to become more
+Without a reliable and secure software defined network, Ciao would have little
+purpose. Utilization of Open vSwitch GRE tunnels allows Ciao to become more
 scalable and enables the inclusion of packet-acceleration technology such as the
 Data Plane Development Kit (DPDK).
 
 \subsection{Context}
 
-Our network mode will exist within Ciao, a cloud orchestrator designed to be
+Our networking mode will exist within Ciao, a cloud orchestrator designed to be
 fast and easy to deploy. Ciao is sectioned into three parts, each with
 distinctive purposes~\cite{ciao}.
 
@@ -363,7 +362,7 @@ compared against C and Python as alternatives, and prevailed in every criteria
 except for availability of the language.
 
 This network mode will be written as a standalone networking mode for Ciao as an
-additional option to the standard Linux bridges available now. For this reason
+additional option to the standard Linux bridges available now. For this reason,
 it must be fully integrated with the Ciao networking framework as it currently
 exists~\cite{ciaoNetworking}.
 
@@ -381,9 +380,9 @@ interface for Open vSwitch to hook into Ciao.
 \subsubsection{Design Concerns}
 Ciao will need to implement an interface for Open vSwitch in order to utilize
 the new feature set that OVS supplies. In order to access the OVS Management
-Database, we will need to access the Open vSwitch Database Management Protocol
-\cite{rfc7047}. The following functions of the protocol will need to be created:
-\cite{rfc7047}\\
+Database, we will need to interface with the Open vSwitch Database Management
+Protocol\cite{rfc7047}. The following functions of the protocol will need to be
+created:\cite{rfc7047}\\
 
 \begin{center}
 	\begin{tabular}{| p{3cm} | p{4cm} | p{6cm} |}
@@ -416,10 +415,11 @@ changing OVS on the fly. This will be the primary interface for our
 implementation.
 
 \subsection{Interface Design View}
-In order to interact with the interface using Golang, the implementation will
-use the libovsdb library\cite{libovsdb}. Libovsdb provides a direct interface
-for Golang to access and modify the OVS Database configurations. The following
-is an example function call to call the above functions:\cite{gosample}\\
+In order to interact with the interface using the Go programming language,
+the implementation will use the libovsdb library\cite{libovsdb}. Libovsdb
+provides a direct interface for Go to access and modify the OVS Database
+configurations. The following is an example function call to call the above
+functions:\cite{gosample}\\
 
 \begin{lstlisting}[caption=Example insert operation in the OVS Database]
 	// simple insert operation
@@ -431,15 +431,15 @@ is an example function call to call the above functions:\cite{gosample}\\
 	}
 \end{lstlisting}
 
-Using the above code, slightly altered for each required operation, Golang can
+Using the above code, slightly altered for each required operation, Go can
 be used to insert, select, update, and delete using a standard format.
 %Cody
 \subsection{Interaction Design Viewpoint}
 % VxLAN/nvGRE tunneling protocol implementation
 An important part of implementation is choosing a tunneling protocol to
-communicate between compute nodes. Currently, standared Generic Routing
+communicate between compute nodes. Currently, standard Generic Routing
 Encapsulation is used to create a virtual network. These tunnels are created at
-the ethernet layer, and allow distributed systems to believe they are on the
+the Ethernet layer, and allow distributed systems to believe they are on the
 same physical network as another computer in a different location.
 
 \subsubsection{Design Concerns}
@@ -456,15 +456,15 @@ fifty bytes~\cite{vxlan}. Speed will be a deciding factor in which interface is
 chosen, so a smaller overhead is good.
 
 NvGRE is another relatively new virtualization standard developed in tandem by
-Microsoft, HP, INtel, and Dell~\cite{nvgre-info}. NvGRE sports a few of the
+Microsoft, HP, Intel, and Dell~\cite{nvgre-info}. NvGRE sports a few of the
 same features as VxLAN, the primary difference between the two being the header
 field. They use different UDP port numbers and use a different bit to indicate
-that encapsulation has occured~\cite{nvgre}. The primary difference between the
+that encapsulation has occurred~\cite{nvgre}. The primary difference between the
 two is going to be overall performance in our testing environment, and in
 production.
 
 Part of the implementation is selecting a more advanced tunneling protocol than
-standard GRE tunnels. The project will be implementing both NvGRE, and VxLAN,
+standard GRE tunnels. The project will be implementing both nvGRE, and VxLAN,
 and testing the performance of both protocols in order to determine the best
 fit. Both protocols implement improved and more modern versions of tunneling
 software. 
@@ -478,9 +478,9 @@ software.
 %Viewpoint Source
 The resource design viewpoint used here is from the IEEE 1016-2009 
 standard~\cite{ieee1016}.
-We must provide explicit performance metrics for our SDN imlementation.
+We must provide explicit performance metrics for our SDN implementation.
 These metrics will be what we use to determine how our SDN implementation
-compares against the pre existing Ciao SDN implementation. 
+compares against the preexisting Ciao SDN implementation. 
 The performance metrics must have numbers we can use to calculate actual and 
 percentage differences in bandwidth and latency.
 
