@@ -539,10 +539,9 @@ docker run  -it --rm networkstatic/iperf3 -c 172.17.0.2
 \paragraph{qperf}
 The qperf tool will be used to gather network latency measurements.
 We can run qperf in a Docker container. There is a public docker image we can 
-use so we will not need to build our own qperf docker image 
-%~\cite{qperfdocker}.
-qperf must be run in a client server configuration. The docker image supports 
-running in either client or server mode.
+use so we will not need to build our own qperf docker image ~\cite{qperfdocker}.
+The qperf tool must be run in a client server configuration.
+The docker image supports running in either client or server mode.
 To measure TCP latency the \texttt{tcp\_lat} flag must be passed to the qperf 
 client.
 To measure UDP latency the \texttt{udp\_lat} flag must be passed to the qperf 
