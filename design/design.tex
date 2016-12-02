@@ -436,8 +436,24 @@ be used to insert, select, update, and delete using a standard format.
 %Cody
 \subsection{Interaction Design Viewpoint}
 % VxLAN/nvGRE tunneling protocol implementation
+An important part of implementation is choosing a tunneling protocol to
+communicate between compute nodes. Currently, standared Generic Routing
+Encapsulation is used to create a virtual network. These tunnels are created at
+the ethernet layer, and allow distributed systems to believe they are on the
+same physical network as another computer in a different location.
+
+\subsubsection{Design Concerns}
+While GRE tunnels get the job done, a new and more modern protocol is needed to
+support advanced virtualization features and scaling to large address spaces.
 
 \subsection{Interaction Design View}
+Part of the implementation is selecting a more advanced tunneling protocol than
+standard GRE tunnels. The project will be implementing both NvGRE, and VxLAN,
+and testing the performance of both protocols in order to determine the best
+fit. Both protocols implement improved and more modern versions of tunneling
+software. The project will implement both and choose.
+
+
 
 \subsection{Resource Design Viewpoint}
 % Network performance testing
