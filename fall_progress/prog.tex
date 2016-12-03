@@ -151,550 +151,103 @@ engineer in charge of Ciao networking, Manohar Castelino, gave us all an
 explanation of Ciao, how the networking works, and what he expects us to
 accomplish.
 
-It was also during this time we were provided with five Intel NUCs that would
-serve as our local cluster. We found out that we needed to register the MAC
-addresses with the university, and communicated this need to Todd Shechter, the
-Oregon State University Director of Information Technology.
-
+It was also during this time that Rob provided us with five Intel NUCs that
+would serve as our local cluster. We found out that we needed to register the
+MAC addresses with the university, and communicated this need to Todd Shechter,
+the Oregon State University Director of Information Technology.
 
 \subsection{Week Three}
 
-Garrett:
+During week three we attempted to install Clear Linux OS for Intel
+Architecture~\cite{clearlinux} on all five Intel NUCs. We were unsuccessful
+because the installer requires a network connection to download the packaging.
+At this point, network access had yet to be approved by OSU IT.
 
-Progress
+Network access is required to install Clear Linux, Ciao, and access the machines
+remotely. Since Clear Linux is a datacenter OS, not a desktop OS, it does not
+support wireless internet connections. Because ethernet is required our hardware
+must be registered with the university. If we were unable to obtain network
+access for the hardware on OSU's network we would have needed to find somewhere
+else to house it.
 
-A couple of weeks ago our team drove up to Intel's campus in Hillsboro to meet
-with our clients.
-They went over Ciao's network stack with us, explained the project in depth, and
-answered questions. In addition to going over Ciao with us, they helped us write
-an abstract and problem statement for the project. We submitted the abstract and
-problem statement for the project on Thursday afternoon (2016/10/13).
-
-Intel is lending us 5 NUCs (small form factor computers), and a managed Cisco
-switch to use as our datacenter for the project. Kevin McGrath is giving us
-access to his lab so we have a secure place to set up the hardware. We have the
-hardware physically in place in Kevin's lab, but we need wired network access to
-install Clear Linux on the NUCs and set up Ciao. We requested network access but
-the request has not yet been approved.
-
-Issues
-
-We are still waiting on access to OSU's wired network for the 5 NUCs and the
-switch that Intel are loaning us for the project. Network access is required to
-install Clear Linux, Ciao, and access the machines remotely. If we are unable to
-obtain network access for the hardware on OSU's network we will need to find
-somewhere else to house it.
-
-Next Steps
-
-We would like to get the network issues sorted out as soon as possible so we can
-finish setting up the NUCs and switch. Once we have network access we will
-install Clear Linux, set up Ciao, examine how Ciao's network stack currently
-works, and gather performance metrics. The performance metrics we gather will be
-used to compare Ciao's current network stack implementation against ours.
-
-Matthew:
-
-Progress
-
-We have made some progress since being put on this project. A couple weeks ago
-we all traveled up to Hillsboro to meet with our clients, which turns out to
-include a couple Principal Engineers (PEs) who are miles more technical than us.
-During this meeting, one of the PEs was kind enough to spend an hour of his time
-explaining the more technical aspects of Ciao (I'm assuming I don't have to go
-into an explanation of our project here) and what they wanted us to do. Also
-during this meeting, we collaborated to write our problem statement due in this
-class. The next week we set up the hardware required to run Ciao in a cluster
-and began the process to register our hardware with the university so we could
-be granted IP addresses.
-
-Issues
-
-Since then we have been trying to jump through various hoops to get ethernet
-access on the hardware. This has been a continuing battle that we expect to be
-resolved soon. We need internet to use git, remote updates of Ciao and Clear
-Linux, and remote access to the cluster. We need wired internet because Clear
-Linux is a datacenter OS, and therefore does not even package the common wifi
-setup tools, such as iw, wifi-menu, wpa-supplicant, etc.
-
-Next Steps
-
-The next step is to install the Clear Linux OS on the five Intel NUCs in the
-cluster. Once that has been done we can set up Ciao and take initial
-measurements as a baseline. This baseline will be recorded so we can take
-further measurements once we implement our new networking mode using OVS.
-
-Cody:
-
-Progress
-
-We've set up the five NUCs, small Intel computers, that will act as our "cloud."
-Once the project is all setup, we will be simulating a production environment
-that we can test and deploy our project on. I would like to thank Intel for
-providing such a wonderful and high performance testing environment.
-
-While visiting Intel, we also got our problem statement and abstract put
-together and approved by the customer. The team has been incredibly helpful, and
-efficient at getting us any information we need to get moving on the project.
-
-Issues
-
-The only wall that we've hit is getting the networking capability set up on
-campus. Because of the set up on campus, Network Services prevents deployment of
-random Ethernet devices. A pragmatic policy to be sure. Knowing all the mischief
-that college students get up to, I completely understand why this policy is in
-place. Because of this, we need to get approval from Network Services before our
-initial deployment of the Ciao infrastructure.
-
-Next Steps
-
-Once the network issues are out of the way, we can move forward with our initial
-testing setup with Ciao. Once that's set up, we can define what the requirements
-of the project are, and begin designing what exactly needs to be implemented.
-
-Thanks for taking the time to read this, and look for future updates!
+We also wrote our problem statement in week three, earlier than most groups were
+able to, since we were ahead of schedule with regard to meeting our team and
+choosing a project.
 
 \subsection{Week Four}
 
-Cody:
+During week four Matthew installed Clear Linux on the Intel NUCs. Since there
+the networking issues had still not been solved he brought them to his house to
+use the wired connection there. At this point our hardware had been registered
+with the university, but for unknown reasons our NUCs were not connecting to the
+network. Todd Shechter was devoting a lot of his time to help us debug, but we
+were not yet successful. He set us up with two five-port switches in Kevin
+McGrath's lab, but they were not receiving IP addresses from the network.
 
-Progress
-
-We had our problem statement reviewed, and we're waiting on the feedback from
-Kevin. That should arrive later tonight. We also spent some time getting the
-five Intel NUCs (Next Unit of Computing) set up in the lab. Matthew spent a good
-amount of time Wednesday getting them imaged with Clear Linux, Intel's flavor of
-Linux. We also got the base latex files for the requirements document pushed to
-a new branch of the docs repo, "client\_req." We'll be updating that and merge it
-once the first version is complete.
-
-We also looked through the basic requirements of the requirements document from
-IEEE.
-
-Issues
-
-Our issues with networking continue through this week. Todd, from the
-engineering network team, has been incredibly helpful and prompt in his
-responses. We plan on getting this issue resolved early next week.
-
-Next Steps
-
-After the network issues are ironed out, we'll get our test environment set up
-with Ciao, and get our requirements document written up.
-
-Matthew:
-
-Progress
-
-This week was almost entirely devoted to figuring out networking for our
-hardware, 5 Intel NUCs. As mentioned previously, these NUCs will make up the
-control node and compute nodes for the cluster we will be running and testing
-Ciao on. After several days of debugging and a 22-email chain with the IT
-director at OSU, we are still blocked.
-
-
-Other than debugging the networking with the IT director, we have successfully
-installed Clear Linux on all NUCs. This was done by bringing them all home and
-installing Clear on my home network. Tonight we will also receive feedback for
-our first draft of the Problem Statement. Hopefully we will have the feedback
-addressed by tomorrow morning (Friday, October 21st), since I will be driving up
-to Intel and will be able to get any changes approved and signed.
-
-Issues
-
-As I mentioned above, the issue with the networking is a big one. Hopefully we
-can get this figured out when the IT director returns on Monday.
-
-Next Steps
-
-The next step is to get networking figured out. This is a necessary step because
-we need to use the network to ssh into the NUCs, as well as communicate with the
-internet for github access and Clear Linux updates.
-
-Garrett:
-
-Progress
-
-Paperwork
-
-Our problem statement was reviewed and returned to us without any feedback. Cody
-emailed Kevin asking if we still need to resubmit the problem statement. We do.
-
-Hardware and Software
-
-In the land of NUCs and networks we are still having problems connecting the
-NUCs to OSU's network. Todd set us up with two 5 port switches in Kevin's lab,
-but we are having problems using them to connect to the network. Clear Linux
-requires network access to install, but network access requires us to set a
-hostname. We worked around the problem for NUC number 1 by bridging my laptop's
-wireless connection to the NUC over ethernet. This was a temporary workaround
-that let us install Clear Linux and set a hostname for the NUC. Unfortunately
-once the NUC was configured, we were still unable to obtain an IP address from
-the OSU network using the switches Todd provided. Several emails with Todd later
-we had NUC number 1 plugged into port 25 of the big 25 port switch in the middle
-of the lab, and connected to the network. This means the NUCs are configured
-correctly, and the issue likes somewhere in the network. At this point Todd
-emailed us that he was out of the office until next week, putting our network
-setup on pause. In the meantime, Matthew took the other 4 NUCs home and
-installed Clear Linux on them there.
-
-Issues
-
-As I said above, we are having problems getting the NUCs connected to OSU's
-network. Todd has been very helpful, but between email latency, and school and
-work schedules consuming chunks of the day the networking issues are taking a
-long time to resolve.
-
-Next Steps
-
-We need to work with Todd next week to get network access for the NUCs in
-Kevin's lab. If that goes through we will set up Ciao on the NUCs. Our problem
-statement does not require any edits so we will resubmit it. The requirements
-document is due on the 28th so we will be working on that.
+We had our problem statement reviewed and were waiting for feedback by the end
+of the week. We also started working on the client requirements document, though
+much of our contributions were simple outline and templating work.
 
 \subsection{Week Five}
 
-Matthew:
-
-Progress
-
 This week we spent most of our time writing the rough draft for the requirements
-document. We have turned it in and it is definitely a good start. We will polish
-it over the next week to turn in next Friday.
+document. We turned it in by the end of the week and were satisfied with our
+progress. The final draft of the requirements document was due the next week,
+week six. This week we also turned in our signed copy of the problem statement.
 
-Another big update for this week is that we have networking! I had another email
-conversation with Todd Shechter, who was at a loss as to why we could not access
-the network on our NUCs. He granted us access to the HP switch we had
-successfully connected via in the past. On Thursday, I went to move all our NUCs
-to the new switch. On a hunch I decided to try out the network one last time.
-They all worked! Our hardware is now set up and hopefully we will be able to get
-to work soon.
-
-Issues
-
-No issues currently, except for an increased workload from other classes. This
-being week 5, we all had midterms to contend with as well. Hopefully things calm
-down for a couple weeks.
-
-Next Steps
-
-The next step is to finish our requirements document and get it signed next
-week. We should also get Ciao installed on our NUCs and our cluster set up.
-
-Cody:
-
-Progress
-
-This week we submitted our finalized and signed copy of the problem statement.
-With that out of the way, we switched gears into the requirements document.
-We've worked through a rough draft, and will be fleshing out the details over
-the weekend. The requirements document has been good to read through, even in
-it's current form. It's given me a little more insight into what exactly the
-project is, and how we're going to go about design and implementation. Overall,
-I'm glad we're doing one.
-
-This week we also got our networking issues resolved! This is great news as it
-will now allow us to completely configure and update our NUCs as needed without
-having to be in the lab.
-
-We met with Frank on Tuesday and gave him the update on where we're at
-currently.
-
-Issues
-
-No notable issues this week. We're moving forward at a good clip.
-
-Next Steps
-
-We'll be completing the requirements document this coming week, as well as
-working on configuring the current implementation of Ciao on our five NUCs.
-We're also expecting some books from Intel that should give us more insight and
-information into software defined networks.
-
-Garrett:
-
-Progress
-
-The network issues have been solved. Matthew was going to move the NUCs from the
-small Cisco switches Todd provided us to the large HP switch in the middle of
-the room when Matthew discovered that the NUCs were able to connect to the
-network using the small switches. Many thanks to Todd Shechter for his
-assistance as we worked through the network issues. All five NUCs have access to
-OSU's wired network. Now we can access them remotely and configure Ciao.
-
-In documentation land we submitted the rough draft of our requirements document.
-
-Issues
-
-We didn't have any issues with the Capstone project its self. Between midterms,
-homework for other classes, and attending the career fair I was very busy which
-left less time to work on capstone.
-
-Next Steps
-
-The requirements document is due next Friday (2016/11/4) so we will be working
-on it next week. We will also set up Ciao in its current form on the NUCs.
+This week our networking issues were resolved. We had another email conversation
+with Todd Shechter, who was at a loss as to why we could not access the network
+from the NUCs. He granted us access to an HP switch we had successfully
+connected via in the past. On Thursday, we went to move all our NUCs to the new
+switch, but tried out the network on the mini switches one last time. This time
+they all worked. Our hardware was now set up and ready to go.
 
 \subsection{Week Six}
 
-Matthew:
-
-Progress
-
-This week we finished writing the requirements document that was due today.
-After the rough draft we turned in last week we continued working on it
-ourselves until Tuesday. On Wednesday Frank emailed us some suggestions (thanks
-Frank) and we addressed those right away. We got the document signed that
-afternoon by Rob Nesius, our client at Intel. We will soon be receiving a book
-from Intel on SDN basics that will help us get started with implementation. We
-would have liked to be starting on implementation by now but the
-writing-intensive course load has tied up our time a bit.
-
-Issues
-
-Our workloads continue to be heavy, but that won't change. We are doing fine,
-completing our assignments on time, and have no immediate blockers.
-
-Cody:
-
-Progress
-
-This week we submitted our finalized and signed copy of the requirements
-document. It's been a rather busy week, but our team has been working well
-together! We laid out a tentative plan for our next steps, which involve the
-design document and getting the books we need to being working with Software
-Defined Networks.
-
-We met with Frank on Tuesday and gave him the update on where we're at
-currently.
-
-Issues
-
-No notable issues this week. We're moving forward at a good clip.
-
-Next Steps
-
-The next major steps are the tech review documents due next week, and begin work
-on the design document. We're supposed to be receiving a book from Intel soon as
-well which should help us get started.
-
-Garrett:
-
-Progress
-
-The final version of our requirements document has been signed and submitted. I
-think we would like to be furhter along in setting up the project and starting
-the implementation, but the writing requirements of the class have kept us busy.
-
-Issues
-
-There haven't been any issues with the class or eachother. We are making
-progress.
+This week we finished writing the requirements document that was due at the end
+of the week. After the rough draft we turned in the previous week we continued
+working on it ourselves until Tuesday. On Wednesday Frank emailed us some
+suggestions and we addressed those right away. We got the document signed that
+afternoon by Rob Nesius, our client at Intel.
 
 \subsection{Week Seven}
 
-Matthew:
-
-Progress
-
-This week we started working on the technical review document due next Monday.
-This document outlines nine different components of our system. For each
-component we are exploring three different technologies that could be used to
+This week we started working on the technical review document due the following
+Monday. This document outlines nine different components of our system. For each
+component we explored three different technologies that could be used to
 implement the component. Since our project is implementing a component of a
 larger system, it was difficult for us to come up with nine components and three
 technologies each (twenty-seven different options). We spent much of our week
-working together to figure out how to split the project up. We will all be
-working on our portions of the document over the weekend.
-
-Issues
-
-The biggest issue with the technical review document is that our system is a
-single component of a larger system, and is therefore difficult to split up into
-nine different parts.
-
-Cody:
-
-Progress
-
-We've moved forward on our Tech Review paper. We have the outline detailed, and
-which person is working on each component. It was a little difficult for us to
-break up the project into the individual components. The main reason for the
-difficulty was that we are implementing a small subcomponent of a very specific
-system. We ended up figuring it out, and we'll all be writing our pieces this
-weekend.
-
-Issues
-
-No notable issues this week.
-
-Garrett:
-
-Progress
-
-This week we started work on the technology review. This involved splitting our
-project into 9 parts and assigning 3 to each member of the team. The goal of our
-project is to implement part of a larger system, so finding 9 smaller parts was
-difficult. After meeting two separate times we were able to figure out how to
-split the project into 9 parts. Each of us has 3 parts to work on now, and we
-will be completing those over the weekend.
-
-Issues
-
-There were no issues this week.
+working together to figure out how to split the project up.
 
 \subsection{Week Eight}
 
-Matthew:
-
-Progress
-
-Over the last weekend we completed our technology review document, coming in at
-just over 16 pages total. Unlike several other groups we managed to complete and
-turn in our technology review on time. We are all satisfied with the result.
-Since then we have shifted to working on the design document that is due
-December 4th. This will be the largest document we produce this term and mostly
-marks the end of the documentation phase. The one document due after the design
-document is a term status report, which is mostly a combination of all the
-weekly updates we have written to give a coherent picture of our progress so far
-this year.
-
-Issues
-
-No issues currently.
-
-Cody:
-
-Progress
-
-It was a busy week! The team managed to get the Tech Review done on time. It
-ended up being quite a bit of work for each of the components the team was
-working on. My favorite section of the tech review was covering the network
-protocols section. I ended up choosing SSNTP, Simple Secure Network Transfer
-Protocol. The protocol was quite interesting as it was custom tailored to our
-project's needs. It was created by one of the principal engineers at Intel, who
-was also the creator of the project. It builds off of the security and handshake
-protocols that SSL and TLS established, but reduces the protocol overhead by
-only needing to do the initial handshake once. There were other sections, but
-they weren't nearly as interesting.
-
-Issues
-
-No issues this week, we're moving along very nicely.
-
-Garrett:
-
-Progress
-
-This past Monday (2016/11/14) we submitted the tech review document. It was a
-lot of work, but we got it in on time unlike many other capstone groups. I
-researched software switch options, network latency tools, and network
-throughput tools. For the software switch, Open vSwitch, the software switch
-recommended by Intel, was the best option. Nothing else I found came close in
-terms of features and portability. There were a lot of options for tools that
-measure network throughput and latency. I had a lot of choice when it came to
-choosing tools so I spent a lot of time reading recommendations, looking at all
-of the options, and comparing them to determine what would work best for us.
-Even though using the tools isn't part of the assignment, I was curious about
-how the networking tools I was researching worked so I set up and used some of
-them to get more of an idea of what I would be doing.
-
-Issues
-
-We didn't have any issues this week.
+This week we submitted the tech review document. It was a lot of work, but we
+got it in on time unlike many other capstone groups. Garrett researched software
+switch options, network latency tools, and network throughput tools. Matthew
+dealt with high-level language, testing, and logging tools. Cody handled the
+network-specific implementation pieces, such as packet protocols, network
+virtualization implementation, and bridge implementation.
 
 \subsection{Week Nine}
 
-Matthew:
-
-Progress
-
 This was a short week with Thursday and Friday given over to the Thanksgiving
-holiday. We have transitioned to using the template requested by Kirsten for the
-design document and are ready to start with writing the document and preparing
-for our final presentation.
-
-Issues
-
-No issues currently.
-
-Cody:
-
-Progress
-
-We had a short week this week. We've started on the design document. We will be
-making the transition over to the template provided by Kirsten for this
-assignment. In the last few documents, we had not used the exact template she
-provided. We will be doing so for the final documents this term.
+holiday. We started working on the design document but did not make much headway
+before breaking for the holiday weekend.
 
 Our team also got together and talked about how we were going to execute the
 final presentation video for a few minutes this week.
 
-Issues
-
-No issues this week. One thing I could use more of, however, is time!
-
-Garrett:
-
-Progress
-
-This week was short due to the Thanksgiving holiday. We met and discussed how we
-will be completing the design document and progress report. We have the design
-document laid out using the template Kirsten wants us to use. We received
-feedback from Kirsten on the tech review. Some of the feedback was helpful
-generally like watching out for spacing issues.
-
-In more of a personal progress report, I have been reading through the book on
-Software Defined Networking. It is very insightful, and I wish I had it at the
-start of the term.
-
-Issues
-
-No issues this week. The holiday is cutting into project time, but that is
-unavoidable.
-
 \subsection{Week Ten}
-
-Matthew:
-
-Progress
 
 This week we focused on the design document due Friday. We spent time
 researching design strategies and writing up our plan to execute. During this
 research we found a very useful Go library that interfaces with Open vSwitch.
 This library will simplify our implementation, allowing us more time to do
-network performance testing, which the client is very interested in.
-
-Issues
-
-No issues this week, we all worked hard and got the document done.
-
-Cody:
-
-Progress
-
-This week we wrote the design document up, and got it signed just in time for
-submission on Friday. Writing the design document was helpful, as it forced the
-team to read through what libaries and interfaces in those libraries we need to
-use. As well as getting a somewhat formal design plan in place, it gave us a
-more informed overview of what peices of the project need to get done.
-
-Issues
-
-No issues this week! Everything is moving smoothly.
-
-Garrett:
-
-Progress
-
-This week we finished the design document. We each wrote up part of the design,
-then spent time editing and revising the document. We turned in the signed copy
-by the due date and did not need to turn in an unsigned copy. It feels good to
-have the first iteration of the design document complete because we are now in a
-position where we can work on implementing the project over winter break.
-
-Issues
-
-No major issues this week.
+network performance testing, which the client is very interested in. Our client
+signed the document with a half-hour to spare before the deadline, and the
+technical advisors for the project, Manohar Castelino and Tim Pepper, indicated
+they were impressed with the design we had outlined.
 
 \section{Fall Term Retrospective}
 
