@@ -26,35 +26,6 @@
 
 %Remove numbering from the bibliography section
 
-\usepackage{etoolbox}
-\patchcmd{\thebibliography}{\section*}{\section}{}{}
-\patchcmd{\thebibliography}{\addcontentsline{toc}{section}{\refname}}{}{}{}
-
-\graphicspath{{../images/}}
-
-\usepackage{booktabs}
-
-\newcommand\addrow[2]{#1 &#2\\ }
-
-\newcommand\addheading[2]{#1 &#2\\ \hline}
-\newcommand\tabularhead{\begin{tabular}{lp{15cm}}
-	\hline
-	}
-	\newcommand\addmulrow[2]{
-		\begin{minipage}[t][][t]{2.5cm}#1\end{minipage}%
-			&\begin{minipage}[t][][t]{15cm}
-				\begin{enumerate} #2   \end{enumerate}
-			\end{minipage}\\ }
-
-	\newenvironment{usecase}{\tabularhead}
-{\hline\end{tabular}}
-
-%\newenvironment{usecase}
-%  \addheading{}{}
-%  \addrow{}{}
-%  \addmulrow{}{}
-%\end{usecase}
-
 \lstset{frame=none,
 language=C,
 columns=flexible,
@@ -120,8 +91,28 @@ leverage of packet acceleration frameworks like the Data Plane Development Kit
 and nvGRE. VxLAN and nvGRE are equal cost multipath routing (ECMP) friendly,
 which could increase network performance overall.
 
+\section{Current Progress}
+
 \section{Week by Week Reports}
 %just paste in weekly blogs?
+
+\subsection{Weeks Zero Through Two}
+
+\subsection{Week Three}
+
+\subsection{Week Four}
+
+\subsection{Week Five}
+
+\subsection{Week Six}
+
+\subsection{Week Seven}
+
+\subsection{Week Eight}
+
+\subsection{Week Nine}
+
+\subsection{Week Ten}
 
 \section{Fall Term Retrospective}
 
