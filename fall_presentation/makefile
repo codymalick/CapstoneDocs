@@ -25,7 +25,7 @@ $(TRG): %.dvi: %.tex $(EXAMPLES)
 	$(LATEX) $<
 
 $(PSF):%.ps: %.dvi
-	$(DVIPS) -R -Poutline -t letter $< -o $@
+	$(DVIPS) -R -Poutline $< -o $@
 
 $(PDF): %.pdf: %.ps
 #	$(DVIPDF) -o $@ $<
