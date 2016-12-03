@@ -92,6 +92,39 @@ and nvGRE. VxLAN and nvGRE are equal cost multipath routing (ECMP) friendly,
 which could increase network performance overall.
 
 \section{Current Progress}
+At present, the project is moving along smoothly. Our testing environment has
+been set up and is networked appropriately. Each Intel NUC (Next Unit of
+Computing) has Clear Linux installed. Come Winter term, we will get Ciao set up
+on each machine and begin development on Ciao. Software development on the
+project has yet to begin as we have just wrapped up the design phase.
+
+Designing has been quite helpful in developing our understanding of the project,
+its goals, and purpose. Because this is a small component of a very complicated
+system, taking the time to investigate what a software defined network is, why
+it's being used, and why we are implementing the piece that we are has been
+quite beneficial.
+
+While in the design phase, we found an extremely useful library for interfacing
+with Open vSwitch, libovsdb. Libovsdb is a library written in the Go programming
+language that allows for simple and efficient calls to the OVS Database
+Management Protocol. Interfacing with OVS is going to be a very large
+portion of the project for us, so finding the library is quite the boon. Here
+is a quick example of how this library functions:\\
+
+\begin{lstlisting}[caption=Example insert operation using libovsdb]
+	// simple insert operation
+	insertOp := libovsdb.Operation{
+		Op:	  "insert",
+		Table:	  "Bridge",
+		Row:	  bridge,
+		UUIDName: namedUUID,
+	}
+\end{lstlisting}
+
+The above example can be reused for all major operations in the OVS Database
+Management Protocol. Other example operations include select, delete, and
+update. Using just the operations listed here, we can accomplish most of the
+needed configuration changes within Open vSwitch.
 
 \section{Week by Week Reports}
 %just paste in weekly blogs?
