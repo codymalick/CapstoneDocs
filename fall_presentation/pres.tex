@@ -157,9 +157,55 @@ basicstyle=\ttfamily
 	Overall performance and overhead are similar on paper, will require
 	testing to see which is the best fit for our implementation
 \end{frame}
-\begin{frame}
+\begin{frame}[allowframebreaks]
 	\frametitle{Stumbling Blocks}
-	Stumbling blocks go here
+	\section{Stumbling Blocks}
+	The one major problem we had during the fall quarter was getting the 
+	Intel NUCs connected to the campus network.
+	We required network access to install Clear Linux on the NUCs, to access
+	them remotely via SSH, and to perform actions that require internet access 
+	such as accessing the Ciao git repository hosted on GitHub.
+	Intel wants us to store the NUCs in a secure location. Kevin McGrath let us 
+	use his lab which has restricted access.
+
+	We set the NUCs up in Kevin's lab on campus, and had to work with Todd 
+	Shecter, the head of the OSU EECS IT department to get permission to 
+	connect them to the campus network, and register them so they would be able 
+	to connect to the campus network. This took three weeks between technical 
+	issues and communication delays because most of our communication was done 
+	by email.
+
+	\section{Network Setup Issues}
+	\begin{itemize}
+		\item We first emailed Todd with an explanation of our project and 
+			requested network access. He requested a meeting to better 
+			understand what we were doing.
+		\item After explaining our project to Todd in person, he gave us 
+			permission to connect the NUCs to the campus network, and said he 
+			would help.
+		\item To connect the NUCs to the network Todd required the MAC address 
+			of each device.
+		\item None of the NUCs had an OS on them, and the MAC address was not 
+			listed on the case, or in the BIOS.
+			We had to boot each NUC from a USB flash drive to get the MAC 
+			address.
+		\item We provided Todd with the MAC addresses of each NUC so they could 
+			be connected to the campus network.
+		\item We waited for Todd to register the NUCS on the campus network.
+		\item After Todd registered the NUCs they were not being assigned an IP 
+			address by the campus network.
+		\item As a workaround so we could install Clear Linux we bridged the 
+			network connection from Garrett's laptop to the NUCs.
+		\item We emailed Todd explaining the IP address issue, and he had us go
+			through several troubleshooting steps, none of which worked.
+		\item Todd had us connect one of the NUCs to a different switch in the 
+			lab which resolved the issue.
+		\item We were going to move the NUCs over to the other switch, but it 
+			took a couple of days before we had time to do this, and during 
+			that time the campus network started assigning IP addresses to the 
+			NUCs.
+	\end{itemize}
+
 \end{frame}
 
 \begin{frame}
