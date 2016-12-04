@@ -59,7 +59,7 @@ basicstyle=\ttfamily
 	\begin{figure}[H]
 		\caption{The Cloud - Randall Munroe~\cite{xkcd908}}
 		\begin{center}
-			\makebox[\textwidth]{\includegraphics[width=\textwidth]{xkcd.eps}}
+			%\makebox[\textwidth]{\includegraphics[width=\textwidth]{xkcd.eps}}
 		\end{center}
 	\end{figure}
 
@@ -125,7 +125,9 @@ basicstyle=\ttfamily
 
 \begin{frame}
 	\frametitle{Project Design}
-	\section{Open vSwitch Database Management Protocol}
+	\section{Project Design}
+	\subsection{Open vSwitch Database Management Protocol}
+
 	Open vSwitch uses a database to manage configuration while running.
 	The configuration can be updated on the fly by accessing its management
 	protocol using the Open vSwitch Database Management Protocol, defined
@@ -133,9 +135,27 @@ basicstyle=\ttfamily
 \end{frame}
 
 \begin{frame}[fragile]
+	\frametitle{OVS Database Management Protocol}
+	One of the main goals of the project is to implement OVS built network
+	bridges programmatically. The protocol uses JSON to build its commands.
+	\\
+	\begin{lstlisting}[caption=Example insert OVS DB Management Protocol]
+	{
+	  "op": "insert",
+	  "table": "Bridge",
+	  "row": 2,
+	  "uuid-name": 00000000-0000-0000-0000-000000000000
+	}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
 	\frametitle{Libovsdb}
+	\subsection{libovsdb}
 	Libovsdb is an open source library that provides a Go programming
-	language wrapper around the OVS Database Management Protocol. Here is
+	language wrapper around the OVS Database Management Protocol. This tool
+	is quite helpful because it allows us easy access to the Management
+	Protocol, without having to manually create JSON. Here is
 	an example:\cite{gosample} \\
 
 \begin{lstlisting}[caption=Example insert operation using libovsdb]
@@ -150,14 +170,20 @@ basicstyle=\ttfamily
 \end{lstlisting}
 \end{frame}
 \begin{frame}
+	\frametitle{Replacing GRE}
+	Generic Routing Encapsulation is one of the original solutions for 
+	point-to-point virtual network tunneling. It was developed by Cisco, but
+	has one major issue: scaling.
+\end{frame}
+\begin{frame}
 	\frametitle{nvGRE and VxLAN}
-	Two alternative tunneling protocols to replace GRE, the current
-	protocol used by Ciao.\\
-	nvGRE: Network virtualization standard created in tandem by HP, Dell,
-	and Intel
-	VxLAN: Network virtualization standard created in tandem by Cisco,
-	VMware, Citrix, and Redhat
-
+	Two alternative tunneling protocols to replace GRE:
+	\begin{itemize}
+		\item nvGRE: Network virtualization standard created in tandem
+			by HP, Dell, and Intel
+		\item VxLAN: Network virtualization standard created in tandem
+			by Cisco, VMware, Citrix, and Redhat
+	\end{itemize}
 	Overall performance and overhead are similar on paper, will require
 	testing to see which is the best fit for our implementation
 \end{frame}
@@ -258,7 +284,7 @@ udp_lat:
 	issues and communication delays because most of our communication was done 
 	by email.
 
-	\section{Network Setup Issues}
+	\subsection{Network Setup Issues}
 	\begin{itemize}
 		\item We first emailed Todd with an explanation of our project and 
 			requested network access. He requested a meeting to better 
@@ -292,8 +318,6 @@ udp_lat:
 
 \end{frame}
 
-\begin{frame}
-\end{frame}
 \begin{frame}
 	\frametitle{References}
 		\bibliographystyle{IEEEtran}
