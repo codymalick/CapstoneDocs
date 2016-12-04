@@ -19,6 +19,9 @@ tabsize=4,
 showstringspaces=false,
 basicstyle=\ttfamily
 }
+\usepackage{parskip}
+\usepackage{graphicx}
+\graphicspath{{../images/}}
 
 \mode<presentation>
 {
@@ -41,13 +44,79 @@ basicstyle=\ttfamily
 \end{frame}
 
 \begin{frame}
-	\frametitle{Context}
-	\section{Context}
-	Context goes here
+	\frametitle{Team Cloud Orchestra}
+	\section{Introduction}
+	Our team is implementing a software defined network based on Open
+	vSwitch for a cloud orchestration technology called Ciao.
+
+	Our client is Rob Nesius, Engineering Manager at Intel Corporation.
 \end{frame}
+
+\begin{frame}
+	\frametitle{Scope}
+	\section{Scope}
+	What is a cloud?
+	\begin{figure}[H]
+		\caption{The Cloud - Randall Munroe~\cite{xkcd908}}
+		\begin{center}
+			\makebox[\textwidth]{\includegraphics[width=\textwidth]{xkcd.eps}}
+		\end{center}
+	\end{figure}
+
+	"A huge, amorphous network of servers somewhere"
+
+\end{frame}
+
+\begin{frame}
+	\frametitle{Scope}
+	The network connecting the nodes must be controlled. In our case, this
+	is achieved by the Cloud Integrated Advanced Orchestrator, or Ciao.
+
+	Ciao provides an easy to deploy, secure, scalable cloud orchestration
+	system which handles virtual machines, containers, and bare metal apps
+	agnostically as generic workloads~\cite{ciao}.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Scope}
+	The servers, or nodes, in these clouds need to talk to each other, hence
+	the need for a network solution.
+
+	Ciao uses a software defined network to allow different compute nodes to
+	communicate with each other.
+
+	Software defined networking is a software abstraction of physical
+	networking solutions, allowing for ``a more scalable and centralized
+	network control architecture''~\cite{goransson}.
+\end{frame}
+
 \begin{frame}
 	\frametitle{Project Goals}
-	Goals go here
+	\framesubtitle{Goal One}
+	\section{Project Goals}
+	Switch Ciao Generic Routing Encapsulation (GRE) tunnel implementation to
+	use Open vSwitch-created GRE tunnels.
+
+	\begin{description}[style=nextline]
+		\item[Generic Routing Encapsulation (GRE)]
+			GRE encapsulates an arbitrary network layer protocol so
+			it can be sent over arbitrary network layer
+			protocol~\cite{rfc1701}.
+		\item[Open vSwitch (OVS)]
+			Open vSwitch is a ``multilayer virtual switch\ldots
+			designed to enable massive network automation through
+			programmatic extension''~\cite{ovs}.
+	\end{description}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Project Goals}
+	\framesubtitle{Goal Two}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Project Goals}
+	\framesubtitle{Goal Three (optional)}
 \end{frame}
 
 \begin{frame}
