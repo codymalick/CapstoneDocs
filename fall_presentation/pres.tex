@@ -1,4 +1,24 @@
 \documentclass[pdf]{beamer}
+\usepackage{listings}
+\usepackage{color}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{frame=none,
+language=C,
+columns=flexible,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=4,
+showstringspaces=false,
+basicstyle=\ttfamily
+}
 
 \mode<presentation>
 {
@@ -32,21 +52,48 @@
 
 \begin{frame}
 	\frametitle{Project Design}
-	Project design goes here
+	\section{Open vSwitch Database Management Protocol}
+	Open vSwitch uses a database to manage configuration while running.
+	The configuration can be updated on the fly by accessing its management
+	protocol using the Open vSwitch Database Management Protocol, defined
+	in RFC 7047\cite{rfc7047}
 \end{frame}
 
+\begin{frame}[fragile]
+	\frametitle{Libovsdb}
+	Libovsdb is an open source library that provides a Go programming
+	language wrapper around the OVS Database Management Protocol. Here is
+	an example:\cite{gosample} \\
+
+\begin{lstlisting}[caption=Example insert operation using libovsdb]
+	// simple insert operation
+	insertOp := libovsdb.Operation{
+	    Op:	  "insert",
+	    Table:	  "Bridge",
+	    Row:	  bridge,
+	    UUIDName: namedUUID,
+	}
+
+\end{lstlisting}
+\end{frame}
+\begin{frame}
+	\frametitle{nvGRE and VxLAN}
+	Two alternative tunneling protocols to replace GRE, the current
+	protocol used by Ciao.\\
+	nvGRE: Network virtualization standard created in tandem by HP, Dell,
+	and Intel
+	VxLAN: Network virtualization standard created in tandem by Cisco,
+	VMware, Citrix, and Redhat
+
+	Overall performance and overhead are similar on paper, will require
+	testing to see which is the best fit for our implementation
+\end{frame}
 \begin{frame}
 	\frametitle{Stumbling Blocks}
 	Stumbling blocks go here
 \end{frame}
 
 \begin{frame}
-	\frametitle{Project Detail}
-	\section{Open vSwitch Database Management Protocol}
-	Open vSwitch uses a database to manage configuration while running.
-	The configuration can be updated on the fly by accessing its management
-	protocol using the Open vSwitch Database Management Protocol, defined
-	in RFC 7047\cite{rfc7047}
 \end{frame}
 \begin{frame}
 	\frametitle{References}
