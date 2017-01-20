@@ -3,9 +3,7 @@ require 'json'
 require'csv'
 require 'optparse'
 
-fileName = "testData.json"
-
-options = {}
+fileName = nil
 
 OptionParser.new do |opts|
   opts.banner = "Usage: iperfParser.rb [options]"
@@ -13,13 +11,17 @@ OptionParser.new do |opts|
     if(f)
       fileName = f
     end
-  end
-  opts.on("-h", "--help", "prints this help dialog") do |n|
-    puts opts
-    exit
+    opts.on("-h", "--help", "prints this help dialog") do |n|
+      puts opts
+      exit
+    end
   end
 end.parse!
 
+if(fileName == nil)
+  puts("Please provide a file with the \"-f\" option")
+  exit
+end
 
 file = File.read(fileName)
 
