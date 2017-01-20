@@ -27,7 +27,9 @@ file = File.read(fileName)
 
 dataHash = JSON.parse(file)
 
-CSV.open("./bandwidth.csv", "wb") do |csv|
+timestamp = Time.now.getutc
+
+CSV.open("./#{timestamp} bandwidth.csv", "wb") do |csv|
   csv << ["bits per second", "retransmits"]
   for interval in dataHash["intervals"].each
     bps = interval["sum"]["bits_per_second"]
