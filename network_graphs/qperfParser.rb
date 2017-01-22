@@ -27,25 +27,39 @@ tcpLat = Array.new
 #Holds udp latency readings
 udpLat = Array.new
 
-lines = File.foreach(fileName).each_slice(2) do |lines|
-  if(lines.select['tcp_lat'].any?)
-    matches = lines.select {|line| line[/latency/i]}
+file = File.open(fileName, "r")
+
+#TODO: fix this
+for file.each_slice(2) do |chunk|
+  if(chunk.select { |line| ['tcp_lat']}.any?)
+    matches = chunk.select {|line| line[/latency/i]}
     for match in matches
-      tcplat.concat(match.split('=').last.split(' ').first)
+      tcpLat.concat([match.split('=').last.split(' ').first])
     end
-  elsif(lines.select['udp_lat'].any?)
-    matches = lines.select {|line| line[/latency/i]}
+  elsif(chunk.select { |line| ['udp_lat']}.any?)
+    matches = chunk.select {|line| line[/latency/i]}
     for match in matches
-      udplat.concat(match.split('=').last.split(' ').first)
+      udpLat.concat([match.split('=').last.split(' ').first])
     end
   end
 end
 
 timestamp = Time.now.getutc
 
+length = [tcpLat.length, udpLat.length].max
 CSV.open("./#{timestamp} latency.csv", "wb") do |csv|
   csv << ["tcp latency", "udp latency"]
-  for entry in tcpLat
-    csv << [entry]
+  for i in 0..length
+    tcpVal = nil
+    udpVal = nil
+    if(tcpLat.at(i))
+      tcpVal = tcpLat.at(i)
+    end
+    if(udpLat.at(i))
+      udpVal = udpLat.at(i)
+    end
+    if(tcpVal || udpVal)
+      csv << [tcpVal, udpVal]
+    end
   end
 end
