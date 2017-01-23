@@ -27,7 +27,7 @@ file = File.read(fileName)
 
 dataHash = JSON.parse(file)
 
-timestamp = Time.now.getutc
+timestamp = Time.now.getutc.to_s.gsub! ':', '-'
 
 CSV.open("./#{timestamp} bandwidth.csv", "wb") do |csv|
   csv << ["bits per second", "retransmits"]

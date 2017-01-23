@@ -42,7 +42,7 @@ while !file.eof?
 end
 
 
-timestamp = Time.now.getutc
+timestamp = Time.now.getutc.to_s.gsub! ':', '-'
 
 length = [tcpLat.length, udpLat.length].max
 CSV.open("#{timestamp} latency.csv", "wb") do |csv|
