@@ -1,0 +1,112 @@
+\documentclass[10pt,onecolumn,journal,draftclsnofoot]{IEEEtran}
+\usepackage[margin=0.75in]{geometry}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{tabu}
+\usepackage{enumitem}
+\usepackage{courier}
+\usepackage{hyperref}
+\usepackage{parskip}
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+%Subsection headers to Arabic numerals
+%\renewcommand\thesection{\arabic{section}}
+%\renewcommand\thesubsection{\thesection.\arabic{subsection}}
+%\renewcommand\thesubsubsection{\thesubsection.\arabic{subsubsection}}
+
+%Section headers to Arabic numerals
+%\renewcommand\thesectiondis{\arabic{section}}
+%\renewcommand\thesubsectiondis{\thesectiondis.\arabic{subsection}}
+%\renewcommand\thesubsubsectiondis{\thesubsectiondis.\arabic{subsubsection}}
+
+%Remove numbering from the bibliography section
+
+\lstset{frame=none,
+language=C,
+columns=flexible,
+numberstyle=\tiny\color{gray},
+keywordstyle=\color{blue},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=4,
+showstringspaces=false,
+basicstyle=\ttfamily
+}
+
+\setlength{\parindent}{0cm}
+
+\begin{document}
+
+\begin{titlepage}
+	\title{Intel Cloud Orchestration Networking\\ Winter Midterm Progress Report}
+	\author{Matthew~Johnson,~Cody~Malick,~and~Garrett~Smith\\
+		Team 51, Cloud Orchestra}
+	\date{\today}
+	\markboth{Senior Design, CS 462, Winter 2017}{}
+	\maketitle
+	\vspace{4cm}
+	\begin{abstract}
+		\noindent This document outlines the progress of the Cloud
+		Orchestration Networking project over the first half of winter
+		term. It contains a short description of the project's purposes
+		and goals, current progress, current issues, and any solutions
+		to those issues. It also contains a week by week retrospective
+		for the first six weeks of winter term. \end{abstract}
+
+\end{titlepage}
+\tableofcontents
+\clearpage
+
+\section{Project Goals}
+
+Our project is to first switch the Linux-created GRE tunnel implementation in
+Ciao to use GRE tunnels created by Open vSwitch. From that point we will switch
+the actual tunneling implementation from GRE to VxLAN/nvGRE based on performance
+measurements of each on data center networking cards. After this is completed, a
+stretch goal is to replace Linux bridges with Open vSwitch switch instances.
+
+\section{Purpose}
+
+The current implementation of Ciao tightly integrates software defined
+networking principles to leverage a limited local awareness of just enough of
+the global cloud's state. Tenant overlay networks are used to overcome
+traditional hardware networking challenges by using a distributed, stateless,
+self-configuring network topology running over dedicated network software
+appliances. This design is achieved using Linux-native Global Routing
+Encapsulation (GRE) tunnels and Linux bridges, and scales well in an environment
+of a few hundred nodes.
+
+While this initial network implementation in Ciao satisfies current simple
+networking needs in Ciao, all innovation around software defined networks has
+shifted to the Open vSwitch (OVS) framework. Moving Ciao to OVS will allow
+leverage of packet acceleration frameworks like the Data Plane Development Kit
+(DPDK) as well as provide support for multiple tunneling protocols such as VxLAN
+and nvGRE. VxLAN and nvGRE are equal cost multipath routing (ECMP) friendly,
+which could increase network performance overall.
+
+\section{Current Progress}
+
+\begin{lstlisting}[caption=Example insert operation using libovsdb]
+	// simple insert operation
+	insertOp := libovsdb.Operation{
+		Op:	  "insert",
+		Table:	  "Bridge",
+		Row:	  bridge,
+		UUIDName: namedUUID,
+	}
+\end{lstlisting}
+
+\section{Week by Week Reports}
+\clearpage 
+
+\bibliographystyle{IEEEtran}
+\bibliography{prog}
+
+\end{document}
