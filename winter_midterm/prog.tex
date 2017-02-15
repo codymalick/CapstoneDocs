@@ -127,7 +127,7 @@ Management Protocol. Other example operations include select, delete, and
 update. Using just the operations listed here, we can accomplish most of the
 needed configuration changes within Open vSwitch.
 
-\section{Week by Week Reports}
+\section{Fall Term Week by Week Reports}
 %just paste in weekly blogs?
 
 \subsection{Background}
@@ -298,7 +298,135 @@ they were impressed with the design we had outlined.
 	\end{tabular}
 \end{center}
 
-\clearpage 
+\section{Winter Term Week by Week Reports}
+%just paste in weekly blogs?
+
+\subsection{Winter Break and Week One}
+
+Over Christmas break Cody and Matthew tried to get Ciao set up on the cluster
+using a manual installation method. We ran into some tough issues and
+communicated them with the Intel team. The Intel team pointed us to
+a much more recently updated setup document that included automated deployment.
+
+During week one there was still an issue in the version of Clear Linux (our
+target distribution) that we were running that caused docker certification to be
+broken. This was fixed within the week and we continued trying to set up Ciao.
+
+\subsection{Week Two}
+
+Garrett wrote several scripts to collect network performance data between nodes.
+He made significant progress in parsing bandwidth data into csv format for
+graphical representation.
+
+This week we continued to work on the Ciao deployment via automated ansible
+playbooks. We encountered several issues from the start and worked through
+them one by one. Issues included errors in the ansible playbooks regarding yaml
+parsing and fqdn configuration. This type of issue was resolved by hardcoding
+the playbooks for our specific setup. By the end of the week we were seeing
+certification management issues in the build.
+
+\subsection{Week Three}
+
+This week we believed we were successful in deploying Ciao and began implementation of
+Open vSwitch components. Garrett has begun working out network measurements for
+our initial benchmarks. Garrett discovered that the network was not being set up
+properly, however, due to issues with the OSU network.
+
+The first half of the week was spent debugging our Ciao deploy with members of
+the Ciao development team at Intel. After several email conversations and debug
+steps, we were advised to switch our operating system to Ubuntu because of
+various certification issues in Clear Linux. This, along with running from
+within a ciao-deploy docker container, fixed our issues and allowed us to
+properly initialize the cluster. As mentioned earlier, our network was not
+properly set up.
+
+\subsection{Week Four}
+
+During week four we continued tentative development on the OVS modules for Ciao.
+Some of the necessary functions have been written, but it has been difficult to
+test this over the physical cluster. Garrett, who has worked on the OSU network
+in the past, thinks the network may not be assigning IPs to the cluster. The OSU
+network DHCP servers will not assign an IP unless the MAC address has been
+registered with the university. To get around this we may have to do single-vm
+setup or find a way to set up the cluster independent from the OSU network.
+
+Ciao provides ciao-down, a tool that helps set up a single-vm environment for
+testing. This will be helpful once we get it spun up.
+
+We were still having issues gathering initial network metrics due to inaccessible
+nodes on our physical cluster. Garrett is working through this but the best way
+to address this may be single-vm for now.
+
+\subsection{Week Five}
+
+Early in the week we got ciao-down (the single-vm setup for Ciao) working to
+test our code.
+
+We have a schedule we are following, and our initial goal was to complete the
+OVS module by the end of week five. Although we had a module written of
+something we were hoping might work, we were unable to get it to integrate
+properly with the rest of Ciao.  It is likely we were misunderstanding some
+things in the calling hierarchy.  Matthew communicated the issues we were seeing
+with Manohar Castelino, one of our clients and a software defined networking
+expert. This led to a conversation about whether or not it was strictly
+necessary to create the bridges in Open vSwitch or if we could simply create the
+GRE tunnels themselves.
+
+As far as the physical cluster goes, we realized that the OSU network will not
+lease IP addresses unless the MAC address is registered with the University.
+Since Ciao uses the network's DHCP server to assign IP addresses to the nodes
+this is a big issue. Garrett has been setting up the physical cluster with a
+DHCP server running on the switch, with only our deployment NUC connected to the
+internet. He has been running into issues setting up the Keystone server once he
+took our controller NUC off the internet. He was trying to modify ansible tasks
+to get around the issue when I left campus today. If he is not able to get this
+to work we will probably ask the university for a subnet we can run a
+non-MAC-locked DHCP server on, but Garrett has worked in OSU IT before and said
+we are unlikely to get permission for that. The number of errors the OSU network
+has generated for us has been a little frustrating.
+
+\subsection{Week Six}
+
+Matthew met with Manohar in-person at Intel on Tuesday to discuss the issues
+with OVS bridges. It turns out Open vSwitch will not attach tunnels to non-OVS
+bridges. This expands our scope somewhat to build a full OVS framework for Ciao,
+instead of just OVS tunnels.
+
+The rest of the week was devoted to working on the midterm progress report for
+Winter term.
+
+\section{Winter Midterm Retrospective}
+
+\begin{center}
+	\begin{tabular}{| p{0.05\linewidth} | p{0.3\linewidth} | p{0.3\linewidth} |
+			p{0.3\linewidth} |}\hline
+		Week & Positives & Deltas & Actions \\ \hline
+
+		1 & Learned about automated deployment for Ciao & Worked through
+		several deployment issues & Attempted to deploy Ciao \\ \hline
+
+		2 & Scripts to collect network statistics completed & Resolved
+		old issues in deployment but uncovered more & Hardcoding
+		variables in the ansible deployment resolved some new issues \\
+		\hline
+
+		3 & Successfully initiated the cluster & Switched OS on the
+		cluster to Ubunto & Started working in single-vm mode \\ \hline
+
+		4 & Wrote some of the module for OVS tunnels & OSU network DHCP
+		will not assign IPs to unregistered MACs & Developed in
+		ciao-down \\ \hline
+
+		5 & OVS module mostly written, but not integrated & Discussed
+		whether OVS bridges were required for OVS tunnels & Tried to set
+		up local DHCP server on switch \\ \hline
+
+		6 & Met with Manohar regarding OVS bridges & OVS bridges are
+		required for OVS tunnels & Worked on progress report for midterm
+		\\ \hline
+
+	\end{tabular}
+\end{center}
 
 \bibliographystyle{IEEEtran}
 \bibliography{prog}
