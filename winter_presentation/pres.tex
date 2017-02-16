@@ -327,19 +327,35 @@ udp_lat:
 \end{frame}
 
 \begin{frame}
+	\frametitle{Winter Term}
+	Progress we have made by the middle of Winter term
+\end{frame}
+
+\begin{frame}
 	\frametitle{Docker Certificate Issues}
-	Clear Linux was managing Docker certificates incorrectly which halted our work until the next release of Clear Linux.
+	Clear Linux was managing Docker certificates incorrectly which halted
+	our work until the next release of Clear Linux.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Problems with Clear Linux Certificate management}
+	Clear Linux manually manages the trust store, which sometimes causes
+	keystone certificates to be overwritten.
 \end{frame}
 
 \begin{frame}
 	\frametitle{Problems with getfqdn()}
-	On Clear Linux the \texttt{socket.getfqdn()} function, which is supposed to return the fully qualified domain name was only returning the host name. We reported this the Clear Linux Developers.
+	On Clear Linux the \texttt{socket.getfqdn()} function, which is supposed
+	to return the fully qualified domain name was only returning the host
+	name. We reported this the Clear Linux Developers.
 	\includegraphics[scale=0.5]{getfqdn.eps}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Migrating to Ubuntu 16}
-	We migrated to Ubuntu because of the issues with Docker certificates and \texttt{getfqdn()} on Clear Linux. Most of the Ciao team develops on Ubuntu.
+	We migrated to Ubuntu because of the issues with Docker certificates and
+	\texttt{getfqdn()} on Clear Linux. Most of the Ciao team develops on
+	Ubuntu.
 \end{frame}
 
 \begin{frame}
@@ -351,12 +367,56 @@ udp_lat:
 		\item To work around this we moved the Nucs off of OSU's network.
 		\item We are running a DHCP server on the Cisco switch we are using for the LAN
 	\end{itemize}
-\end{frame} 
+\end{frame}
 
+\begin{frame}
+	\frametitle{Open vSwitch}
+	Goal: implement GRE tunnels with Open vSwitch by the end of week five
+
+	This did not happen.
+\end{frame}
+
+\begin{frame}[allowframebreaks, fragile]
+	\frametitle{Open vSwitch - libovsdb}
+	It was originally our plan to implement with libovsdb.
+
+	\begin{lstlisting}[caption=libovsdb insert operation]
+	"op": "insert",
+	"table": "Port",
+	"row": <port information>,
+	"type": "gre",
+	"uuid-name": "uuid"
+	\end{lstlsting}
+
+	But! We actually need to create an OVS bridge for this to work.
+
+\end{frame}
+
+\begin{frame}[allowframebreaks, fragile]
+	\frametitle{Open vSwitch - OVS bridge first}
+
+	\begin{lstlisting}[caption=No Linux Bridge and OVS Tunnel]
+		mrsj@singlevm:~\$ sudo brctl addbr br1
+		mrsj@singlevm:~\$ sudo brctl show
+		bridge name     bridge id               STP enabled     interfaces
+		br0             8000.000000000000       no
+		br1             8000.000000000000       no
+		docker0         8000.02427ef725d4       no
+		mrsj@singlevm:~\$ sudo ovs-vsctl add-port br1 gre0 -- set interface gre0 type=gre options:remote_ip=192.215.10.0
+		ovs-vsctl: no bridge named br1
+	\end{lstlsting}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Next Steps}
+	Now our scope has changed a bit - we need to actually create bridges for
+	the OVS tunnels to connect to.
+\end{frame}
 
 \begin{frame}
 	\frametitle{References}
-		\bibliographystyle{IEEEtran}
-		\bibliography{pres}
-	\end{frame}
+	\bibliographystyle{IEEEtran}
+	\bibliography{pres}
+\end{frame}
+
 \end{document}
