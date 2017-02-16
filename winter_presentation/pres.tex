@@ -380,13 +380,13 @@ udp_lat:
 	\frametitle{Open vSwitch - libovsdb}
 	It was originally our plan to implement with libovsdb.
 
-	\begin{lstlisting}[caption=libovsdb insert operation]
+	\begin{lstlisting}
 	"op": "insert",
 	"table": "Port",
 	"row": <port information>,
 	"type": "gre",
 	"uuid-name": "uuid"
-	\end{lstlsting}
+	\end{lstlisting}
 
 	But! We actually need to create an OVS bridge for this to work.
 
@@ -404,7 +404,7 @@ udp_lat:
 		docker0         8000.02427ef725d4       no
 		mrsj@singlevm:~\$ sudo ovs-vsctl add-port br1 gre0 -- set interface gre0 type=gre options:remote_ip=192.215.10.0
 		ovs-vsctl: no bridge named br1
-	\end{lstlsting}
+	\end{lstlisting}
 \end{frame}
 
 \begin{frame}
