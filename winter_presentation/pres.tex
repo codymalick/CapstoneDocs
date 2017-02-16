@@ -33,14 +33,29 @@ basicstyle=\ttfamily
 }
 
 \begin{document}
-\title{Intel Cloud Orchestration Networking Design and Goals}
+\title{Intel Cloud Orchestration Networking}
 \author{Matthew Johnson, Cody Malick, and Garrett Smith}
 \date{17 February, 2017}
 
 \maketitle
 \begin{frame}
 	\frametitle{Table of Contents}
-	\tableofcontents
+	\begin{itemize}
+		\item Introduction
+		\item Fall Progress
+		\begin{itemize}
+			\item Network Performance testing
+			\item Stumbling Blocks
+		\end{itemize}
+		\item Winter Progress
+		\begin{itemize}
+			\item Ciao Deployment Issues
+			\item Networking Issues
+			\item Open vSwitch Scope
+			\item Next Steps
+		\end{itemize}
+
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -266,14 +281,6 @@ udp_lat:
 	\end{lstlisting}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Network Performance Measurement Scripts}
-	\begin{itemize}
-		\item Garrett wrote scripts to parse the output from iperf and qperf into csv format.
-		\item Scripts were written in Ruby because of its strong support for parsing strings, and good JSON library.
-	\end{itemize}
-\end{frame}
-
 \begin{frame}[allowframebreaks]
 	\frametitle{Stumbling Blocks}
 	\section{Stumbling Blocks}
@@ -359,6 +366,14 @@ udp_lat:
 \end{frame}
 
 \begin{frame}
+	\frametitle{Network Performance Measurement Scripts}
+	\begin{itemize}
+		\item Garrett wrote scripts to parse the output from iperf and qperf into csv format.
+		\item Scripts were written in Ruby because of its strong support for parsing strings, and good JSON library.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
 	\frametitle{Problems Running Workloads}
 	\begin{itemize}
 		\item After we set up Ciao, we ran into issues running workloads.
@@ -367,6 +382,10 @@ udp_lat:
 		\item To work around this we moved the Nucs off of OSU's network.
 		\item We are running a DHCP server on the Cisco switch we are using for the LAN
 	\end{itemize}
+
+	\begin{lstlisting}[caption=CNCI error]
+{"error":{"code":500,"name":"Internal Server Error","message":"Unable to Launch Tenant CNCI"}}
+	\end{lstlisting}
 \end{frame}
 
 \begin{frame}
@@ -380,7 +399,7 @@ udp_lat:
 	\frametitle{Open vSwitch - libovsdb}
 	It was originally our plan to implement with libovsdb.
 
-	\begin{lstlisting}
+	\begin{lstlisting}[caption=libovsdb insert operation]
 	"op": "insert",
 	"table": "Port",
 	"row": <port information>,
