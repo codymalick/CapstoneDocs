@@ -130,17 +130,17 @@ update. Using just the operations listed here, we can accomplish most of the
 needed configuration changes within Open vSwitch.
 
 \section{Winter Progress}
-Winter term has started off a little bumpy for the team. We spent the first four
-weeks focusing on setting up our development environment, as well as ironing out
-issues related to network testing. These topics will be covered in-depth in the
-folling 'issues' section. Our current progress, as far as development is
-concerned, is working on the first feature, implementing OVS generated GRE
-tunnels. While we originally planned to have that feature completed by the end
-of the fifth week, we are in contact with our friends at Intel to figure out
-some of the issues we've been running into. Good progress on testing the basic
-NUC setup, and will be covered in the following section. Lastly, our current
-development progress, and issues related to deployment of OVS in Ciao will be
-discussed.
+Early Winter term was defined by various errors created first by the operating
+system we were using, and further compounded by networking issues from the MAC
+locked OSU network. We worked through these issues one-by-one and managed to
+make progress with development of the first goal. This progress was stymied by
+the discovery that our assumption about Open vSwitch compatibility was wrong
+about halfway through the term, which has changed the scope of our project
+considerably. While we originally planned to have that first goal completed by
+the end of the fifth week, this scope change altered our schedule and pushed it
+back. Good progress has been made on testing the basic cluster setup, but this
+has been hindered by the OSU network restrictions. All these topics will be
+covered in-depth in the following sections.
 
 \subsection{Network Testing Progress - Garrett Smith}
 To help handle the data from the network testing tools iperf and qperf Garrett
@@ -171,6 +171,7 @@ setting up Ciao on the new network, but it has taken a lower priority than
 development.
 
 \subsection{Development Progress - Matthew Johnson}
+
 The overall progress for development has not been what we hoped due to some
 assumptions that we made being wrong. We started the term assuming the only
 thing needing to be accomplished for the first step was implementing Open
@@ -183,8 +184,8 @@ do.
 
 We found a great Golang library called libovsdb~\cite{libovsdb} that
 programmatically creates and manages an Open vSwitch network. The libovsdb
-provides an interface to an OVS database on the host system and allows a program
-to create and destroy bridges and tunnels.
+provides an interface to an OVS database on the host system and allows a
+program to create and destroy bridges and tunnels.
 
 Creating a tunnel in libovsdb is rather simple, as we displayed for our fall
 progress for bridge creation (see above - Example insert operation using
@@ -207,20 +208,29 @@ It was our hope to have the first step done by the fifth or sixth week of the
 term. At the beginning of this term, and during the writing of all our
 requirements documentation, it was assumed by us and our clients that GRE
 tunnels could be created independently of Linux bridges and that the new OVS
-tunnels could be connected to Linux bridges. There was nothing through our
-research that implied differently.
+tunnels could be connected to Linux bridges. There was nothing through the
+research we had done up to this point that implied differently. This was also
+the desired result by our client due to the flexibility of Linux bridges. Linux
+bridges are more versatile than OVS bridges so it was their hope to leave the
+bridge implementation alone for the first part of the project, then later add
+an alternate implementation in OVS that could be used if desired.
 
-This assumption led to attempts to use OVS to do exactly that. This led to many
-(now predictable) errors with network setup. This drove us to look at other
-examples of open source projects using libovsdb and we noticed that everyone
-else was creating OVS bridges before they created OVS tunnels. We were unable to
-find any examples of mixing networking feature types.
+This assumption led to attempts to use OVS to do exactly that. When we tried
+this simple implementation of just the Open vSwitch GRE tunnels without
+creating OVS bridges, we encountered many errors with network setup. With what
+we know now these errors were very predictable. The errors we encountered drove
+us to look at other examples of open source projects using libovsdb and we
+noticed that everyone else was creating OVS bridges before they created OVS
+tunnels. We were unable to find any examples of mixing networking feature
+types.
 
 As a result of the above discoveries, we communicated our concerns to our
 clients and tried to test manual creation of OVS GRE tunnels and Linux bridges.
 This was easy to do with the command line tool brctl to create the bridge and
-the Open vSwitch command line interface ovs-vsctl. It turned out that Open
-vSwitch could not even see Linux bridges on the system.
+the Open vSwitch command line interface ovs-vsctl. First we created a Linux
+bridge with brctl called br1. Then we tried to connect a GRE tunnel created
+with ovs-vsctl to the bridge br1, but it turned out that Open vSwitch could not
+even see Linux bridges on the system.
 
 \begin{lstlisting}[caption=No Linux Bridge and OVS Tunnel]
 	mrsj@singlevm:~\$ sudo brctl addbr br1
@@ -233,21 +243,24 @@ vSwitch could not even see Linux bridges on the system.
 \end{lstlisting}
 
 We communicated our findings to our clients and they agreed that this shows it
-is necessary to first create the OVS bridge if we want to use the OVS-created
+is necessary to first create the OVS bridge if we want to use the OVS created
 GRE tunnels. This means it is now necessary to implement the entire network
-framework with Open vSwitch, a considerable change in scope. This was originally
-considered a stretch goal for the project, but has now changed to the primary
-goal, pushing the goal one back to goal two and goal two back to the stretch
-goal position.
+framework with Open vSwitch, a considerable change in scope. This was
+originally considered a stretch goal for the project, but has now changed to
+the primary goal, pushing the goal one back to goal two and goal two back to
+the stretch goal position. Our future work will be to create the OVS framework
+and create OVS bridges (previously the stretch goal), then create OVS tunnels
+to connect them (previously goal one). Finally we hope to complete the final
+goal of creating VxLAN and nvGRE modules (previously goal two).
 
-This problem was identified during the beginning of week six of Winter term. The
-steps we now have to take include initializing different constructs to watch the
-Open vSwtich database for updates to the various tables, initialize database
-caches, create an OVS bridge, create an OVS GRE tunnel, mutate the Bridge table
-to connect the new tunnel to the bridge. When the tunnel and bridge are no
-longer needed they must be destroyed and removed from the OVS database.
-Fortunately, there exist examples, including in the libovsdb source code, for
-how to do this.
+This problem was identified during the beginning of week six of Winter term.
+The steps we now have to take include initializing different constructs to
+watch the Open vSwtich database for updates to the various tables, initialize
+database caches, create an OVS bridge, create an OVS GRE tunnel, mutate the
+Bridge table to connect the new tunnel to the bridge. When the tunnel and
+bridge are no longer needed they must be destroyed and removed from the OVS
+database. Fortunately, there exist examples, including in the libovsdb source
+code, for how to do this.
 
 There is another technological hurdle that needs to be tested, however, and we
 have not had time to do the testing this week due to the midterm report and
@@ -255,12 +268,22 @@ presentation we have been working on. There may be a hitch when creating an OVS
 bridge on the controller nodes (CNCIs). The issue may arise because the CNCI
 runs a DHCP server to assign IP addresses to the compute nodes. Manohar
 Castelino, the networking expert on the Ciao development team, was concerned
-there may be issues connecting a DHCP server to an Open vSwitch bridge instance.
-The way we plan on testing this is to set up two separate virtual machines and
-using the command line tool ovs-vsctl to initiate first a bridge on both and a
-tunnel between them. At this point we will try to connect a DHCP server to the
-bridge on one of the nodes. If network connectivity between the two nodes is
-maintained then there will be no issues with running OVS bridges on the CNCIs.
+there may be issues connecting a DHCP server to an Open vSwitch bridge
+instance. The way we plan on testing this is to set up two separate virtual
+machines and using the command line tool ovs-vsctl to initiate first a bridge
+on both and a tunnel between them. At this point we will try to connect a DHCP
+server to the bridge on one of the nodes. If network connectivity between the
+two nodes is maintained and the DHCP server is still able to successfully
+assign IP addresses then there will be no issues with running OVS bridges on
+the CNCIs.
+
+Going forward in the next week or so we will first test that a DHCP server can
+be attached to an Open vSwitch bridge. This should not be an issue but would be
+the last technical hurdle to overcome to create an OVS framework for Ciao. Once
+that is determined, and if there are no issues, we will proceed with setting up
+the OVS framework. This will include all the caching and update-watching for
+the tables, the creation of bridges on the CNCI and on the compute nodes, and
+creation of the GRE tunnels to connect them.
 
 \section{Issues - Cody Malick}
 In this section, we will cover the issues we ran into at the beginning of term,
