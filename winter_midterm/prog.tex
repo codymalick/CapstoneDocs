@@ -75,6 +75,12 @@ the actual tunneling implementation from GRE to VxLAN/nvGRE based on performance
 measurements of each on data center networking cards. After this is completed, a
 stretch goal is to replace Linux bridges with Open vSwitch switch instances.
 
+These goals changed somewhat by the middle of the Winter term. The primary goal
+now is to replace the Linux bridges with Open vSwitch switch instances because
+of an assumption that was found to be incorrect. This change will be discussed
+in the Winter Progress section. This change also pushes the other two goals back
+behind the bridge goal.
+
 \section{Purpose}
 
 The current implementation of Ciao tightly integrates software defined
@@ -233,12 +239,12 @@ with ovs-vsctl to the bridge br1, but it turned out that Open vSwitch could not
 even see Linux bridges on the system.
 
 \begin{lstlisting}[caption=No Linux Bridge and OVS Tunnel]
-	mrsj@singlevm:~\$ sudo brctl addbr br1
-	mrsj@singlevm:~\$ sudo brctl show
+	mrsj@singlevm:~# sudo brctl addbr br1
+	mrsj@singlevm:~# sudo brctl show
 	bridge name     bridge id               STP enabled     interfaces
 	br1             8000.000000000000       no
 	docker0         8000.02427ef725d4       no
-	mrsj@singlevm:~\$ sudo ovs-vsctl add-port br1 gre0 -- set interface gre0 type=gre options:remote_ip=192.215.10.0
+	mrsj@singlevm:~# sudo ovs-vsctl add-port br1 gre0 -- set interface gre0 type=gre options:remote_ip=192.215.10.0
 	ovs-vsctl: no bridge named br1
 \end{lstlisting}
 
