@@ -93,22 +93,25 @@ technology.
 The software we will be developing will be an Open VSwitch networking mode within Ciao,
 encapsulating the following goals:
 
+\subsubsection{Replace Linux Bridges with OVS Bridges}
+The first goal of the project is to replace all Linux Bridge calls in Ciao with
+OVS generated tunnels. A full implementation is needed in order to generate
+tunnels using the OVS management database. 
+
 \subsubsection{Open vSwitch GRE Tunnel}
 
-The first goal of the project is to switch the current GRE tunnel implementation with the Open vSwitch
-created GRE tunnel. This will allow for newer packet encapsulation techniques to be used, as
-well as provide the option to test packet acceleration.
+The second goal of the project is to switch the current GRE tunnel implementation
+with the Open vSwitch created GRE tunnel. This will allow for newer packet
+encapsulation techniques to be used, as well as provide the option to test
+packet acceleration.
 
-\subsubsection{Test and Implement Best Performing Tunnel Implementation}
+\subsubsection{Stretch Goal: Test and Implement Best Performing Tunnel Implementation}
 
-Switch the tunneling implementation to VxLAN/nvGRE based on performance measurements of VxLAN and nvGRE
-on data center network cards.
+The stretch goal for the project is to switch the tunneling implementation. The
+two options are VxLAN and nvGRE, and will the final implementation will be based
+on performance measurements of each protocol on data center network cards.
 
-\subsubsection{Stretch Goal, Replace Linux Bridge}
-
-The final objective and stretch goal of the project is to replace the Linux bridges with Open
-vSwitch instances.
-
+\subsection{Notes on Scope Changes}
 
 \subsection{Definitions, acronyms, and abbreviations}
 
