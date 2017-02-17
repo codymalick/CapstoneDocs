@@ -129,6 +129,216 @@ Management Protocol. Other example operations include select, delete, and
 update. Using just the operations listed here, we can accomplish most of the
 needed configuration changes within Open vSwitch.
 
+\section{Winter Progress}
+Winter term has started off a little bumpy for the team. We spent the first four
+weeks focusing on setting up our development environment, as well as ironing out
+issues related to network testing. These topics will be covered in-depth in the
+folling 'issues' section. Our current progress, as far as development is
+concerned, is working on the first feature, implementing OVS generated GRE
+tunnels. While we originally planned to have that feature completed by the end
+of the fifth week, we are in contact with our friends at Intel to figure out
+some of the issues we've been running into. Good progress on testing the basic
+NUC setup, and will be covered in the following section. Lastly, our current
+development progress, and issues related to deployment of OVS in Ciao will be
+discussed.
+
+\subsection{Network Testing Progress - Garrett Smith}
+To help handle the data from the network testing tools iperf and qperf Garrett
+wrote some scripts in Ruby to convert the output from multiple runs of iperf and
+qperf into CSV files. Ruby was chosen because it has good support for consuming
+plain text and JSON (author's opinion), and because Garrett is familiar with it.
+The plain text support is useful because qperf outputs its results in human
+readable format which is not useful when comparing the results of multiple
+tests.  The JSON support is useful because we are using the iperf option to
+output results in JSON format, and again, we want to change the format the
+network performance data is in because the format is not great for using in
+performance comparisons.
+
+We ran into more issues running the Ciao cluster on OSU's network so we moved it
+off of the OSU network. More details on those issues are in the Issues section.
+Garrett set up the Cisco SG300 switch Intel is lending us for this project in
+layer 3 mode and started up its built in DHCP server so we can run out own local
+area network that we have full control over.  This setup will be useful at expo
+because we will not have access to OSU's network while we are there.  The
+downsides to this setup are that we do not have remote access to the Nucs, and
+they cannot connect to the internet for updates.
+
+Currently all of the Nucs have static IP addresses on the local network Garrett
+set up. We have not finished setting Ciao up on the new network yet. We need to
+clear out the configuration we had set for running Ciao on the OSU network
+before it will work correctly in the new configuration. We are in the process of
+setting up Ciao on the new network, but it has taken a lower priority than
+development.
+
+\subsection{Development Progress - Matthew Johnson}
+The overall progress for development has not been what we hoped due to some
+assumptions that we made being wrong. We started the term assuming the only
+thing needing to be accomplished for the first step was implementing Open
+vSwitch (OVS) created Generic Routing Encapsulation (GRE) tunnels without
+touching implementation of other network features. This is a very simple
+requirement for systems with OVS already installed as a dependency. As far as
+the command line tools go, OVS provides ovs-vsctl to create OVS bridges and
+tunnels. The simplicity of this tool makes creating a network topology easy to
+do.
+
+We found a great Golang library called libovsdb~\cite{libovsdb} that
+programmatically creates and manages an Open vSwitch network. The libovsdb
+provides an interface to an OVS database on the host system and allows a program
+to create and destroy bridges and tunnels.
+
+Creating a tunnel in libovsdb is rather simple, as we displayed for our fall
+progress for bridge creation (see above - Example insert operation using
+libovsdb). Creating a GRE tunnel with libovsdb is just as simple if taken as a
+single operation. The operation is generally the same, except that tunnels are
+created in the Port table instead of the Bridge table.
+
+\begin{lstlisting}[caption=Example tunnel insert operation using libovsdb]
+	// simple insert operation
+	insertOp := libovsdb.Operation{
+		Op:	  "insert",
+		Table:	  "Port",
+		Row:	  <port row information, including remote ip>,
+		Type:     “gre”,
+		UUIDName: namedUUID,
+	}
+\end{lstlisting}
+
+It was our hope to have the first step done by the fifth or sixth week of the
+term. At the beginning of this term, and during the writing of all our
+requirements documentation, it was assumed by us and our clients that GRE
+tunnels could be created independently of Linux bridges and that the new OVS
+tunnels could be connected to Linux bridges. There was nothing through our
+research that implied differently.
+
+This assumption led to attempts to use OVS to do exactly that. This led to many
+(now predictable) errors with network setup. This drove us to look at other
+examples of open source projects using libovsdb and we noticed that everyone
+else was creating OVS bridges before they created OVS tunnels. We were unable to
+find any examples of mixing networking feature types.
+
+As a result of the above discoveries, we communicated our concerns to our
+clients and tried to test manual creation of OVS GRE tunnels and Linux bridges.
+This was easy to do with the command line tool brctl to create the bridge and
+the Open vSwitch command line interface ovs-vsctl. It turned out that Open
+vSwitch could not even see Linux bridges on the system.
+
+\begin{lstlisting}[caption=No Linux Bridge and OVS Tunnel]
+	mrsj@singlevm:~\$ sudo brctl addbr br1
+	mrsj@singlevm:~\$ sudo brctl show
+	bridge name     bridge id               STP enabled     interfaces
+	br1             8000.000000000000       no
+	docker0         8000.02427ef725d4       no
+	mrsj@singlevm:~\$ sudo ovs-vsctl add-port br1 gre0 -- set interface gre0 type=gre options:remote_ip=192.215.10.0
+	ovs-vsctl: no bridge named br1
+\end{lstlisting}
+
+We communicated our findings to our clients and they agreed that this shows it
+is necessary to first create the OVS bridge if we want to use the OVS-created
+GRE tunnels. This means it is now necessary to implement the entire network
+framework with Open vSwitch, a considerable change in scope. This was originally
+considered a stretch goal for the project, but has now changed to the primary
+goal, pushing the goal one back to goal two and goal two back to the stretch
+goal position.
+
+This problem was identified during the beginning of week six of Winter term. The
+steps we now have to take include initializing different constructs to watch the
+Open vSwtich database for updates to the various tables, initialize database
+caches, create an OVS bridge, create an OVS GRE tunnel, mutate the Bridge table
+to connect the new tunnel to the bridge. When the tunnel and bridge are no
+longer needed they must be destroyed and removed from the OVS database.
+Fortunately, there exist examples, including in the libovsdb source code, for
+how to do this.
+
+There is another technological hurdle that needs to be tested, however, and we
+have not had time to do the testing this week due to the midterm report and
+presentation we have been working on. There may be a hitch when creating an OVS
+bridge on the controller nodes (CNCIs). The issue may arise because the CNCI
+runs a DHCP server to assign IP addresses to the compute nodes. Manohar
+Castelino, the networking expert on the Ciao development team, was concerned
+there may be issues connecting a DHCP server to an Open vSwitch bridge instance.
+The way we plan on testing this is to set up two separate virtual machines and
+using the command line tool ovs-vsctl to initiate first a bridge on both and a
+tunnel between them. At this point we will try to connect a DHCP server to the
+bridge on one of the nodes. If network connectivity between the two nodes is
+maintained then there will be no issues with running OVS bridges on the CNCIs.
+
+\section{Issues - Cody Malick}
+In this section, we will cover the issues we ran into at the beginning of term,
+as well as the solutions, and discussions that were had around them. The first
+two major issues are related to environment setup. These two issues consumed a
+large portion of the first part of the term.
+
+\subsection{Environment Setup - Cody Malick}
+The first, and arguably most major issue that was experienced, was setting up
+the Ciao cluster. The first step of the project is, quite simply, getting Ciao
+working in the state that it was provided to us. This ultimately should have
+been fairly straightforward, but we ran into two major issues. The first of
+which was the management of certificates in Clear Linux.
+
+Clear Linux, Intel's custom Linux distribution, is a fast OS designed to take
+advantage of Intel CPU's advanced features that often go unutilized. This was an
+obvious choice for our team. We initially set up all the NUCs with Clear Linux
+installed, and proceeded with deployment. We spent about a week tracking down an
+issue with Clear Linux. Specifically, that Clear Linux manually manages the
+network trust store. This isn't an issue, but the behavior of Clear Linux was
+slightly different than Ubuntu's. After some investigation, we reported the bug
+to the Clear Linux team, who had a bug fix shipped in the next release.
+
+The second major issue we encountered was that of getting FQDN's in Ciao, or
+Fully Qualified Domain Names. These were important to the controller node of
+Ciao as it needed to identify the compute nodes needed to deploy software onto.
+As we were trying to deploy, we found that Ciao kept attempting to connect to
+the hostname of the device instead of the FQDN. For example, the control node
+would try to connect to \texttt{fw-dear205-ciao-nuc0} instead of the FQDN,
+\texttt{fw-dear205-ciao-nuc0.engr.oregonstate.edu}. A screenshot of what is
+expected of the python call is show below. At first, we thought this issue was
+because of caching in the OS, but quickly found out this was not the case after
+manually clearing the cache, as well as rebooting the system.  After some
+further investigation, we found that Python3 was only getting the hostname on
+Clear Linux instead of the FQDN. We reported this problem to the Clear Linux
+team as well, and they have since shipped a fix.
+
+\begin{figure}[h]
+	\caption{Expected result of Python FQDN call}
+	\centering
+	\includegraphics[scale=0.5]{getfqdn.eps}
+\end{figure}
+
+We found out later that the Ciao dev team usually uses Ubuntu as its development
+environment. With that in mind, we decided to move to an Ubuntu development
+environment to make it as consistent as possible. We have since then installed
+Ubuntu 16.10 on all the machines. Also at the recommendation of the Ciao team,
+we started using Ciao-Down, a single virtual machine development environment.
+With this set up, we were able to quickly get to work on the development of the
+first feature. While we are not currently using a fully deployed version of Ciao
+for development, we will work on getting Ciao tested with the new features in
+our full five NUC setup once we've made progress on development.
+
+\subsection{Network Testing - Garrett Smith}
+
+Using the automated deployment Ansible play book we were able to deploy Ciao,
+but we ran into errors running workloads using the Ciao command line interface.
+For example running \texttt{ciao-cli instance add -workload } resulted in the
+following error message.
+
+\begin{lstlisting}[caption = Failing to run a workload]
+garrett@fw-dear205-ciao-nuc1:~\$ ciao-cli instance add -workload ab68111c-03a6-11e6-87de-001320fb6e31 -instances 1
+F0202 09:02:18.353666    8527 instance.go:531] ciao-cli FATAL: HTTP Error [500] for [POST https://fw-dear205-ciao-nuc1.engr.oregonstate.edu:8774/v2.1/8624fb4b8d8f489a9a32f051770aeed2/servers]: {"error":{"code":500,"name":"Internal Server Error","message":"Unable to Launch Tenant CNCI"}}
+\end{lstlisting}
+
+Garrett did some digging through the Ciao source code and located the source of
+the error as a new CNCI being created, but not receiving an IP address. We were
+running Ciao on the OSU network, which was not assigning an IP address to the
+CNCI.
+
+To get more control over the network we are using Garrett set up an isolated
+local network using the Cisco SG300 switch Intel is lending us for the project,
+and is configuring Ciao on that. There are a few places we had hostnames and
+other settings hardcoded into the deployment configuration. We need to update
+the configuration then we should be able to deploy Ciao onto the new network
+setup 
+with the Ansible playbook.
+
 \section{Fall Term Week by Week Reports}
 %just paste in weekly blogs?
 
@@ -299,139 +509,15 @@ they were impressed with the design we had outlined.
 
 	\end{tabular}
 \end{center}
-\section{Winter Progress - Cody Malick}
-Winter term has started off a little bumpy for the team. We spent the first 
-four weeks focusing on setting up our development environment, as well as ironing
-out issues related to network testing. These topics will be covered in-depth
-in the folling 'issues' section. Our current progress, as far as development
-is concerned, is working on the first feature, implementing OVS generated GRE
-tunnels. While we originally planned to have that feature completed by the end
-of the fifth week, we are in contact with our friends at Intel to figure out
-some of the issues we've been running into. Good progress on testing the basic
-NUC setup, and will be covered in the following section. Lastly, our current
-development progress, and issues related to deployment of OVS in Ciao will
-be discussed. 
-
-\subsection{Network Testing Progress - Garrett Smith}
-To help handle the data from the network testing tools iperf and qperf Garrett 
-wrote some scripts in Ruby to convert the output from multiple runs of iperf 
-and qperf into CSV files. Ruby was chosen because it has good support for 
-consuming plain text and JSON (author's opinion), and because Garrett is 
-familiar with it. The plain text support is useful because qperf outputs its 
-results in human readable format which is not useful when comparing the results 
-of multiple tests.
-The JSON support is useful because we are using the iperf option to output 
-results in JSON format, and again, we want to change the format the network 
-performance data is in because the format is not great for using in performance 
-comparisons.
-
-We ran into more issues running the Ciao cluster on OSU's network so we 
-moved it off of the OSU network. More details on those issues are in the Issues 
-section. Garrett set up the Cisco SG300 switch Intel is 
-lending us for this project in layer 3 mode and started up its built in DHCP 
-server so we can run out own local area network that we have full control over.
-This setup will be useful at expo because we will not have access to OSU's 
-network while we are there.
-The downsides this this setup 
-are that we do not have remote access to the Nucs, and they cannot connect to 
-the internet for updates.
-
-Currently all of the Nucs have static IP addresses on the local network Garrett 
-set up. We have not finished setting Ciao up on the new network yet. We need to 
-clear out the configuration we had set for running Ciao on the OSU network 
-before it will work correctly in the new configuration. We are in the process 
-of setting up Ciao on the new network, but it has taken a lower priority than 
-development.
-
-\subsection{Development Progress - Matthew Johnson}
-
-\section{Issues - Cody Malick}
-In this section, we will cover the issues we ran into at the beginning of term,
-as well as the solutions, and discussions that were had around them. The first
-two major issues are related to environment setup. These two issues consumed a
-large portion of the first part of the term.
-
-\subsection{Environment Setup - Cody Malick}
-The first, and arguably most major issue that was experienced, was setting up
-the Ciao cluster. The first step of the project is, quite simply, getting Ciao
-working in the state that it was provided to us. This ultimately should have
-been fairly straightforward, but we ran into two major issues. The first of which
-was the management of certificates in Clear Linux. 
-
-Clear Linux, Intel's custom Linux distribution, is a fast OS designed to take
-advantage of Intel CPU's advanced features that often go unutilized. This was
-an obvious choice for our team. We initially set up all the NUCs with Clear Linux
-installed, and proceeded with deployment. We spent about a week tracking down
-an issue with Clear Linux. Specifically, that Clear Linux manually manages the
-network trust store. This isn't an issue, but the behavior of Clear Linux was
-slightly different than Ubuntu's. After some investigation, we reported the bug
-to the Clear Linux team, who had a bug fix shipped in the next release.
-
-The second major issue we encountered was that of getting FQDN's in Ciao, or
-Fully Qualified Domain Names. These were important to the controller node of
-Ciao as it needed to identify the compute nodes needed to deploy software onto.
-As we were trying to deploy, we found that Ciao kept attempting to connect to
-the hostname of the device instead of the FQDN. For example, the control node
-would try to connect to \texttt{fw-dear205-ciao-nuc0} instead of the FQDN,
-\texttt{fw-dear205-ciao-nuc0.engr.oregonstate.edu}. A screenshot of what is
-expected of the python call is show below. At first, we thought this
-issue was because of caching in the OS, but quickly found out this was not
-the case after manually clearing the cache, as well as rebooting the system.
-After some further investigation, we found that Python3 was only getting the
-hostname on Clear Linux instead of the FQDN. We reported this problem to the
-Clear Linux team as well, and they have since shipped a fix.
-
-\begin{figure}[h]
-	\caption{Expected result of Python FQDN call}
-	\centering
-	\includegraphics[scale=0.5]{getfqdn.eps}
-\end{figure}
-
-We found out later that the Ciao dev team usually uses Ubuntu as its development
-environment. With that in mind, we decided to move to an Ubuntu development
-environment to make it as consistent as possible. We have since then installed
-Ubuntu 16.10 on all the machines. Also at the recommendation of the Ciao team,
-we started using Ciao-Down, a single virtual machine development
-environment. With this set up, we were able to quickly get to work on the 
-development of the first feature. While we are not currently using a fully
-deployed version of Ciao for development, we will work on getting Ciao tested
-with the new features in our full five NUC setup once we've made progress on
-development.
-
-\subsection{Network Testing - Garrett Smith}
-
-Using the automated deployment 
-Ansible play book we were able to deploy Ciao, but we ran into errors running 
-workloads using the Ciao command line interface. For example running 
-\texttt{ciao-cli instance add -workload } resulted in the following error 
-message.
-\begin{lstlisting}[caption = Failing to run a workload]
-garrett@fw-dear205-ciao-nuc1:~\$ ciao-cli instance add -workload ab68111c-03a6-11e6-87de-001320fb6e31 -instances 1
-F0202 09:02:18.353666    8527 instance.go:531] ciao-cli FATAL: HTTP Error [500] for [POST https://fw-dear205-ciao-nuc1.engr.oregonstate.edu:8774/v2.1/8624fb4b8d8f489a9a32f051770aeed2/servers]: {"error":{"code":500,"name":"Internal Server Error","message":"Unable to Launch Tenant CNCI"}}
-\end{lstlisting}
-
-Garrett did some digging through the Ciao source code and located the source of 
-the error as a new CNCI being created, but not receiving an IP address. We were 
-running Ciao on the OSU network, which was not assigning an IP address to the 
-CNCI.
-
-To get more control over the network we are using Garrett set up an 
-isolated local network using the Cisco SG300 switch Intel is lending us for the 
-project, and is configuring Ciao on that. There are a few places
-we had hostnames and other settings 
-hardcoded into the deployment configuration. We need to update the 
-configuration then we should be able to deploy Ciao onto the new network setup 
-with the Ansible playbook.
-
-\section{Winter Term Week by Week Reports - Matthew Johnson}
+\section{Winter Term Week by Week Reports}
 %just paste in weekly blogs?
 
 \subsection{Winter Break and Week One}
 
 Over Christmas break Cody and Matthew tried to get Ciao set up on the cluster
 using a manual installation method. We ran into some tough issues and
-communicated them with the Intel team. The Intel team pointed us to
-a much more recently updated setup document that included automated deployment.
+communicated them with the Intel team. The Intel team pointed us to a much more
+recently updated setup document that included automated deployment.
 
 During week one there was still an issue in the version of Clear Linux (our
 target distribution) that we were running that caused docker certification to be
@@ -452,10 +538,10 @@ certification management issues in the build.
 
 \subsection{Week Three}
 
-This week we believed we were successful in deploying Ciao and began implementation of
-Open vSwitch components. Garrett has begun working out network measurements for
-our initial benchmarks. Garrett discovered that the network was not being set up
-properly, however, due to issues with the OSU network.
+This week we believed we were successful in deploying Ciao and began
+implementation of Open vSwitch components. Garrett has begun working out network
+measurements for our initial benchmarks. Garrett discovered that the network was
+not being set up properly, however, due to issues with the OSU network.
 
 The first half of the week was spent debugging our Ciao deploy with members of
 the Ciao development team at Intel. After several email conversations and debug
@@ -478,9 +564,9 @@ setup or find a way to set up the cluster independent from the OSU network.
 Ciao provides ciao-down, a tool that helps set up a single-vm environment for
 testing. This will be helpful once we get it spun up.
 
-We were still having issues gathering initial network metrics due to inaccessible
-nodes on our physical cluster. Garrett is working through this but the best way
-to address this may be single-vm for now.
+We were still having issues gathering initial network metrics due to
+inaccessible nodes on our physical cluster. Garrett is working through this but
+the best way to address this may be single-vm for now.
 
 \subsection{Week Five}
 
