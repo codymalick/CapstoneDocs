@@ -113,6 +113,56 @@ on performance measurements of each protocol on data center network cards.
 
 \subsection{Notes on Scope Changes}
 
+At the beginning of Winter term, and during the writing of all our requirements
+documentation, it was assumed by us and our clients that GRE tunnels could be
+created independently of Linux bridges and that the new OVS tunnels could be
+connected to Linux bridges. There was nothing through the research we had done
+up to this point that implied differently. This was also the desired result by
+our client due to the flexibility of Linux bridges. Linux bridges are more
+versatile than OVS bridges so it was their hope to leave the bridge
+implementation alone for the first part of the project, then later add an
+alternate implementation in OVS that could be used if desired.
+
+The assumption that OVS bridges and tunnels could be created independently and
+separately led to attempts to use OVS to do exactly that. When we tried this
+simple implementation of just the Open vSwitch GRE tunnels without creating OVS
+bridges, we encountered many errors with network setup. With what we know now
+these errors were very predictable. The errors we encountered drove us to look
+at other examples of open source projects using libovsdb and we noticed that
+everyone else was creating OVS bridges before they created OVS tunnels. We were
+unable to find any examples of mixing networking feature types.
+
+As a result of the above discoveries, we communicated our concerns to our
+clients and tried to test manual creation of OVS GRE tunnels and Linux bridges.
+This was easy to do with the command line tool brctl to create the bridge and
+the Open vSwitch command line interface ovs-vsctl. First we created a Linux
+bridge with brctl called br1. Then we tried to connect a GRE tunnel created with
+ovs-vsctl to the bridge br1, but it turned out that Open vSwitch could not even
+see Linux bridges on the system.
+
+\begin{lstlisting}[caption=No Linux Bridge and OVS Tunnel]
+	mrsj@singlevm:~# sudo brctl addbr br1
+	mrsj@singlevm:~# sudo brctl show
+	bridge name     bridge id               STP enabled     interfaces
+	br1             8000.000000000000       no
+	docker0         8000.02427ef725d4       no
+	mrsj@singlevm:~# sudo ovs-vsctl add-port br1 gre0 -- set interface gre0 type=gre options:remote_ip=192.215.10.0
+	ovs-vsctl: no bridge named br1
+\end{lstlisting}
+
+We communicated our findings to our clients and they agreed that this shows it
+is necessary to first create the OVS bridge if we want to use the OVS created
+GRE tunnels. This means it is now necessary to implement the entire network
+framework with Open vSwitch, a considerable change in scope. This was
+originally considered a stretch goal for the project, but has now changed to
+the primary goal, pushing the goal one back to goal two and goal two back to
+the stretch goal position. Our future work will be to create the OVS framework
+and create OVS bridges (previously the stretch goal), then create OVS tunnels
+to connect them (previously goal one). Finally we hope to complete the final
+goal of creating VxLAN and nvGRE modules (previously goal two).
+
+This problem was identified during the beginning of week six of Winter term.
+
 \subsection{Definitions, acronyms, and abbreviations}
 
 \begin{description}[leftmargin=12em,style=nextline]
