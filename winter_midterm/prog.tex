@@ -262,27 +262,36 @@ tunnel between them. At this point we will try to connect a DHCP server to the
 bridge on one of the nodes. If network connectivity between the two nodes is
 maintained then there will be no issues with running OVS bridges on the CNCIs.
 
-\section{Issues - Cody Malick}
+\subsection{Issues - Cody Malick}
 In this section, we will cover the issues we ran into at the beginning of term,
 as well as the solutions, and discussions that were had around them. The first
 two major issues are related to environment setup. These two issues consumed a
 large portion of the first part of the term.
 
-\subsection{Environment Setup - Cody Malick}
-The first, and arguably most major issue that was experienced, was setting up
-the Ciao cluster. The first step of the project is, quite simply, getting Ciao
-working in the state that it was provided to us. This ultimately should have
-been fairly straightforward, but we ran into two major issues. The first of
-which was the management of certificates in Clear Linux.
+\subsubsection{Environment Setup - Cody Malick}
+Environment setup is a pivotal part of our project, as developing and deploying
+to a non-cloud environment would not show what the project has accomplished.
+As such, it is important that our team have a good testing
+environment. The first, and arguably most major issue that was experienced,
+was setting up the Ciao cluster. The first step of the project is, quite simply,
+getting Ciao working in the state that it was provided to us. This ultimately
+should have been fairly straightforward, but we ran into two major issues. 
+The first of which was the management of certificates in Clear Linux.
 
-Clear Linux, Intel's custom Linux distribution, is a fast OS designed to take
-advantage of Intel CPU's advanced features that often go unutilized. This was an
-obvious choice for our team. We initially set up all the NUCs with Clear Linux
-installed, and proceeded with deployment. We spent about a week tracking down an
-issue with Clear Linux. Specifically, that Clear Linux manually manages the
-network trust store. This isn't an issue, but the behavior of Clear Linux was
-slightly different than Ubuntu's. After some investigation, we reported the bug
-to the Clear Linux team, who had a bug fix shipped in the next release.
+Clear Linux, Intel's custom Linux distribution, is a fast operating system
+designed to take advantage of Intel CPU's advanced features that often go
+under utilized. This was an obvious choice for our team. We initially set up
+all the NUCs with Clear Linux installed, and proceeded with deployment.
+We spent about a week tackling some minor configuration issues that came from
+simply being new to the system. Later, about a week was spent tracking down an
+issue within Clear Linux. Specifically, that Clear Linux manually manages the
+network trust store. This isn't an issue in general, but this behavior of Clear
+Linux is slightly different than Ubuntu's. At first we thought we had simply
+set a value wrong in a configuration. But after further investigation, it
+became clear it was an issue unrelated to configuration. The difference in 
+behavior was reported to the Clear Linux development team. They have since
+shipped a bug fix in a later release. On that front, we were able to iron out
+Ciao's behavior on Clear Linux.
 
 The second major issue we encountered was that of getting FQDN's in Ciao, or
 Fully Qualified Domain Names. These were important to the controller node of
@@ -295,8 +304,9 @@ expected of the python call is show below. At first, we thought this issue was
 because of caching in the OS, but quickly found out this was not the case after
 manually clearing the cache, as well as rebooting the system.  After some
 further investigation, we found that Python3 was only getting the hostname on
-Clear Linux instead of the FQDN. We reported this problem to the Clear Linux
-team as well, and they have since shipped a fix.
+Clear Linux instead of the FQDN. Ciao relies on certain Python3 function calls.
+We reported this problem to the Clear Linux team as well, and they have since
+shipped a fix. 
 
 \begin{figure}[h]
 	\caption{Expected result of Python FQDN call}
@@ -304,17 +314,54 @@ team as well, and they have since shipped a fix.
 	\includegraphics[scale=0.5]{getfqdn.eps}
 \end{figure}
 
-We found out later that the Ciao dev team usually uses Ubuntu as its development
+After running into these two issues, we spoke with the Ciao team about our
+setup, as we wanted to quickly iron out any other testing environment issues.
+We found out that the Ciao dev team usually uses Ubuntu as its development
 environment. With that in mind, we decided to move to an Ubuntu development
 environment to make it as consistent as possible. We have since then installed
 Ubuntu 16.10 on all the machines. Also at the recommendation of the Ciao team,
-we started using Ciao-Down, a single virtual machine development environment.
-With this set up, we were able to quickly get to work on the development of the
-first feature. While we are not currently using a fully deployed version of Ciao
-for development, we will work on getting Ciao tested with the new features in
-our full five NUC setup once we've made progress on development.
+we started using Ciao-Down.
 
-\subsection{Network Testing - Garrett Smith}
+Ciao-down is a single virtual machine development
+environment used by the Ciao development team to work on code locally, and 
+simulate a full cluster environment. This is quite a boon for the team as far
+as independent development. It allows ease of setup, and quick deployment of
+changes to a simulated environment for testing. An example of how easy it is
+to set up:\cite{ciao-down}
+
+\begin{lstlisting}[caption = Simplicity of Ciao-Down setup]
+	$ go get github.com/01org/ciao/testutil/ciao-down
+	$ ciao-down prepare
+
+\end{lstlisting}
+
+That's how simple it is to get a single environment setup working with 
+Ciao-Down. Running \texttt{ciao-down prepare} spins up a new virtual machine
+on the local machine. It then installs any necessary tools needed, such as the
+Go programming language, an open-ssh server, and other tools. After 
+\texttt{ciao-down prepare} is run, simply running
+\texttt{ciao-down connect} connects to the newly created virtual machine, which
+pulls from the Ciao repository on the local machine.
+
+The only caveat to this was that the machine Ciao-Down is running on requires
+nested kernel-based virtualization. While this is not an uncommon feature, the
+steps for enabling it were a bit tedious. On the first attempt, we manually
+edited Grub's (the boot loader for Ubuntu) configuration in order to enable it.
+But after a helpful hint from one of the good folks at Intel, there is a simple
+one line command that enables it:
+
+\begin{lstlisting}[caption = An easy way to enable nested KVM support]
+	echo "options kvm-intel nested=1 | sudo tee /etc/modprobe.d/kvm-intel.conf
+\end{lstlisting}
+
+
+With this set up, we were
+able to quickly get to work on the development of the first feature. While we
+are not currently using a fully deployed version of Ciao for development, we
+will work on getting Ciao tested with the new features in our full five NUC
+setup once progress has been made on development.
+
+\subsubsection{Network Testing - Garrett Smith}
 
 Using the automated deployment Ansible play book we were able to deploy Ciao,
 but we ran into errors running workloads using the Ciao command line interface.
