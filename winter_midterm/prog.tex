@@ -14,6 +14,8 @@
 \definecolor{gray}{rgb}{0.5,0.5,0.5}
 \definecolor{mauve}{rgb}{0.58,0,0.82}
 
+\graphicspath{{../images/}}
+
 %Subsection headers to Arabic numerals
 %\renewcommand\thesection{\arabic{section}}
 %\renewcommand\thesubsection{\thesection.\arabic{subsection}}
@@ -92,7 +94,7 @@ leverage of packet acceleration frameworks like the Data Plane Development Kit
 and nvGRE. VxLAN and nvGRE are equal cost multipath routing (ECMP) friendly,
 which could increase network performance overall.
 
-\section{Current Progress}
+\section{Fall Progress}
 At present, the project is moving along smoothly. Our testing environment has
 been set up and is networked appropriately. Each Intel NUC (Next Unit of
 Computing) has Clear Linux installed. Come Winter term, we will get Ciao set up
@@ -297,6 +299,76 @@ they were impressed with the design we had outlined.
 
 	\end{tabular}
 \end{center}
+\section{Winter Progress}
+Winter term has started off a little bumpy for the team. We spent the first 
+four weeks focusing on setting up our development environment, as well as ironing
+out issues related to network testing. These topics will be covered in-depth
+in the folling 'issues' section. Our current progress, as far as development
+is concerned, is working on the first feature, implementing OVS generated GRE
+tunnels. While we originally planned to have that feature completed by the end
+of the fifth week, we are in contact with our friends at Intel to figure out
+some of the issues we've been running into. Good progress on testing the basic
+NUC setup, and will be covered in the following section. Lastly, our current
+development progress, and issues related to deployment of OVS in Ciao will
+be discussed. 
+
+\subsection{Network Testing Progress}
+\subsection{Development Progress}
+
+\section{Issues}
+In this section, we will cover the issues we ran into at the beginning of term,
+as well as the solutions, and discussions that were had around them. The first
+two major issues are related to environment setup. These two issues consumed a
+large portion of the first part of the term.
+
+\subsection{Environment Setup}
+The first, and arguably most major issue that was experienced, was setting up
+the Ciao cluster. The first step of the project is, quite simply, getting Ciao
+working in the state that it was provided to us. This ultimately should have
+been fairly straightforward, but we ran into two major issues. The first of which
+was the management of certificates in Clear Linux. 
+
+Clear Linux, Intel's custom Linux distribution, is a fast OS designed to take
+advantage of Intel CPU's advanced features that often go unutilized. This was
+an obvious choice for our team. We initially set up all the NUCs with Clear Linux
+installed, and proceeded with deployment. We spent about a week tracking down
+an issue with Clear Linux. Specifically, that Clear Linux manually manages the
+network trust store. This isn't an issue, but the behavior of Clear Linux was
+slightly different than Ubuntu's. After some investigation, we reported the bug
+to the Clear Linux team, who had a bug fix shipped in the next release.
+
+The second major issue we encountered was that of getting FQDN's in Ciao, or
+Fully Qualified Domain Names. These were important to the controller node of
+Ciao as it needed to identify the compute nodes needed to deploy software onto.
+As we were trying to deploy, we found that Ciao kept attempting to connect to
+the hostname of the device instead of the FQDN. For example, the control node
+would try to connect to \texttt{fw-dear205-ciao-nuc0} instead of the FQDN,
+\texttt{fw-dear205-ciao-nuc0.engr.oregonstate.edu}. A screenshot of what is
+expected of the python call is show below. At first, we thought this
+issue was because of caching in the OS, but quickly found out this was not
+the case after manually clearing the cache, as well as rebooting the system.
+After some further investigation, we found that Python3 was only getting the
+hostname on Clear Linux instead of the FQDN. We reported this problem to the
+Clear Linux team as well, and they have since shipped a fix.
+
+\begin{figure}[h]
+	\caption{Expected result of Python FQDN call}
+	\centering
+	\includegraphics[scale=0.5]{getfqdn.eps}
+\end{figure}
+
+We found out later that the Ciao dev team usually uses Ubuntu as its development
+environment. With that in mind, we decided to move to an Ubuntu development
+environment to make it as consistent as possible. We have since then installed
+Ubuntu 16.10 on all the machines. Also at the reccomendation of the Ciao team,
+we started using Ciao-Down, a single virtual machine development
+environment. With this set up, we were able to quickly get to work on the 
+development of the first feature. While we are not currently using a fully
+deployed version of Ciao for development, we will work on getting Ciao tested
+with the new features in our full five NUC setup once we've made progress on
+development.
+
+\subsection{Network Testing}
 
 \section{Winter Term Week by Week Reports}
 %just paste in weekly blogs?
