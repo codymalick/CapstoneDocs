@@ -388,13 +388,6 @@ udp_lat:
 	\end{lstlisting}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Open vSwitch}
-	Goal: implement GRE tunnels with Open vSwitch by the end of week five
-
-	This did not happen.
-\end{frame}
-
 \begin{frame}[allowframebreaks, fragile]
 	\frametitle{Open vSwitch - libovsdb}
 	It was originally our plan to implement with libovsdb.
@@ -427,9 +420,47 @@ udp_lat:
 \end{frame}
 
 \begin{frame}
+	\frametitle{Open vSwitch}
+	Original Goal: implement GRE tunnels with Open vSwitch by the end of week five
+
+	Scope Change: cannot implement GRE tunnels in OVS without first
+	implementing bridges in OVS, originally a stretch goal.
+
+	New Goal: Implement bridges in OVS, then implement tunnels in OVS.
+	Finally, implement VXLAN and nvGRE tunneling protocols as a stretch
+	goal.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Progress}
+	Internal Functions
+
+	Internal functions were written in Ciao to control OVS via the ovs-vsctl
+	tool.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Progress}
+	Ciao Integration
+
+	We have integrated the internal function calls into Ciao in the compute
+	node (cn) module, the compute node concentrator (CNCI) module, and the
+	controlling network module (network).
+\end{frame}
+
+\begin{frame}
+	\frametitle{Progress}
+	Testing
+
+	ciao-down (test utility for Ciao) successfully builds our integrated
+	network module, but fails on the verify script.
+\end{frame}
+
+\begin{frame}
 	\frametitle{Next Steps}
-	Now our scope has changed a bit - we need to actually create bridges for
-	the OVS tunnels to connect to.
+	Integrating new network mode into the Ciao \texttt{bridge} object. Will
+	allow the internal network map to track new bridges and tunnels created
+	by OVS, and update them appropriately.
 \end{frame}
 
 \begin{frame}
