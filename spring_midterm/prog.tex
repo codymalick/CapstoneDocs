@@ -102,9 +102,33 @@ leverage of packet acceleration frameworks like the Data Plane Development Kit
 (DPDK) as well as provide support for multiple tunneling protocols such as VxLAN
 and nvGRE. VxLAN and nvGRE are equal cost multipath routing (ECMP) friendly,
 which could increase network performance overall.
-\section{Progress}
 
-\section{Issues}
+\section{Spring Progress}
+Over spring break, and through the first few weeks of the term, we were in active
+development on the project. Working towards a working prototype, we were aiming
+to fully flesh out the Open vSwitch interfaces we had created. This involved 
+altering the \texttt{bridge} object that Ciao uses to track network connections.
+Specifically, updating the bridge to support various network modes, and adding
+the appropriate logic to utilize the new mode.
+
+After fully implementing the mode logic, we had a major breakthrough week two
+of the term. We were able to create a working VM instance in Ciao-Down,
+our single machine development environment. Though a major milestone, we found
+after some testing that we could not ssh into the machine.
+
+%Screen shot of Ciao-down pingable instance, but not ssh-able
+
+\section{Issue}
+After consulting with Manohar Castillino, the Principle Engineer at Intel and
+original author of Ciao, he suspected that our project was very close to working.
+He suggested that we take a look at the maximum transmission unit, or MTU, that
+Ciao was configured to use. MTU is the defined size of a packet or IP frame
+that can be sent over the network.\cite{MTU} This is configured on a per-device
+basis. After implementing and defining MTU in Ciao, the results did not change.
+At present, our code is being reviewed by Manohar, and we are working with him
+to figure out the problem. 
+
+%Code snippet of MTU setting
 
 \section{Remaining Steps}
 
