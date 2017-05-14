@@ -75,8 +75,12 @@ stretch goal is to replace Linux bridges with Open vSwitch switch instances.
 
 These goals changed somewhat by the middle of the Winter term. The primary goal
 now is to replace the Linux bridges with Open vSwitch switch instances because
-of an assumption that was found to be incorrect. It was discovered that a full
-implementation of Open vSwitch was required. Initially, we had planned on using
+of an assumption that was found to be incorrect. It was assumed that we could 
+create tunnel endpoints with Open vSwitch without using Open vSwitch bridges 
+but Open vSwitch could not create tunnel endpoints with the Linux bridges 
+Ciao uses. A full
+integration of Open vSwitch was required to use Open vSwitch created tunnels. 
+Initially, we had planned on using
 a third party API, \texttt{libovsdb} to interface with the Open vSwitch
 management database~\cite{libovsdb}. While providing the necessary
 functionality, it added undocumented overhead. Specifically, all bridges and
@@ -121,6 +125,10 @@ our single machine development environment. Though a major milestone, we found
 after some testing that we could not ssh into the machine.
 
 %Screen shot of Ciao-down pingable instance, but not ssh-able
+\begin{figure}[H]
+\caption{Instance is can be pinged but ssh is refused.}
+\includegraphics[scale=0.5]{./ssh-refused.eps}
+\end{figure}
 
 We continued to work on this problem until recently by trying to manipulate how
 the controller nodes manage their virtual network interface cards (VNICs). Our
