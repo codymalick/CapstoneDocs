@@ -119,6 +119,58 @@ altering the \texttt{bridge} object that Ciao uses to track network connections.
 Specifically, updating the bridge to support various network modes, and adding
 the appropriate logic to utilize the new mode.
 
+A very important piece of code is the \texttt{bridge} object. The \texttt{bridge}
+object represents how Ciao tracks network bridges internally. This being a key
+aspect of our project, we altered it in a very simply way. We added a \texttt{mode}
+field to the \texttt{attrs} (attributes) struct. The mode field simply allows
+the code differentiate between the default Linux bridge network mode, and our
+newly implemented OVS mode. 
+
+\begin{figure}[H]
+	\caption{The Ciao \texttt{bridge} object, and the newly added \texttt{mode}
+	field in the \texttt{attrs} struct}
+\includegraphics[scale=0.75]{./bridge.eps}
+\end{figure}
+
+Other core code snippets are in the \texttt{ovs\_bridge.go} and \texttt{ovs\_gre.go}
+files. These files contain the primary interfaces we designed and implemented
+to allow Ciao to call the \texttt{ovs-vsctl} command line utility. As per our
+scope change, we had to drop the use of the \texttt{libovsdb}, the third party
+library we were using. Having to use OVS in the full networking stack, both 
+bridge and tunnel rather than exclusively tunnel, means that Ciao has to have
+a way of calling the OVS management database. For this task we opted to use 
+\texttt{ovs-vsctl}. 
+
+In order to call \texttt{ovs-vsctl}, we have to build a command in Ciao, and
+then use a built in Golang function called \texttt{exec()}. The \texttt{exec()}
+function simply allows an array of strings to be translated and executed in a
+shell. This made our lives very simple as we could simply build a generic function
+to handle dishing a command to shell, and then specific functions for all the
+functionality we needed. Our generic function, named \texttt{vsctlCmd()}, takes
+in a string and calls \texttt{exec()}. 
+
+\begin{figure}[H]
+	\caption{The \texttt{vsctlCmd} function takes a string array, and calls
+	the \texttt{exec} function on the string array}
+\includegraphics[scale=0.75]{./vsctlcmd.eps}
+\end{figure}
+
+For specific functionality, we defined the commands needed from \texttt{ovs-vsctl}
+in individual functions. An example of this is the \texttt{createOvsBridge()} function.
+The \texttt{createOvsBridge()} function takes in a \texttt{bridgeId} string, 
+and builds a command into a string array. The base of the command is the
+\texttt{ovs-vsctl} parameter \texttt{add-br}. After the base command, it simply
+adds the bridge ID to the array, and adds the remaining parameters. These types
+of functions make up the interfaces to create, destroy, and link our bridges and
+tunnels in Ciao.
+
+\begin{figure}[H]
+	\caption{The \texttt{createOvsBridge} function takes a string
+		\texttt{bridgeId}, builds a command, and calls the \texttt{vsctlCmd()
+	function}}
+\includegraphics[scale=0.75]{./createOvsBridge.eps}
+\end{figure}
+
 After fully implementing the mode logic, we had a major breakthrough week two
 of the term. We were able to create a working VM instance in Ciao-Down,
 our single machine development environment. Though a major milestone, we found
